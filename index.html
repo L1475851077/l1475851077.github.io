@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WestChef Commercial Kitchen Equipment</title>
+    <meta name="description" content="Professional Western Kitchen Equipment Supplier - Commercial Fridges, Ovens, Worktables, Dishwashers. Factory Direct, Global Shipping.">
+    <meta name="keywords" content="commercial kitchen equipment, western kitchen, restaurant equipment, westchef, ovens, fridges">
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- 顶部导航 -->
+    <header>
+        <div class="container">
+            <div class="logo">🌟 WestChef</div>
+            <nav>
+                <a href="#products">Products</a>
+                <a href="#why">Why Us</a>
+                <a href="#contact">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- 首屏 Banner -->
+    <section class="hero">
+        <div class="container">
+            <h1>Professional Western Kitchen Equipment</h1>
+            <p>10+ Years Experience · Factory Direct · Free Layout Design · Global Warranty</p>
+            <a href="#contact" class="btn">Send Inquiry</a>
+        </div>
+    </section>
+
+    <!-- 公司简介 -->
+    <section class="intro">
+        <div class="container">
+            <h2>About WestChef</h2>
+            <p>We specialize in providing high-end western kitchen equipment for hotels, restaurants, and bakeries worldwide. Our product range includes commercial fridges, ovens, worktables, dishwashers, and more. Customization available. Global shipping & installation support.</p>
+        </div>
+    </section>
+
+    <!-- 产品展示区 -->
+    <section id="products" class="products">
+        <div class="container">
+            <h2>Hot Products</h2>
+            <div class="product-grid">
+                <!-- 产品1 -->
+                <div class="product-card" onclick="openModal('product1')">
+                    <img src="images/product1.jpg" alt="Commercial Double Door Fridge B-2000">
+                    <h3>Commercial Double Door Fridge B-2000</h3>
+                    <p>304 Stainless Steel · Energy Saving · 3-Year Warranty</p>
+                </div>
+                <!-- 产品2 -->
+                <div class="product-card" onclick="openModal('product2')">
+                    <img src="images/product2.jpg" alt="3-Layer Electric Oven O-300">
+                    <h3>3-Layer Electric Oven O-300</h3>
+                    <p>Precise Temperature · Independent Control · For Bakeries</p>
+                </div>
+                <!-- 产品3 -->
+                <div class="product-card" onclick="openModal('product3')">
+                    <img src="images/product3.jpg" alt="Stainless Steel Worktable W-500">
+                    <h3>Stainless Steel Worktable W-500</h3>
+                    <p>Thick Surface · Anti-Slip · Multi-Functional Rack</p>
+                </div>
+                <!-- 产品4 -->
+                <div class="product-card" onclick="openModal('product4')">
+                    <img src="images/product4.jpg" alt="Commercial Dishwasher D-800">
+                    <h3>Commercial Dishwasher D-800</h3>
+                    <p>High-Temp Sanitize · Fast Wash · Water Saving</p>
+                </div>
+                <!-- 产品5 -->
+                <div class="product-card" onclick="openModal('product5')">
+                    <img src="images/product5.jpg" alt="Heated Display Cabinet S-100">
+                    <h3>Heated Display Cabinet S-100</h3>
+                    <p>Double Glass · Constant Temp · For Dessert Shops</p>
+                </div>
+                <!-- 产品6 -->
+                <div class="product-card" onclick="openModal('product6')">
+                    <img src="images/product6.jpg" alt="Modular Workstation C-600">
+                    <h3>Modular Workstation C-600</h3>
+                    <p>Flexible Design · Space Saving · Customizable</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 产品详情弹窗 -->
+    <div id="productModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeModal()">&times;</span>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <!-- 为什么选择我们 -->
+    <section id="why" class="why">
+        <div class="container">
+            <h2>Why Choose WestChef?</h2>
+            <div class="advantages">
+                <div class="advantage">
+                    <div class="icon">✅</div>
+                    <h3>Factory Direct</h3>
+                    <p>No middleman, better price, quality guaranteed</p>
+                </div>
+                <div class="advantage">
+                    <div class="icon">📐</div>
+                    <h3>Free Design</h3>
+                    <p>Professional layout planning based on your kitchen</p>
+                </div>
+                <div class="advantage">
+                    <div class="icon">🌍</div>
+                    <h3>Global Support</h3>
+                    <p>Worldwide shipping & installation, 24/7 after-sales</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 联系我们 -->
+    <section id="contact" class="contact">
+        <div class="container">
+            <h2>Contact Us</h2>
+            <div class="contact-wrapper">
+                <div class="contact-info">
+                    <p>📞 <strong>Phone:</strong> +86 138 XXXX XXXX</p>
+                    <p>📧 <strong>Email:</strong> sales@westchef.com</p>
+                    <p>🏭 <strong>Address:</strong> No.88 Zhangjiang Rd, Shanghai, China</p>
+                </div>
+                <form class="contact-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+                    <input type="text" name="name" placeholder="Your Name" required>
+                    <input type="email" name="email" placeholder="Your Email" required>
+                    <input type="tel" name="phone" placeholder="Your WhatsApp Number">
+                    <textarea name="message" placeholder="Please specify product model, quantity or special requirements..." rows="4" required></textarea>
+                    <button type="submit" class="btn">Send Inquiry</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer>
+        <div class="container">
+            <p>© 2025 WestChef Commercial Kitchen Equipment Co., Ltd.</p>
+        </div>
+    </footer>
+
+    <!-- WhatsApp/微信联系悬浮按钮 -->
+    <div id="contactFloatBtn" class="contact-float-btn" onclick="openContactModal()">
+        📞 Contact Us
+    </div>
+
+    <!-- 联系方式弹窗 -->
+    <div id="contactModal" class="contact-modal">
+        <div class="contact-modal-content">
+            <span class="close" onclick="closeContactModal()">&times;</span>
+            <h2>Contact Customer Service</h2>
+            <div class="contact-options">
+                <!-- WhatsApp -->
+                <div class="contact-option">
+                    <h3>💬 WhatsApp</h3>
+                    <p>+86 138 XXXX XXXX</p>
+                    <img src="images/whatsapp_qr.jpg" alt="WhatsApp QR Code" class="qr-code">
+                    <p class="note">Scan to chat or click number</p>
+                </div>
+                <!-- 微信 -->
+                <div class="contact-option">
+                    <h3>📱 WeChat</h3>
+                    <p>WestChefGlobal</p>
+                    <img src="images/wechat_qr.jpg" alt="WeChat QR Code" class="qr-code">
+                    <p class="note">Scan to add WeChat</p>
+                </div>
+                <!-- Email -->
+                <div class="contact-option">
+                    <h3>✉️ Email</h3>
+                    <p><a href="mailto:sales@westchef.com">sales@westchef.com</a></p>
+                    <p class="note">Reply within 24 hours</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
