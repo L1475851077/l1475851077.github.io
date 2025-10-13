@@ -46,7 +46,7 @@ header .container {
   width: auto;         /* 保持原始宽高比 */
   vertical-align: middle; /* 让图片和文字垂直居中对齐 */
   transform: translateY(-15px); /* 向上移动 3 像素，按需调整 */
-  margin-right: 10px;  /* 图片和文字之间的间距 */
+  margin-right: 5px;  /* 图片和文字之间的间距 */
 }
 
 nav a {
