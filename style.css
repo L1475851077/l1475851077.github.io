@@ -45,7 +45,7 @@ header .container {
   height: 70px;        /* 设置高度（推荐用高度，宽度自动等比缩放） */
   width: auto;         /* 保持原始宽高比 */
   vertical-align: middle; /* 让图片和文字垂直居中对齐 */
-  transform: translateY(-10px); /* 向上移动 3 像素，按需调整 */
+  transform: translateY(-13px); /* 向上移动 3 像素，按需调整 */
   margin-right: 10px;  /* 图片和文字之间的间距 */
 }
 
