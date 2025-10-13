@@ -40,6 +40,14 @@ header .container {
     color: #d63031;
 }
 
+/* 控制 logo 图片大小 */
+.logo .logo-img {
+  height: 40px;        /* 设置高度（推荐用高度，宽度自动等比缩放） */
+  width: auto;         /* 保持原始宽高比 */
+  vertical-align: middle; /* 让图片和文字垂直居中对齐 */
+  margin-right: 10px;  /* 图片和文字之间的间距 */
+}
+
 nav a {
     margin-left: 30px;
     text-decoration: none;
