@@ -46,37 +46,31 @@
         <div class="container">
             <h2>Hot Products</h2>
             <div class="product-grid">
-                <!-- 产品1 -->
                 <div class="product-card" onclick="openModal('product1')">
                     <img src="images/product1.jpg" alt="Commercial Double Door Fridge B-2000">
                     <h3>Commercial Double Door Fridge B-2000</h3>
                     <p>304 Stainless Steel · Energy Saving · 3-Year Warranty</p>
                 </div>
-                <!-- 产品2 -->
                 <div class="product-card" onclick="openModal('product2')">
                     <img src="images/product2.jpg" alt="3-Layer Electric Oven O-300">
                     <h3>3-Layer Electric Oven O-300</h3>
                     <p>Precise Temperature · Independent Control · For Bakeries</p>
                 </div>
-                <!-- 产品3 -->
                 <div class="product-card" onclick="openModal('product3')">
                     <img src="images/product3.jpg" alt="Stainless Steel Worktable W-500">
                     <h3>Stainless Steel Worktable W-500</h3>
                     <p>Thick Surface · Anti-Slip · Multi-Functional Rack</p>
                 </div>
-                <!-- 产品4 -->
                 <div class="product-card" onclick="openModal('product4')">
                     <img src="images/product4.jpg" alt="Commercial Dishwasher D-800">
                     <h3>Commercial Dishwasher D-800</h3>
                     <p>High-Temp Sanitize · Fast Wash · Water Saving</p>
                 </div>
-                <!-- 产品5 -->
                 <div class="product-card" onclick="openModal('product5')">
                     <img src="images/product5.jpg" alt="Heated Display Cabinet S-100">
                     <h3>Heated Display Cabinet S-100</h3>
                     <p>Double Glass · Constant Temp · For Dessert Shops</p>
                 </div>
-                <!-- 产品6 -->
                 <div class="product-card" onclick="openModal('product6')">
                     <img src="images/product6.jpg" alt="Modular Workstation C-600">
                     <h3>Modular Workstation C-600</h3>
@@ -125,9 +119,10 @@
             <div class="contact-wrapper">
                 <div class="contact-info">
                     <p>📞 <strong>Phone:</strong> +86 138 XXXX XXXX</p>
-                    <p>📧 <strong>Email:</strong> sales@kfcatering.com</p>
+                    <p>📧 <strong>Email:</strong> <a href="mailto:sales@kfcatering.com">sales@kfcatering.com</a></p>
                     <p>🏭 <strong>Address:</strong> No.88 Zhangjiang Rd, Shanghai, China</p>
                 </div>
+                <!-- ✅ 修复 Formspree 表单 -->
                 <form class="contact-form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
                     <input type="text" name="name" placeholder="Your Name" required>
                     <input type="email" name="email" placeholder="Your Email" required>
@@ -157,21 +152,18 @@
             <span class="close" onclick="closeContactModal()">&times;</span>
             <h2>Contact Customer Service</h2>
             <div class="contact-options">
-                <!-- WhatsApp -->
                 <div class="contact-option">
                     <h3>💬 WhatsApp</h3>
                     <p>+86 138 XXXX XXXX</p>
                     <img src="images/whatsapp_qr.jpg" alt="WhatsApp QR Code" class="qr-code">
                     <p class="note">Scan to chat or click number</p>
                 </div>
-                <!-- 微信 -->
                 <div class="contact-option">
                     <h3>📱 WeChat</h3>
                     <p>KFcateringGlobal</p>
                     <img src="images/wechat_qr.jpg" alt="WeChat QR Code" class="qr-code">
                     <p class="note">Scan to add WeChat</p>
                 </div>
-                <!-- Email -->
                 <div class="contact-option">
                     <h3>✉️ Email</h3>
                     <p><a href="mailto:sales@kfcatering.com">sales@kfcatering.com</a></p>
