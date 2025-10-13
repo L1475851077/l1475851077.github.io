@@ -395,3 +395,87 @@ footer {
         height: 150px;
     }
 }
+
+/* ========== Product List & Detail Pages ========== */
+.products-page .container {
+    padding: 80px 0;
+}
+
+.product-card-link {
+    text-decoration: none;
+    color: inherit;
+    display: block;
+}
+
+.product-card-link:hover .product-card {
+    transform: translateY(-5px);
+}
+
+/* Product Detail */
+.product-detail {
+    padding: 80px 0;
+    background: #fff;
+}
+
+.product-detail .container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2.5rem;
+    align-items: start;
+}
+
+.product-images img {
+    width: 100%;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.product-info h1 {
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+}
+
+.subtitle {
+    color: #d63031;
+    font-weight: 500;
+    margin-bottom: 1.5rem;
+}
+
+.product-info ul {
+    padding-left: 1.5rem;
+    margin: 1rem 0;
+    color: #444;
+}
+
+.specs-table {
+    width: 100%;
+    margin: 1.2rem 0;
+    border-collapse: collapse;
+}
+
+.specs-table td {
+    padding: 0.6rem 0;
+    border-bottom: 1px solid #eee;
+}
+
+.specs-table td:first-child {
+    font-weight: 600;
+    width: 45%;
+}
+
+.cta-section {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid #eee;
+}
+
+.cta-section .btn {
+    margin-top: 0.8rem;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+    .product-detail .container {
+        grid-template-columns: 1fr;
+    }
+}
