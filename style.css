@@ -54,7 +54,8 @@ nav a:hover {
 
 /* Hero */
 .hero {
-    background: linear-gradient(rgba(0,0,0,0.6), rgba(0,0,0,0.6)), url('https://via.placeholder.com/1920x800') center/cover no-repeat;
+    background: linear-gradient(rgba(0,0,0,0.9), rgba(0,0,0,0.9)), 
+    url('images/logo.png') center/cover no-repeat;
     color: white;
     text-align: center;
     padding: 120px 20px;
