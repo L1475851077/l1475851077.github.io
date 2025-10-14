@@ -9,6 +9,14 @@ body {
     line-height: 1.6;
     color: #333;
     background: #f9f9f9;
+    opacity: 0;
+    transform: translateY(10px);
+    transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+}
+
+body.loaded {
+  opacity: 1;
+  transform: translateY(0);
 }
 
 .container {
@@ -488,4 +496,53 @@ footer {
     .product-detail .container {
         grid-template-columns: 1fr;
     }
+}
+
+/* View All 链接样式 */
+/* .view-all-link {
+    font-size: 1.2rem;
+    font-weight: 400;
+    color: #d63031;
+    text-decoration: none;
+    margin-left: 16px;
+}
+.view-all-link:hover {
+    text-decoration: underline;
+} */
+
+/* Hot Products 包裹容器（相对定位，供浮窗定位） */
+.products-wrapper {
+    position: relative;
+}
+
+@media (max-width: 768px) {
+    .view-all-float {
+        top: -8px;
+        right: 0;
+        font-size: 0.9rem;
+        padding: 4px 12px;
+    }
+}
+
+/* 悬浮“View All”按钮 */
+.view-all-float {
+    position: absolute;
+    top: -42px;
+    right: -12px;
+    background: rgba(214, 48, 49, 0.9); /* KFcatering 主色 #d63031 半透 */
+    color: white;
+    padding: 6px 16px;
+    border-radius: 20px;
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 500;
+    z-index: 10;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.view-all-float:hover {
+    background: rgba(214, 48, 49, 1);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
 }
