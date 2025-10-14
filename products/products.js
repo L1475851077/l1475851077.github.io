@@ -115,3 +115,8 @@ document.addEventListener('DOMContentLoaded', () => {
         renderProducts();
     });
 });
+
+// 等待页面资源加载完成后触发动画
+window.addEventListener('load', () => {
+  document.body.classList.add('loaded');
+});
