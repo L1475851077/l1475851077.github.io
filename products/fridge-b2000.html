@@ -16,10 +16,11 @@
         <div class="container">
             <div class="logo">
                 <img src="../images/logo.png" alt="KFcatering Logo" class="logo-img">
-                KFcatering</div>
+                KFcatering
+            </div>
             <nav>
                 <a href="../index.html">Home</a>
-                <a href="../products/">Products</a>
+                <a href="../products/index.html">Products</a>
                 <a href="../index.html#contact">Contact</a>
             </nav>
         </div>
@@ -28,30 +29,17 @@
     <main class="product-detail">
         <div class="container">
             <div class="product-images">
-                <img src="../images/photo-冰箱.jpg" alt="Commercial Double Door Fridge B-2000">
+                <img id="productImage" src="" alt="">
             </div>
             <div class="product-info">
-                <h1>Commercial Double Door Fridge B-2000</h1>
-                <p class="subtitle">304 Stainless Steel · Energy Saving · 3-Year Warranty</p>
+                <h1 id="productName"></h1>
+                <p class="subtitle" id="productSubtitle"></p>
 
                 <h2>Key Features</h2>
-                <ul>
-                    <li>Full 304 food-grade stainless steel interior & exterior</li>
-                    <li>Dual evaporator system for stable temperature control</li>
-                    <li>Energy-efficient compressor with R290 eco-refrigerant</li>
-                    <li>Adjustable shelves, total capacity 800L</li>
-                    <li>Factory direct – no middleman markup</li>
-                </ul>
+                <ul id="productFeatures"></ul>
 
                 <h2>Technical Specifications</h2>
-                <table class="specs-table">
-                    <tr><td>Model</td><td>B-2000</td></tr>
-                    <tr><td>Capacity</td><td>800L</td></tr>
-                    <tr><td>Material</td><td>304 Stainless Steel</td></tr>
-                    <tr><td>Cooling System</td><td>Fan Cooling, Frost-Free</td></tr>
-                    <tr><td>Noise Level</td><td><45dB</td></tr>
-                    <tr><td>Warranty</td><td>3 Years Global</td></tr>
-                </table>
+                <table class="specs-table" id="productSpecs"></table>
 
                 <div class="cta-section">
                     <p>We offer <strong>free kitchen layout design</strong> for all orders.</p>
@@ -66,5 +54,56 @@
             <p>© 2025 KFcatering Commercial Kitchen Equipment Co., Ltd.</p>
         </div>
     </footer>
+
+    <script>
+        // ===== 每个商品只需修改这里的 data =====
+        const productData = {
+            name: "Commercial Double Door Fridge B-2000",
+            subtitle: "304 Stainless Steel · Energy Saving · 3-Year Warranty",
+            image: "../images/photo-冰箱.jpg",
+            features: [
+                "Full 304 food-grade stainless steel interior & exterior",
+                "Dual evaporator system for stable temperature control",
+                "Energy-efficient compressor with R290 eco-refrigerant",
+                "Adjustable shelves, total capacity 800L",
+                "Factory direct – no middleman markup"
+            ],
+            specs: {
+                "Model": "B-2000",
+                "Capacity": "800L",
+                "Material": "304 Stainless Steel",
+                "Cooling System": "Fan Cooling, Frost-Free",
+                "Noise Level": "<45dB",
+                "Warranty": "3 Years Global"
+            }
+        };
+
+        // ===== 自动渲染 =====
+        document.getElementById('productName').textContent = productData.name;
+        document.getElementById('productSubtitle').textContent = productData.subtitle;
+        document.getElementById('productImage').src = productData.image;
+        document.getElementById('productImage').alt = productData.name;
+
+        // 渲染 Features
+        const featuresList = document.getElementById('productFeatures');
+        productData.features.forEach(f => {
+            const li = document.createElement('li');
+            li.textContent = f;
+            featuresList.appendChild(li);
+        });
+
+        // 渲染 Specs
+        const specsTable = document.getElementById('productSpecs');
+        for (const [key, value] of Object.entries(productData.specs)) {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `<td>${key}</td><td>${value}</td>`;
+            specsTable.appendChild(tr);
+        }
+
+        // 等待页面资源加载完成后触发动画
+        window.addEventListener('load', () => {
+            document.body.classList.add('loaded');
+        });
+    </script>
 </body>
 </html>
