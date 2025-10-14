@@ -1,0 +1,67 @@
+/* products/products.css */
+
+/* 搜索与侧边栏布局 */
+.products-page .container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 30px;
+    padding: 80px 0;
+}
+
+.sidebar {
+    width: 240px;
+    flex-shrink: 0;
+}
+
+.search-box {
+    width: 100%;
+    padding: 12px 16px;
+    margin-bottom: 25px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-family: inherit;
+}
+
+.category-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.category-list li {
+    margin-bottom: 12px;
+}
+
+.category-list a {
+    display: block;
+    padding: 8px 12px;
+    text-decoration: none;
+    color: #555;
+    border-radius: 5px;
+    transition: all 0.2s;
+}
+
+.category-list a:hover,
+.category-list a.active {
+    background: #d63031;
+    color: white;
+}
+
+.main-content {
+    flex: 1;
+    min-width: 300px;
+}
+
+/* 响应式 */
+@media (max-width: 768px) {
+    .products-page .container {
+        flex-direction: column;
+    }
+    .sidebar {
+        width: 100%;
+    }
+    .search-box {
+        margin-bottom: 20px;
+    }
+}
