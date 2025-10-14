@@ -83,7 +83,3 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
   });
 });
 
-// ===== 页面淡入动画（提升跳转体验）=====
-window.addEventListener('load', () => {
-  document.body.classList.add('page-loaded');
-});
