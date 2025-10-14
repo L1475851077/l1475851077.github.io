@@ -45,7 +45,17 @@ const allProducts = [
 ];
 
 // ===== 配置哪些是热销品（只需改这里！）=====
-const hotProductIds = ['fridge-b2000', 'oven-o300', ,'worktable-w500','dishwasher-d800','cabinet-s100','workstation-c600',];
+const hotProductIds = ['fridge-b2000', 'oven-o300','worktable-w500','dishwasher-d800','cabinet-s100','workstation-c600',];
+
+// 打开联系弹窗
+function openContactModal() {
+    document.getElementById('contactModal').style.display = 'block';
+};
+
+// 关闭联系弹窗
+function closeContactModal() {
+    document.getElementById('contactModal').style.display = 'none';
+};
 
 // ===== 渲染首页 Hot Products =====
 function renderHotProducts() {
