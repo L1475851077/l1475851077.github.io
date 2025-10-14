@@ -6,6 +6,7 @@
     <title>All Products | KFcatering</title>
     <meta name="description" content="Browse all commercial kitchen equipment from KFcatering: fridges, ovens, worktables, dishwashers and more. Factory direct, global shipping.">
     <link rel="stylesheet" href="../style.css">
+    <link rel="stylesheet" href="products.css">
     <link rel="icon" type="image/x-icon" href="../images/logo.ico"/>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -16,7 +17,8 @@
         <div class="container">
             <div class="logo">
                 <img src="../images/logo.png" alt="KFcatering Logo" class="logo-img">
-                KFcatering</div>
+                KFcatering
+            </div>
             <nav>
                 <a href="../index.html">Home</a>
                 <a href="../index.html#why">Why Us</a>
@@ -27,50 +29,16 @@
 
     <main class="products-page">
         <div class="container">
-            <h2>All Products</h2>
-            <div class="product-grid">
-                <a href="fridge-b2000.html" class="product-card-link">
-                    <div class="product-card">
-                        <img src="../images/photo-冰箱.jpg" alt="Commercial Double Door Fridge B-2000">
-                        <h3>Commercial Double Door Fridge B-2000</h3>
-                        <p>304 Stainless Steel · Energy Saving · 3-Year Warranty</p>
-                    </div>
-                </a>
-                <a href="oven-o300.html" class="product-card-link">
-                    <div class="product-card">
-                        <img src="../images/photo-冰箱.jpg" alt="3-Layer Electric Oven O-300">
-                        <h3>3-Layer Electric Oven O-300</h3>
-                        <p>Precise Temperature · Independent Control · For Bakeries</p>
-                    </div>
-                </a>
-                <a href="worktable-w500.html" class="product-card-link">
-                    <div class="product-card">
-                        <img src="../images/photo-冰箱.jpg" alt="Stainless Steel Worktable W-500">
-                        <h3>Stainless Steel Worktable W-500</h3>
-                        <p>Thick Surface · Anti-Slip · Multi-Functional Rack</p>
-                    </div>
-                </a>
-                <a href="dishwasher-d800.html" class="product-card-link">
-                    <div class="product-card">
-                        <img src="../images/photo-冰箱.jpg" alt="Commercial Dishwasher D-800">
-                        <h3>Commercial Dishwasher D-800</h3>
-                        <p>High-Temp Sanitize · Fast Wash · Water Saving</p>
-                    </div>
-                </a>
-                <a href="cabinet-s100.html" class="product-card-link">
-                    <div class="product-card">
-                        <img src="../images/photo-冰箱.jpg" alt="Heated Display Cabinet S-100">
-                        <h3>Heated Display Cabinet S-100</h3>
-                        <p>Double Glass · Constant Temp · For Dessert Shops</p>
-                    </div>
-                </a>
-                <a href="workstation-c600.html" class="product-card-link">
-                    <div class="product-card">
-                        <img src="../images/photo-冰箱.jpg" alt="Modular Workstation C-600">
-                        <h3>Modular Workstation C-600</h3>
-                        <p>Flexible Design · Space Saving · Customizable</p>
-                    </div>
-                </a>
+            <!-- 侧边栏：搜索 + 分类 -->
+            <aside class="sidebar">
+                <input type="text" id="searchInput" class="search-box" placeholder="Search products...">
+                <ul class="category-list" id="categoryList"></ul>
+            </aside>
+
+            <!-- 商品列表 -->
+            <div class="main-content">
+                <h2>All Products</h2>
+                <div class="product-grid" id="productGrid"></div>
             </div>
         </div>
     </main>
@@ -81,6 +49,6 @@
         </div>
     </footer>
 
-    <script src="../script.js"></script>
+    <script src="products.js"></script>
 </body>
 </html>
