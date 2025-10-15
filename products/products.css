@@ -20,6 +20,15 @@ body.loaded {
     padding: 80px 0;
 }
 
+.hamburger {
+  display: none; /* 桌面隐藏汉堡按钮 */
+}
+
+nav {
+  display: flex;
+  gap: 20px;
+}
+
 .sidebar {
     width: 240px;
     flex-shrink: 0;
@@ -69,6 +78,37 @@ body.loaded {
 @media (max-width: 768px) {
     .products-page .container {
         flex-direction: column;
+    }
+    .hamburger {
+        display: block;
+        background: none;
+        border: none;
+        font-size: 24px;
+        cursor: pointer;
+        margin-left: auto; /* 靠右对齐 */
+        color: #333;
+  }
+
+    nav {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background: white;
+        flex-direction: column;
+        padding: 16px 0;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        display: none; /* 默认隐藏 */
+        z-index: 1000;
+    }
+
+    nav.show {
+        display: flex;
+    }
+
+    nav a {
+        padding: 12px 20px;
+        text-align: left;
     }
     .sidebar {
         width: 100%;
