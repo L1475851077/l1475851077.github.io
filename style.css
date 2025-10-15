@@ -14,9 +14,10 @@ body {
     transition: opacity 0.4s ease-out, transform 0.4s ease-out;
 }
 
-body.loaded {
-  opacity: 1;
-  transform: translateY(0);
+body.loaded,
+.loaded {
+    opacity: 1;
+    transform: translateY(0);
 }
 
 .container {
@@ -55,6 +56,15 @@ header .container {
   vertical-align: middle; /* 让图片和文字垂直居中对齐 */
   transform: translateY(-15px); /* 向上移动 3 像素，按需调整 */
   margin-right: 5px;  /* 图片和文字之间的间距 */
+}
+
+.hamburger {
+  display: none; /* 桌面隐藏汉堡按钮 */
+}
+
+nav {
+  display: flex;
+  gap: 20px;
 }
 
 nav a {
@@ -335,6 +345,8 @@ footer {
     border-radius: 15px;
     position: relative;
     text-align: center;
+    opacity: 1 !important;
+    transform: none !important;
 }
 
 .contact-modal h2 {
@@ -350,12 +362,25 @@ footer {
     margin-top: 30px;
 }
 
+/* .contact-option {
+    background: #f8f9fa;
+    padding: 25px;
+    border-radius: 10px;
+    text-align: center;
+    transition: transform 0.3s;
+} */
+
 .contact-option {
     background: #f8f9fa;
     padding: 25px;
     border-radius: 10px;
     text-align: center;
     transition: transform 0.3s;
+    min-height: 280px; /* ← 关键：强制最小高度 */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
 }
 
 .contact-option:hover {
@@ -368,6 +393,17 @@ footer {
     margin-bottom: 15px;
     font-size: 1.3rem;
 }
+/* 
+.qr-code {
+    width: 180px;
+    height: 180px;
+    margin: 15px auto;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    display: block;
+    background: #f8f9fa; 
+    object-fit: cover;
+} */
 
 .qr-code {
     width: 180px;
@@ -376,6 +412,8 @@ footer {
     border: 1px solid #eee;
     border-radius: 8px;
     display: block;
+    background: #e9ecef; /* 更明显的 fallback 背景 */
+    object-fit: cover;
 }
 
 .note {
@@ -390,8 +428,36 @@ footer {
         font-size: 2.2rem;
     }
 
+    .hamburger {
+        display: block;
+        background: none;
+        border: none;
+        font-size: 24px;
+        cursor: pointer;
+        margin-left: auto; /* 靠右对齐 */
+        color: #333;
+  }
+
     nav {
-        display: none;
+        position: absolute;
+        top: 100%;
+        left: 0;
+        width: 100%;
+        background: white;
+        flex-direction: column;
+        padding: 16px 0;
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        display: none; /* 默认隐藏 */
+        z-index: 1000;
+    }
+
+    nav.show {
+        display: flex;
+    }
+
+    nav a {
+        padding: 12px 20px;
+        text-align: left;
     }
 
     .product-grid,
