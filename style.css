@@ -612,3 +612,15 @@ footer {
     transform: translateY(-2px);
     box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
 }
+
+/* 去掉热销商品卡片链接的下划线 */
+.product-link {
+    text-decoration: none;
+    color: inherit; /* 保持 h3 和 p 原有颜色 */
+}
+
+/* 确保内部元素也不显示下划线（保险起见） */
+.product-link h3,
+.product-link p {
+    text-decoration: none;
+}
