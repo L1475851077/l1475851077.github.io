@@ -117,3 +117,15 @@ nav {
         margin-bottom: 20px;
     }
 }
+
+/* 所有商品页卡片动画 */
+.product-card {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.product-card.animate-in {
+  opacity: 1;
+  transform: translateY(0);
+}
