@@ -1,6 +1,21 @@
-// 等待页面资源加载完成后触发动画
-window.addEventListener('load', () => {
-  document.body.classList.add('loaded');
+// ===== 页面动画初始化（支持返回缓存）=====
+function initPageAnimation() {
+    if (!document.body.classList.contains('loaded')) {
+        document.body.classList.add('loaded');
+    }
+}
+
+// 首次加载：等所有资源（图片等）加载完再触发动画
+window.addEventListener('load', initPageAnimation);
+
+// 从浏览器后退/前进缓存（bfcache）恢复时重新触发动画
+window.addEventListener('pageshow', (event) => {
+    if (event.persisted) {
+        // 页面来自缓存，强制重置动画状态
+        document.body.classList.remove('loaded');
+        // 稍等一帧，重新添加 loaded 触发动画
+        requestAnimationFrame(initPageAnimation);
+    }
 });
 
 
@@ -50,9 +65,9 @@ const hotProductIds = ['fridge-b2000', 'oven-o300','worktable-w500','dishwasher-
 // 打开联系弹窗
 function openContactModal() {
   //修复弹窗被动画遮挡
-    document.body.style.transition = 'none';
-    document.body.style.opacity = '1';
-    document.body.style.transform = 'none';
+    // document.body.style.transition = 'none';
+    // document.body.style.opacity = '1';
+    // document.body.style.transform = 'none';
   //打开弹窗
     document.getElementById('contactModal').style.display = 'block';
 };
