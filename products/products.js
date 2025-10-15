@@ -81,6 +81,30 @@ function renderCategories() {
 }
 
 // ===== 渲染商品列表 =====
+// function renderProducts() {
+//     const filtered = products.filter(product => {
+//         const matchesCategory = currentCategory === 'all' || product.category === currentCategory;
+//         const matchesSearch = product.name.toLowerCase().includes(searchTerm) || 
+//                               product.description.toLowerCase().includes(searchTerm);
+//         return matchesCategory && matchesSearch;
+//     });
+
+//     if (filtered.length === 0) {
+//         productGrid.innerHTML = '<p style="grid-column:1/-1; text-align:center; color:#888;">No products found.</p>';
+//         return;
+//     }
+
+//     productGrid.innerHTML = filtered.map(product => `
+//         <a href="${product.id}.html" class="product-card-link">
+//             <div class="product-card">
+//                 <img src="${product.image}" alt="${product.name}">
+//                 <h3>${product.name}</h3>
+//                 <p>${product.description}</p>
+//             </div>
+//         </a>
+//     `).join('');
+// }
+
 function renderProducts() {
     const filtered = products.filter(product => {
         const matchesCategory = currentCategory === 'all' || product.category === currentCategory;
@@ -89,12 +113,16 @@ function renderProducts() {
         return matchesCategory && matchesSearch;
     });
 
+    // 清空容器
+    productGrid.innerHTML = '';
+
     if (filtered.length === 0) {
         productGrid.innerHTML = '<p style="grid-column:1/-1; text-align:center; color:#888;">No products found.</p>';
         return;
     }
 
-    productGrid.innerHTML = filtered.map(product => `
+    // 生成 HTML 字符串（不带动画类）
+    const htmlString = filtered.map(product => `
         <a href="${product.id}.html" class="product-card-link">
             <div class="product-card">
                 <img src="${product.image}" alt="${product.name}">
@@ -103,6 +131,17 @@ function renderProducts() {
             </div>
         </a>
     `).join('');
+
+    // 插入 DOM
+    productGrid.innerHTML = htmlString;
+
+    // 等下一帧，触发动画
+    requestAnimationFrame(() => {
+        const cards = productGrid.querySelectorAll('.product-card');
+        cards.forEach(card => {
+            card.classList.add('animate-in');
+        });
+    });
 }
 
 // ===== 初始化 =====
