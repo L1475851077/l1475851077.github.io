@@ -18,7 +18,11 @@
                 <img src="../images/logo.png" alt="KFcatering Logo" class="logo-img">
                 KFcatering
             </div>
-            <nav>
+        <button class="hamburger" id="hamburger" aria-label="Toggle navigation">
+            &#9776; <!-- 或使用 <span></span> 自定义图标 -->
+        </button>
+
+            <nav id="mainNav" >
                 <a href="../index.html">Home</a>
                 <a href="../products/index.html">Products</a>
                 <a href="../index.html#contact">Contact</a>
@@ -99,7 +103,25 @@
             tr.innerHTML = `<td>${key}</td><td>${value}</td>`;
             specsTable.appendChild(tr);
         }
+        document.addEventListener('DOMContentLoaded', () => {
+    // ✅ 商品详情页不需要 renderCategories / renderProducts，直接删掉！
 
+    const hamburger = document.getElementById('hamburger');
+    const nav = document.getElementById('mainNav');
+
+    if (hamburger && nav) {
+        hamburger.addEventListener('click', (e) => {
+            e.stopPropagation();
+            nav.classList.toggle('show');
+        });
+
+        document.addEventListener('click', (e) => {
+            if (!nav.contains(e.target) && !hamburger.contains(e.target)) {
+                nav.classList.remove('show');
+            }
+        });
+    }
+});
         // 等待页面资源加载完成后触发动画
         window.addEventListener('load', () => {
             document.body.classList.add('loaded');
