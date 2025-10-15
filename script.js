@@ -49,6 +49,11 @@ const hotProductIds = ['fridge-b2000', 'oven-o300','worktable-w500','dishwasher-
 
 // 打开联系弹窗
 function openContactModal() {
+  //修复弹窗被动画遮挡
+    document.body.style.transition = 'none';
+    document.body.style.opacity = '1';
+    document.body.style.transform = 'none';
+  //打开弹窗
     document.getElementById('contactModal').style.display = 'block';
 };
 
