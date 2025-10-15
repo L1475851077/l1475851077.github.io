@@ -82,6 +82,25 @@ function renderHotProducts() {
 // ===== 页面加载完成后初始化 =====
 document.addEventListener('DOMContentLoaded', () => {
   renderHotProducts();
+
+  const hamburger = document.getElementById('hamburger');
+  const nav = document.getElementById('mainNav');
+
+  if (hamburger && nav) {
+    // 切换菜单
+    hamburger.addEventListener('click', (e) => {
+      e.stopPropagation(); // 防止点击汉堡按钮时触发 document 的点击
+      nav.classList.toggle('show');
+    });
+
+    // 点击页面其他地方时关闭菜单
+    document.addEventListener('click', (e) => {
+      if (!nav.contains(e.target) && !hamburger.contains(e.target)) {
+        nav.classList.remove('show');
+      }
+    });
+  }
+  
 });
 
 // ===== 平滑滚动（保留原有功能）=====
