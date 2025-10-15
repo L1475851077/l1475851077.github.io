@@ -299,9 +299,28 @@ footer {
 }
 
 /* Contact Float Button & Modal */
-.contact-float-btn {
+/* .contact-float-btn {
     position: fixed;
     bottom: 30px;
+    right: 30px;
+    background: #25D366;
+    color: white;
+    padding: 15px 25px;
+    border-radius: 30px;
+    font-weight: 600;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+    cursor: pointer;
+    z-index: 999;
+    font-size: 1rem;
+    transition: all 0.3s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+} */
+
+.contact-float-btn {
+    position: fixed;
+    bottom: 60px;
     right: 30px;
     background: #25D366;
     color: white;
@@ -467,11 +486,18 @@ footer {
         grid-template-columns: 1fr;
     }
 
-    .contact-float-btn {
+    /* .contact-float-btn {
         bottom: 20px;
         right: 20px;
         padding: 12px 20px;
         font-size: 0.9rem;
+    } */
+
+     .contact-float-btn {
+        bottom: calc(50px + env(safe-area-inset-bottom, 20px));
+        right: 20px;
+        padding: 12px 20px;
+        font-size: 0.95rem;
     }
 
     .qr-code {
