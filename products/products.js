@@ -5,14 +5,12 @@
 
 // ===== DOM 元素 =====
 
-const productGrid = document.getElementById('productGrid');
-
 let currentCategory = 'all';
 let searchTerm = '';
 
 // ===== 渲染分类列表 =====
 function renderCategories() {
-    categoryList.innerHTML = categories.map(cat => 
+    categoryList.innerHTML = CATEGORIES.map(cat => 
         `<li><a href="#" data-id="${cat.id}" class="${cat.id === currentCategory ? 'active' : ''}">${cat.name}</a></li>`
     ).join('');
     
