@@ -2,7 +2,7 @@
 
 /* 搜索与侧边栏布局 */
 /* 页面淡入动画 */
-body {
+/* body {
   opacity: 0;
   transform: translateY(10px);
   transition: opacity 0.4s ease-out, transform 0.4s ease-out;
@@ -11,7 +11,7 @@ body {
 body.loaded {
   opacity: 1;
   transform: translateY(0);
-}
+} */
 
 .products-page .container {
     display: flex;
