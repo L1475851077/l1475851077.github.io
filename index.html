@@ -39,13 +39,57 @@
     </header>
 
     <!-- 首屏 Banner -->
-    <section class="hero">
+    <!-- <section class="hero">
         <div class="container">
             <h1>Professional Western Kitchen Equipment</h1>
             <p>10+ Years Experience · Factory Direct · Free Layout Design · Global Warranty</p>
             <a href="#contact" class="btn">Send Inquiry</a>
         </div>
-    </section>
+    </section> -->
+
+    <!-- 轮播图区域 -->
+<section class="carousel-section">
+    <div class="carousel">
+        <!-- 幻灯片 1 -->
+        <div class="slide active">
+            <img src="images/carousel1.jpg" alt="Professional Western Kitchen Equipment">
+            <div class="slide-content">
+                <h1>Professional Western Kitchen Equipment</h1>
+                <p>10+ Years Experience · Factory Direct · Free Layout Design · Global Warranty</p>
+                <a href="#contact" class="btn">Send Inquiry</a>
+            </div>
+        </div>
+        <!-- 幻灯片 2 -->
+        <div class="slide">
+            <img src="images/carousel2.jpg" alt="Commercial Kitchen Solutions for Hotels">
+            <div class="slide-content">
+                <h1>Trusted by Global Restaurants</h1>
+                <p>Custom Layouts · Energy-Efficient Equipment · 24/7 Support</p>
+                <a href="#contact" class="btn">Get a Free Quote</a>
+            </div>
+        </div>
+        <!-- 幻灯片 3 -->
+        <div class="slide">
+            <img src="images/carousel3.jpg" alt="High-End Bakery Equipment">
+            <div class="slide-content">
+                <h1>Complete Bakery & Restaurant Solutions</h1>
+                <p>Ovens, Fridges, Workstations – All in One Place</p>
+                <a href="products/index.html" class="btn">View Products</a>
+            </div>
+        </div>
+
+        <!-- 左右切换按钮（可选） -->
+        <button class="carousel-btn prev" onclick="changeSlide(-1)">‹</button>
+        <button class="carousel-btn next" onclick="changeSlide(1)">›</button>
+
+        <!-- 指示器（可选） -->
+        <div class="carousel-indicators">
+            <span class="indicator active" onclick="currentSlide(1)"></span>
+            <span class="indicator" onclick="currentSlide(2)"></span>
+            <span class="indicator" onclick="currentSlide(3)"></span>
+        </div>
+    </div>
+</section>
 
     <!-- 公司简介 -->
     <section class="intro">
