@@ -123,7 +123,7 @@ document.addEventListener('DOMContentLoaded', () => {
 //     });
 //   }
     
-// });
+});
 
 // 等待页面资源加载完成后触发动画
 window.addEventListener('load', () => {
