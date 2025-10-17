@@ -1,63 +1,10 @@
 // products/products.js
 
 // ===== 商品数据 =====
-const categories = [
-    { id: 'all', name: 'All Products' },
-    { id: 'fridge', name: 'Refrigeration' },
-    { id: 'oven', name: 'Ovens' },
-    { id: 'worktable', name: 'Worktables & Stations' },
-    { id: 'dishwasher', name: 'Dishwashers' },
-    { id: 'cabinet', name: 'Display Cabinets' }
-];
 
-const products = [
-    {
-        id: 'fridge-b2000',
-        name: 'Commercial Double Door Fridge B-2000',
-        description: '304 Stainless Steel · Energy Saving · 3-Year Warranty',
-        category: 'fridge',
-        image: '../images/photo-冰箱.jpg'
-    },
-    {
-        id: 'oven-o300',
-        name: '3-Layer Electric Oven O-300',
-        description: 'Precise Temperature · Independent Control · For Bakeries',
-        category: 'oven',
-        image: '../images/photo-冰箱.jpg'
-    },
-    {
-        id: 'worktable-w500',
-        name: 'Stainless Steel Worktable W-500',
-        description: 'Thick Surface · Anti-Slip · Multi-Functional Rack',
-        category: 'worktable',
-        image: '../images/photo-冰箱.jpg'
-    },
-    {
-        id: 'dishwasher-d800',
-        name: 'Commercial Dishwasher D-800',
-        description: 'High-Temp Sanitize · Fast Wash · Water Saving',
-        category: 'dishwasher',
-        image: '../images/photo-冰箱.jpg'
-    },
-    {
-        id: 'cabinet-s100',
-        name: 'Heated Display Cabinet S-100',
-        description: 'Double Glass · Constant Temp · For Dessert Shops',
-        category: 'cabinet',
-        image: '../images/photo-冰箱.jpg'
-    },
-    {
-        id: 'workstation-c600',
-        name: 'Modular Workstation C-600',
-        description: 'Flexible Design · Space Saving · Customizable',
-        category: 'worktable',
-        image: '../images/photo-冰箱.jpg'
-    }
-];
 
 // ===== DOM 元素 =====
-const searchInput = document.getElementById('searchInput');
-const categoryList = document.getElementById('categoryList');
+
 const productGrid = document.getElementById('productGrid');
 
 let currentCategory = 'all';
@@ -80,38 +27,24 @@ function renderCategories() {
     });
 }
 
-// ===== 渲染商品列表 =====
-// function renderProducts() {
-//     const filtered = products.filter(product => {
-//         const matchesCategory = currentCategory === 'all' || product.category === currentCategory;
-//         const matchesSearch = product.name.toLowerCase().includes(searchTerm) || 
-//                               product.description.toLowerCase().includes(searchTerm);
-//         return matchesCategory && matchesSearch;
-//     });
-
-//     if (filtered.length === 0) {
-//         productGrid.innerHTML = '<p style="grid-column:1/-1; text-align:center; color:#888;">No products found.</p>';
-//         return;
-//     }
-
-//     productGrid.innerHTML = filtered.map(product => `
-//         <a href="${product.id}.html" class="product-card-link">
-//             <div class="product-card">
-//                 <img src="${product.image}" alt="${product.name}">
-//                 <h3>${product.name}</h3>
-//                 <p>${product.description}</p>
-//             </div>
-//         </a>
-//     `).join('');
-// }
 
 function renderProducts() {
-    const filtered = products.filter(product => {
+    const productGrid = document.getElementById('productGrid');
+    const titleElement = document.getElementById('productsTitle');
+    
+    const filtered = PRODUCTS.filter(product => {
         const matchesCategory = currentCategory === 'all' || product.category === currentCategory;
         const matchesSearch = product.name.toLowerCase().includes(searchTerm) || 
                               product.description.toLowerCase().includes(searchTerm);
         return matchesCategory && matchesSearch;
     });
+
+            // === 动态更新标题 ===
+    if (titleElement) {
+        const currentCat = CATEGORIES.find(cat => cat.id === currentCategory);
+        const title = currentCat ? currentCat.name : 'All Products';
+        titleElement.textContent = title;
+    }
 
     // 清空容器
     productGrid.innerHTML = '';
@@ -146,6 +79,15 @@ function renderProducts() {
 
 // ===== 初始化 =====
 document.addEventListener('DOMContentLoaded', () => {
+    const searchInput = document.getElementById('searchInput');
+    const categoryList = document.getElementById('categoryList');
+
+        // 安全检查
+    if (!categoryList) {
+        console.error('Element #categoryList not found.');
+        return;
+    }
+    
     renderCategories();
     renderProducts();
 
