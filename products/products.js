@@ -25,7 +25,7 @@ function renderCategories() {
     });
 }
 
-
+// ===== 渲染商品列表 =====
 function renderProducts() {
     const productGrid = document.getElementById('productGrid');
     const titleElement = document.getElementById('productsTitle');
@@ -38,11 +38,22 @@ function renderProducts() {
     });
 
             // === 动态更新标题 ===
-    if (titleElement) {
-        const currentCat = CATEGORIES.find(cat => cat.id === currentCategory);
-        const title = currentCat ? currentCat.name : 'All Products';
-        titleElement.textContent = title;
+    // if (titleElement) {
+    //     const currentCat = CATEGORIES.find(cat => cat.id === currentCategory);
+    //     const title = currentCat ? currentCat.name : 'All Products';
+    //     titleElement.textContent = title;
+    // }
+        if (titleElement) {
+    const currentCat = CATEGORIES.find(cat => cat.id === currentCategory);
+    let title;
+    if (currentCategory === 'all') {
+        title = 'All Products'; // 保持原样，不拼接
+    } else {
+        title = currentCat ? currentCat.name + ' Products' : 'All Products';
     }
+    titleElement.textContent = title;
+    document.title = `Guangzhou Kingfood Catering Equipment | ${title}`;
+}
 
     // 清空容器
     productGrid.innerHTML = '';
