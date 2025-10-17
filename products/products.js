@@ -52,7 +52,7 @@ function renderProducts() {
         title = currentCat ? currentCat.name + ' Products' : 'All Products';
     }
     titleElement.textContent = title;
-    document.title = `Guangzhou Kingfood Catering Equipment | ${title}`;
+    document.title = `${title} | Guangzhou Kingfood Catering Equipment`;
 }
 
     // 清空容器
