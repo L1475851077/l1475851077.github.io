@@ -132,3 +132,35 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
   });
 });
 
+// 轮播图控制
+let currentSlideIndex = 0;
+const slides = document.querySelectorAll('.carousel .slide');
+const indicators = document.querySelectorAll('.carousel .indicator');
+
+function showSlide(index) {
+    // 循环处理
+    if (index >= slides.length) currentSlideIndex = 0;
+    else if (index < 0) currentSlideIndex = slides.length - 1;
+    else currentSlideIndex = index;
+
+    // 隐藏所有幻灯片
+    slides.forEach(slide => slide.classList.remove('active'));
+    indicators.forEach(ind => ind.classList.remove('active'));
+
+    // 显示当前幻灯片
+    slides[currentSlideIndex].classList.add('active');
+    indicators[currentSlideIndex].classList.add('active');
+}
+
+function changeSlide(direction) {
+    showSlide(currentSlideIndex + direction);
+}
+
+function currentSlide(n) {
+    showSlide(n - 1); // 因为 HTML 中是从 1 开始
+}
+
+// 自动播放（每 5 秒切换）
+setInterval(() => {
+    changeSlide(1);
+}, 5000);
