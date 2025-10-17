@@ -164,3 +164,14 @@ function currentSlide(n) {
 setInterval(() => {
     changeSlide(1);
 }, 5000);
+
+
+//微信二维码抖动
+  function triggerQrAnimation() {
+    const qr = document.getElementById('wechatQr');
+    if (qr) {
+      qr.classList.remove('animate');
+      void qr.offsetWidth; // 触发重排，确保动画可重复
+      qr.classList.add('animate');
+    }
+  }
