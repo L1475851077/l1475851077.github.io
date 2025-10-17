@@ -129,3 +129,83 @@ nav {
   opacity: 1;
   transform: translateY(0);
 }
+
+/* ===== 产品卡片整体布局 ===== */
+.product-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 24px;
+}
+
+.product-card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+  height: 100%;
+}
+
+.product-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 16px;
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  /* box-shadow: 0 2px 6px rgba(0,0,0,0.05); */
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.4s ease, transform 0.4s ease;
+}
+
+.product-card.animate-in {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ===== 关键：适配 550x550 正方形图 ===== */
+.product-card img {
+  width: 100%;
+  height: auto;
+  max-height: 240px;        /* 限制最大高度，避免过大 */
+  object-fit: contain;      /* 完整显示，不裁剪 */
+  object-position: center;
+  display: block;
+  margin-bottom: 14px;
+  border-radius: 4px;
+  background-color: #ffffff;
+}
+
+.product-card h3 {
+  margin: 0 0 10px;
+  font-size: 1.1em;
+  line-height: 1.4;
+  /* color: #333; */
+}
+
+.product-card p {
+  margin: 0;
+  font-size: 0.95em;
+  /* color: #666; */
+  line-height: 1.5;
+}
+
+/* 消除灰色背景透出 */
+body,
+.main-content {
+  background-color: #ffffff !important;
+}
+
+
+/* 调整标题与卡片的对齐 */
+.main-content > h2 {
+  margin: 0 0 40px;       /* 移除默认 margin-top，控制下方间距 */
+  padding: 0;
+  font-size: 1.8em;
+  line-height: 1.2;
+}
+
+/* 确保 .main-content 无额外上边距 */
+.main-content {
+  padding: 0; /* 或只保留左右 padding，如 padding: 0 24px; */
+}
