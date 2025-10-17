@@ -10,6 +10,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <script src="../script.js" defer></script>
 </head>
 <body>
     <header>
@@ -59,6 +60,39 @@
         </div>
     </footer>
 
+    
+    <!-- WhatsApp/微信联系悬浮按钮 -->
+    <div id="contactFloatBtn" class="contact-float-btn" onclick="openContactModal()">
+        📞 Contact Us
+    </div>
+
+    <!-- 联系方式弹窗 -->
+    <div id="contactModal" class="contact-modal">
+        <div class="contact-modal-content">
+            <span class="close" onclick="closeContactModal()">&times;</span>
+            <h2>Contact Customer Service</h2>
+            <div class="contact-options">
+                <div class="contact-option">
+                    <h3>💬 WhatsApp</h3>
+                    <p>+86 138 XXXX XXXX</p>
+                    <img src="images/whatsapp_qr.jpg" alt="WhatsApp QR Code" class="qr-code">
+                    <p class="note">Scan to chat or click number</p>
+                </div>
+                <div class="contact-option">
+                    <h3>📱 WeChat</h3>
+                    <p>KFcateringGlobal</p>
+                    <img src="images/wechat_qr.jpg" alt="WeChat QR Code" class="qr-code">
+                    <p class="note">Scan to add WeChat</p>
+                </div>
+                <div class="contact-option">
+                    <h3>✉️ Email</h3>
+                    <p><a href="mailto:ling@kfcatering.com">ling@kfcatering.com</a></p>
+                    <p class="note">Reply within 24 hours</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
     <script>
         // ===== 每个商品只需修改这里的 data =====
         const productData = {
@@ -103,25 +137,25 @@
             tr.innerHTML = `<td>${key}</td><td>${value}</td>`;
             specsTable.appendChild(tr);
         }
-        document.addEventListener('DOMContentLoaded', () => {
-    // ✅ 商品详情页不需要 renderCategories / renderProducts，直接删掉！
+//         document.addEventListener('DOMContentLoaded', () => {
+//     // ✅ 商品详情页不需要 renderCategories / renderProducts，直接删掉！
 
-    const hamburger = document.getElementById('hamburger');
-    const nav = document.getElementById('mainNav');
+//     const hamburger = document.getElementById('hamburger');
+//     const nav = document.getElementById('mainNav');
 
-    if (hamburger && nav) {
-        hamburger.addEventListener('click', (e) => {
-            e.stopPropagation();
-            nav.classList.toggle('show');
-        });
+//     if (hamburger && nav) {
+//         hamburger.addEventListener('click', (e) => {
+//             e.stopPropagation();
+//             nav.classList.toggle('show');
+//         });
 
-        document.addEventListener('click', (e) => {
-            if (!nav.contains(e.target) && !hamburger.contains(e.target)) {
-                nav.classList.remove('show');
-            }
-        });
-    }
-});
+//         document.addEventListener('click', (e) => {
+//             if (!nav.contains(e.target) && !hamburger.contains(e.target)) {
+//                 nav.classList.remove('show');
+//             }
+//         });
+//     }
+// });
         // 等待页面资源加载完成后触发动画
         window.addEventListener('load', () => {
             document.body.classList.add('loaded');
