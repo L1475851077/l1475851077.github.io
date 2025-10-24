@@ -209,3 +209,58 @@ body,
 .main-content {
   padding: 0; /* 或只保留左右 padding，如 padding: 0 24px; */
 }
+
+
+/* ===== 粘性页脚：防止内容少时页脚上浮 ===== */
+html, body {
+  height: 100%;
+  margin: 0;
+}
+
+#mainContent {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh; /* 关键：至少占满整个视口高度 */
+}
+
+main.products-page {
+  flex: 1 0 auto; /* 自动撑开，填充剩余空间 */
+}
+
+footer {
+  flex-shrink: 0; /* 防止页脚被压缩 */
+}
+
+/* ===== 固定侧边栏（仅桌面端） ===== */
+@media (min-width: 769px) {
+  .products-page {
+    display: block; /* 退出 flex 布局，避免干扰 sticky */
+    position: relative;
+  }
+/* 
+  .products-page .container {
+    display: flex;
+    padding: 80px 0; 
+  }
+
+   */
+  .sidebar {
+    position: sticky;
+    top: 15%; /* 与 header 高度对齐（header ≈80px） */
+    height: fit-content;
+    max-height: calc(100vh - 120px); /* 防止过高溢出 */
+    overflow-y: auto; /* 内容多时侧边栏可滚动 */
+    align-self: flex-start;
+  }
+}
+
+.products-header {
+  padding: 22px 18px 10px; /* 上 → 28px（比之前多 8~12px），下 → 16px */
+}
+
+
+.products-page .container {
+  display: flex;
+  gap: 30px;
+  padding: 0 0 40px; /* 只保留底部 padding，顶部交给 .products-header */
+}
