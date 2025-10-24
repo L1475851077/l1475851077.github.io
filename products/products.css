@@ -112,6 +112,7 @@ nav {
     }
     .sidebar {
         width: 100%;
+        padding-top: 20px;
     }
     .search-box {
         margin-bottom: 20px;
@@ -237,13 +238,7 @@ footer {
     display: block; /* 退出 flex 布局，避免干扰 sticky */
     position: relative;
   }
-/* 
-  .products-page .container {
-    display: flex;
-    padding: 80px 0; 
-  }
 
-   */
   .sidebar {
     position: sticky;
     top: 15%; /* 与 header 高度对齐（header ≈80px） */
