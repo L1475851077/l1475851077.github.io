@@ -65,7 +65,7 @@ function renderProducts() {
 
     // 生成 HTML 字符串（不带动画类）
     const htmlString = filtered.map(product => `
-        <a href="${product.id}.html" class="product-card-link">
+        <a href="product_details/${product.id}.html" class="product-card-link">
             <div class="product-card">
                 <img src="${product.image}" alt="${product.name}">
                 <h3>${product.name}</h3>
@@ -105,23 +105,6 @@ document.addEventListener('DOMContentLoaded', () => {
         renderProducts();
     });
 
-//   const hamburger = document.getElementById('hamburger');
-//   const nav = document.getElementById('mainNav');
-
-//   if (hamburger && nav) {
-//     // 切换菜单
-//     hamburger.addEventListener('click', (e) => {
-//       e.stopPropagation(); // 防止点击汉堡按钮时触发 document 的点击
-//       nav.classList.toggle('show');
-//     });
-
-//     // 点击页面其他地方时关闭菜单
-//     document.addEventListener('click', (e) => {
-//       if (!nav.contains(e.target) && !hamburger.contains(e.target)) {
-//         nav.classList.remove('show');
-//       }
-//     });
-//   }
     
 });
 
