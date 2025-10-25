@@ -132,38 +132,63 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
   });
 });
 
+
 // 轮播图控制
-let currentSlideIndex = 0;
-const slides = document.querySelectorAll('.carousel .slide');
-const indicators = document.querySelectorAll('.carousel .indicator');
+document.addEventListener('DOMContentLoaded', () => {
+    const carousel = document.querySelector('.carousel');
+    if (!carousel) return; // 如果页面没有轮播容器，直接退出
 
-function showSlide(index) {
-    // 循环处理
-    if (index >= slides.length) currentSlideIndex = 0;
-    else if (index < 0) currentSlideIndex = slides.length - 1;
-    else currentSlideIndex = index;
+    const slides = carousel.querySelectorAll('.slide');
+    const indicators = carousel.querySelectorAll('.indicator');
+    const prevBtn = carousel.querySelector('.carousel-btn.prev');
+    const nextBtn = carousel.querySelector('.carousel-btn.next');
 
-    // 隐藏所有幻灯片
-    slides.forEach(slide => slide.classList.remove('active'));
-    indicators.forEach(ind => ind.classList.remove('active'));
+    if (slides.length === 0) return;
 
-    // 显示当前幻灯片
-    slides[currentSlideIndex].classList.add('active');
-    indicators[currentSlideIndex].classList.add('active');
-}
+    let currentSlideIndex = 0;
 
-function changeSlide(direction) {
-    showSlide(currentSlideIndex + direction);
-}
+    function showSlide(index) {
+        // 循环处理
+        if (index >= slides.length) index = 0;
+        else if (index < 0) index = slides.length - 1;
+        currentSlideIndex = index;
 
-function currentSlide(n) {
-    showSlide(n - 1); // 因为 HTML 中是从 1 开始
-}
+        // 更新幻灯片
+        slides.forEach((slide, i) => {
+            slide.classList.toggle('active', i === currentSlideIndex);
+        });
 
-// 自动播放（每 5 秒切换）
-setInterval(() => {
-    changeSlide(1);
-}, 5000);
+        // 更新指示器
+        indicators.forEach((ind, i) => {
+            ind.classList.toggle('active', i === currentSlideIndex);
+        });
+    }
+
+    // 绑定左右按钮
+    if (prevBtn) {
+        prevBtn.addEventListener('click', () => showSlide(currentSlideIndex - 1));
+    }
+    if (nextBtn) {
+        nextBtn.addEventListener('click', () => showSlide(currentSlideIndex + 1));
+    }
+
+    // 绑定指示器
+    indicators.forEach((indicator, i) => {
+        indicator.addEventListener('click', () => showSlide(i));
+    });
+
+    // 自动播放（可选）
+    let autoPlay = true;
+    const interval = setInterval(() => {
+        if (autoPlay) showSlide(currentSlideIndex + 1);
+    }, 5000);
+
+    // 可选：鼠标悬停暂停自动播放
+    if (carousel) {
+        carousel.addEventListener('mouseenter', () => autoPlay = false);
+        carousel.addEventListener('mouseleave', () => autoPlay = true);
+    }
+});
 
 
 //微信二维码抖动
