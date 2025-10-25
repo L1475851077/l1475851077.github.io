@@ -10,7 +10,7 @@ const CATEGORIES = [
     { id: 'cabinet', name: 'Kitchen Equipment' }
 ];
 
-const PRODUCTS = [
+ PRODUCTS = [
     {
         id: 'fridge-b2000', //商品型号
         name: 'Commercial Double Door Fridge B-2000', //标题
