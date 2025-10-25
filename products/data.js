@@ -10,7 +10,7 @@ const CATEGORIES = [
     { id: 'cabinet', name: 'Kitchen Equipment' }
 ];
 
- PRODUCTS = [
+PRODUCTS = [
     {
         id: 'fridge-b2000', //商品型号
         name: 'Commercial Double Door Fridge B-2000', //标题
@@ -59,5 +59,99 @@ const CATEGORIES = [
         description: 'Flexible Design · Space Saving · Customizable',
         category: 'fridge',
         image: '../images/fridge-KF-0.5F-2F.webp'
+    },
+    {
+        id: 'fridge-KF-0.5F-3F',
+        name: 'Commercial Upright Double Doors Freezer KF-0.5F-3F',
+        description: 'Flexible Design · Space Saving · Customizable',
+        category: 'fridge',
+        image: '../images/fridge-KF-0.5F-2F.webp'
+    },
+    {
+        id: 'fridge-KF-0.5F-4F',
+        name: 'Commercial Upright Double Doors Freezer KF-0.5F-4F',
+        description: 'Flexible Design · Space Saving · Customizable',
+        category: 'fridge',
+        image: '../images/fridge-KF-0.5F-2F.webp'
+    },
+    {
+        id: 'fridge-KF-0.5F-5F',
+        name: 'Commercial Upright Double Doors Freezer KF-0.5F-5F',
+        description: 'Flexible Design · Space Saving · Customizable',
+        category: 'fridge',
+        image: '../images/fridge-KF-0.5F-2F.webp'
     }
+    ,
+    {
+        id: 'fridge-KF-0.5F-6F',
+        name: 'Commercial Upright Double Doors Freezer KF-0.5F-6F',
+        description: 'Flexible Design · Space Saving · Customizable',
+        category: 'fridge',
+        image: '../images/fridge-KF-0.5F-2F.webp'
+    }
+    ,
+    {
+        id: 'fridge-KF-0.5F-7F',
+        name: 'Commercial Upright Double Doors Freezer KF-0.5F-7F',
+        description: 'Flexible Design · Space Saving · Customizable',
+        category: 'fridge',
+        image: '../images/fridge-KF-0.5F-2F.webp'
+    }
+    ,
+    {
+        id: 'fridge-KF-0.5F-8F',
+        name: 'Commercial Upright Double Doors Freezer KF-0.5F-8F',
+        description: 'Flexible Design · Space Saving · Customizable',
+        category: 'fridge',
+        image: '../images/fridge-KF-0.5F-2F.webp'
+    }
+    ,
+    {
+        id: 'fridge-KF-0.5F-9F',
+        name: 'Commercial Upright Double Doors Freezer KF-0.5F-9F',
+        description: 'Flexible Design · Space Saving · Customizable',
+        category: 'fridge',
+        image: '../images/fridge-KF-0.5F-2F.webp'
+    }
+    ,
+    {
+        id: 'fridge-KF-0.5F-9F',
+        name: 'Commercial Upright Double Doors Freezer KF-0.5F-9F',
+        description: 'Flexible Design · Space Saving · Customizable',
+        category: 'fridge',
+        image: '../images/fridge-KF-0.5F-2F.webp'
+    }
+    ,
+    {
+        id: 'fridge-KF-0.5F-10F',
+        name: 'Commercial Upright Double Doors Freezer KF-0.5F-10F',
+        description: 'Flexible Design · Space Saving · Customizable',
+        category: 'fridge',
+        image: '../images/fridge-KF-0.5F-2F.webp'
+    }
+    ,
+    {
+        id: 'fridge-KF-0.5F-11F',
+        name: 'Commercial Upright Double Doors Freezer KF-0.5F-11F',
+        description: 'Flexible Design · Space Saving · Customizable',
+        category: 'fridge',
+        image: '../images/fridge-KF-0.5F-2F.webp'
+    }
+    ,
+    {
+        id: 'fridge-KF-0.5F-12F',
+        name: 'Commercial Upright Double Doors Freezer KF-0.5F-12F',
+        description: 'Flexible Design · Space Saving · Customizable',
+        category: 'fridge',
+        image: '../images/fridge-KF-0.5F-2F.webp'
+    }
+    ,
+    {
+        id: 'fridge-KF-0.5F-13F',
+        name: 'Commercial Upright Double Doors Freezer KF-0.5F-13F',
+        description: 'Flexible Design · Space Saving · Customizable',
+        category: 'fridge',
+        image: '../images/fridge-KF-0.5F-2F.webp'
+    }
+
 ];
