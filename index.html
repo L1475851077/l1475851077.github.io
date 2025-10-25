@@ -24,7 +24,7 @@
         <div class="container">
             <div class="logo">
             <img src="images/logo.webp" alt="KFcatering Logo" class="logo-img">
-                KFcatering</div>
+                Kingfood</div>
 
         <!-- 汉堡按钮（仅小屏显示） -->
         <button class="hamburger" id="hamburger" aria-label="Toggle navigation">
@@ -79,16 +79,16 @@
             </div>
         </div>
 
-        <!-- 左右切换按钮（可选） -->
-        <button class="carousel-btn prev" onclick="changeSlide(-1)">‹</button>
-        <button class="carousel-btn next" onclick="changeSlide(1)">›</button>
-
-        <!-- 指示器（可选） -->
-        <div class="carousel-indicators">
-            <span class="indicator active" onclick="currentSlide(1)"></span>
-            <span class="indicator" onclick="currentSlide(2)"></span>
-            <span class="indicator" onclick="currentSlide(3)"></span>
-        </div>
+            <!-- 左右切换按钮 -->
+            <button class="carousel-btn prev" aria-label="Previous slide">‹</button>
+            <button class="carousel-btn next" aria-label="Next slide">›</button>
+    
+            <!-- 指示器 -->
+            <div class="carousel-indicators">
+                <span class="indicator active" data-slide="1"></span>
+                <span class="indicator" data-slide="2"></span>
+                <span class="indicator" data-slide="3"></span>
+            </div>
     </div>
 </section>
 
@@ -99,47 +99,7 @@
             <p>We specialize in providing high-end western kitchen equipment for hotels, restaurants, and bakeries worldwide. Our product range includes commercial fridges, ovens, worktables, dishwashers, and more. Customization available. Global shipping & installation support.</p>
         </div>
     </section>
-
-    <!-- 产品展示区 -->
-    <!-- <section id="products" class="products">
-        <div class="container">
-            <h2>Hot Products</h2>
-            <div class="product-grid">
-                <a href="products/fridge-b2000.html" class="product-link">
-                  <div class="product-card">
-                    <img src="images/photo-冰箱.jpg" alt="Commercial Double Door Fridge B-2000">
-                            <h3>Commercial Double Door Fridge B-2000</h3>
-                            <p>304 Stainless Steel · Energy Saving · 3-Year Warranty</p>
-                    </div>
-                </a>
-                <div class="product-card" onclick="openModal('product2')">
-                    <img src="images/photo-冰箱.jpg" alt="3-Layer Electric Oven O-300">
-                    <h3>3-Layer Electric Oven O-300</h3>
-                    <p>Precise Temperature · Independent Control · For Bakeries</p>
-                </div>
-                <div class="product-card" onclick="openModal('product3')">
-                    <img src="images/photo-冰箱.jpg" alt="Stainless Steel Worktable W-500">
-                    <h3>Stainless Steel Worktable W-500</h3>
-                    <p>Thick Surface · Anti-Slip · Multi-Functional Rack</p>
-                </div>
-                <div class="product-card" onclick="openModal('product4')">
-                    <img src="images/photo-冰箱.jpg" alt="Commercial Dishwasher D-800">
-                    <h3>Commercial Dishwasher D-800</h3>
-                    <p>High-Temp Sanitize · Fast Wash · Water Saving</p>
-                </div>
-                <div class="product-card" onclick="openModal('product5')">
-                    <img src="images/photo-冰箱.jpg" alt="Heated Display Cabinet S-100">
-                    <h3>Heated Display Cabinet S-100</h3>
-                    <p>Double Glass · Constant Temp · For Dessert Shops</p>
-                </div>
-                <div class="product-card" onclick="openModal('product6')">
-                    <img src="images/photo-冰箱.jpg" alt="Modular Workstation C-600">
-                    <h3>Modular Workstation C-600</h3>
-                    <p>Flexible Design · Space Saving · Customizable</p>
-                </div>
-            </div>
-        </div>
-    </section> -->
+        
     <!-- 产品展示区 -->
     <!-- <section id="products" class="products">
         <div class="container">
