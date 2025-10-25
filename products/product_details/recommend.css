@@ -216,7 +216,7 @@
 
 /* === 轮播控制按钮 === */
 .carousel-btn {
-  background: #f0f0f0;
+  background: rgba(0, 0, 0, 0.5);
   border: none;
   width: 32px;
   height: 32px;
@@ -232,9 +232,9 @@
   transition: background 0.2s ease;
 }
 
-.carousel-btn:hover {
+/* .carousel-btn:hover {
   background: #e0e0e0;
-}
+} */
 
 .carousel-btn:active {
   background-color: #d0d0d0; /* 改为改变背景色 */
