@@ -289,3 +289,19 @@ footer {
     opacity: 0.5;
     cursor: not-allowed;
 }
+
+/* ===== 防止无商品时布局塌陷 ===== */
+.products-scroll-area {
+  min-height: 400px; /* 关键：确保区域始终有足够高度 */
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start; /* 商品顶部对齐，空状态居中可选 */
+}
+
+/* 空状态提示优化（覆盖内联样式） */
+.products-scroll-area .product-grid > p {
+  margin: auto 0; /* 如果希望空提示垂直居中，用 margin: auto; */
+  padding: 20px;
+  font-size: 1.1em;
+  color: #777;
+}
