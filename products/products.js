@@ -126,7 +126,7 @@ function renderProducts() {
     }
 
     const htmlString = paginatedItems.map(product => `
-        <a href="product_details/${product.id}.html" class="product-card-link">
+       <a href="./product_details/product.html?id=${product.id}" class="product-card-link">
             <div class="product-card">
                 <img src="${product.image}" alt="${product.name}">
                 <h3>${product.name}</h3>
