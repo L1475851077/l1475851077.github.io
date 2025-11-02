@@ -794,3 +794,9 @@ footer {
     80% { transform: scale(1.13) rotate(1deg); }
     100% { transform: scale(1); }
   }
+
+main.product-detail {
+    position: relative;
+    min-height: 81.8vh; 
+    padding-bottom: 100px; 
+}
