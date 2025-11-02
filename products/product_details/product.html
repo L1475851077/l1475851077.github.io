@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Loading Product | Guangzhou Kingfood Catering Equipment</title>
+    <meta name="description" content="">
+    <link rel="stylesheet" href="../../style.css">
+    <link rel="stylesheet" href="./recommend.css">
+    <link rel="icon" type="image/x-icon" href="../../images/logo.ico" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="../../loading.css">
+    <script src="../../loading.js" defer></script>
+    <script src="../../script.js" defer></script>
+    <script src="../data.js"></script>
+    <script src="./recommend.js"></script>
+    <script src="./product_details.js"></script>
+    <script>
+        if ('scrollRestoration' in history) {
+            history.scrollRestoration = 'manual';
+        }
+    </script>
+</head>
+
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <img src="../../images/logo.webp" alt="Kingfood catering Logo" class="logo-img">
+                Kingfood
+            </div>
+            <button class="hamburger" id="hamburger" aria-label="Toggle navigation">
+                &#9776;
+            </button>
+            <nav id="mainNav">
+                <a href="../../index.html">Home</a>
+                <a href="../index.html">Products</a>
+                <a href="../../index.html#contact">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <main class="product-detail">
+        <div class="container" id="productContainer">
+            <!-- 新增：左边布局容器 -->
+            <div class="left-layout">
+                <div class="product-images">
+                    <img id="productImage" src="" alt="">
+                </div>
+                <!-- 推荐商品（现在在左边下方） -->
+                <div class="related-products outside-main-content">
+                    <h3>You May Also Like</h3>
+                    <div class="related-carousel">
+                        <button class="carousel-btn prev" aria-label="Previous">&#8249;</button>
+                        <div class="carousel-track" id="relatedProductGrid"></div>
+                        <button class="carousel-btn next" aria-label="Next">&#8250;</button>
+                    </div>
+                </div>
+            </div>
+            <!-- 右边布局：商品信息 -->
+            <div class="product-info">
+                <h1 id="productName"></h1>
+                <p class="subtitle" id="productSubtitle"></p>
+
+                <h2>Key Features</h2>
+                <ul id="productFeatures"></ul>
+
+                <h2>Technical Specifications</h2>
+                <table class="specs-table" id="productSpecs"></table>
+
+                <div class="cta-section">
+                    <p>We offer <strong>free kitchen layout design</strong> for all orders.</p>
+                    <a href="../../index.html#contact" class="btn">Send Inquiry</a>
+                </div>
+            </div>
+        </div> <!-- End of .container -->
+    </main>
+
+
+
+    <footer>
+        <div class="container">
+            <p>© 2025 Guangzhou Kingfood Catering Equipment Co., Ltd.</p>
+        </div>
+    </footer>
+
+    <!-- WhatsApp/微信联系悬浮按钮 -->
+    <div id="contactFloatBtn" class="contact-float-btn" onclick="openContactModal()">
+        📞 Contact Us
+    </div>
+
+    <!-- 联系方式弹窗 -->
+    <div id="contactModal" class="contact-modal">
+        <div class="contact-modal-content">
+            <span class="close" onclick="closeContactModal()">&times;</span>
+            <h2>Contact Customer Service</h2>
+            <p><a href="mailto:ling@kfcatering.com" class="btn">Email：ling@kfcatering.com</a></p>
+            <div class="contact-options">
+                <div class="contact-option">
+                    <h3><i class="fab fa-whatsapp" style="color: #25D366; margin-right: 8px;"></i> WhatsApp</h3>
+                    <a href="https://wa.me/8619927525746" class="btn">Add WhatsApp</a>
+                    <img src="../../images/whatsapp_qr.webp" alt="WhatsApp QR Code" class="qr-code">
+                    <p class="note">Scan to add WhatsApp</p>
+                </div>
+                <div class="contact-option">
+                    <h3><i class="fab fa-weixin" style="color: #07C160; margin-right: 8px;"></i> WeChat</h3>
+                    <a href="#" class="btn" onclick="triggerQrAnimation(); return false;">Add WeChat</a>
+                    <img id="wechatQr" src="../../images/wechat_qr.webp" alt="WeChat QR Code" class="qr-code">
+                    <p class="note">Scan to add WeChat</p>
+                </div>
+                <div class="contact-option">
+                    <h3><i class="fab fa-facebook" style="color: #1877F2; margin-right: 8px;"></i> Facebook</h3>
+                    <a href="https://www.facebook.com/profile.php?id=100076730304582" class="btn">Browse Facebook</a>
+                    <img src="../../images/facebook_qr.webp" alt="Facebook QR Code" class="qr-code">
+                    <p class="note">Scan to add Facebook</p>
+                </div>
+                <div class="contact-option">
+                    <h3><i class="fab fa-instagram" style="color: #E1306C; margin-right: 8px;"></i> Instagram</h3>
+                    <a href="https://www.instagram.com/kingfoodcatering/" class="btn">Browse Instagram</a>
+                    <img src="../../images/instagram_qr.webp" alt="Instagram QR Code" class="qr-code">
+                    <p class="note">Scan to add Instagram</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+</body>
+
+</html>
