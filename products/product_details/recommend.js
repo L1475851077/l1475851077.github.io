@@ -73,7 +73,7 @@ function renderRecommendPage(pageIndex = 0) {
 
   grid.innerHTML = pageItems.map(p => `
   <div class="recommend-card">
-    <a href="${p.id}.html">
+    <a href="./product.html?id=${p.id}">
       <img src="../${p.image}" alt="${p.name}" loading="lazy">
       <h3>${p.name}</h3>
       <p>${p.description || ''}</p>
