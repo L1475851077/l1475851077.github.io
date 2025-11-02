@@ -1,0 +1,24 @@
+[
+    {
+        "id": "fridge-b2000",
+        "name": "Commercial Double Door Fridge B-2000",
+        "subtitle": "304 Stainless Steel · Energy Saving · 3-Year Warranty",
+        "image": "./product_images/fridge/photo-冰箱.jpg",
+        "category": "fridges",
+        "features": [
+            "Full 304 food-grade stainless steel interior & exterior",
+            "Dual evaporator system for stable temperature control",
+            "Energy-efficient compressor with R290 eco-refrigerant",
+            "Adjustable shelves, total capacity 800L",
+            "Factory direct – no middleman markup"
+        ],
+        "specs": {
+            "Model": "B-2000",
+            "Capacity": "800L",
+            "Material": "304 Stainless Steel",
+            "Cooling System": "Fan Cooling, Frost-Free",
+            "Noise Level": "<45dB",
+            "Warranty": "3 Years Global"
+        }
+    }
+]
