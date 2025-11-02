@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Not Found | Guangzhou Kingfood Catering Equipment</title>
+    <meta name="description" content="The product you are looking for could not be found.">
+    <link rel="stylesheet" href="../../style.css">
+    <link rel="icon" type="image/x-icon" href="../../images/logo.ico" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+    <link rel="stylesheet" href="../../loading.css">
+    <script src="../../loading.js" defer></script>
+    <script src="../../script.js" defer></script>
+    <script>
+        if ('scrollRestoration' in history) {
+            history.scrollRestoration = 'manual';
+        }
+    </script>
+</head>
+<body>
+    <header>
+        <div class="container">
+            <div class="logo">
+                <img src="../../images/logo.webp" alt="Kingfood catering Logo" class="logo-img">
+                Kingfood
+            </div>
+            <button class="hamburger" id="hamburger" aria-label="Toggle navigation">
+                &#9776;
+            </button>
+            <nav id="mainNav">
+                <a href="../../index.html">Home</a>
+                <a href="../index.html">Products</a>
+                <a href="../../index.html#contact">Contact</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- 替换的 main 内容 -->
+    <main class="product-detail">
+        <div class="container" style="padding: 120px 20px; text-align: center;">
+            <h2>🔍 Product Not Found</h2>
+            <p>Sorry, we couldn't find the product you're looking for.</p>
+            <p>It may have been removed or the link is incorrect.</p>
+            <a href="../index.html" class="btn" style="margin-top: 20px; display: inline-block;">Browse All Products</a>
+            <p style="margin-top: 30px; font-size: 0.9em; color: #777;">
+                Need help? <a href="mailto:ling@kfcatering.com" style="color: #d63031; text-decoration: underline;">Contact us</a>
+            </p>
+        </div>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>© 2025 Guangzhou Kingfood Catering Equipment Co., Ltd.</p>
+        </div>
+    </footer>
+
+    <!-- WhatsApp/微信联系悬浮按钮（可选保留） -->
+   <div id="contactFloatBtn" class="contact-float-btn" onclick="openContactModal()">
+        📞 Contact Us
+    </div>
+
+    <!-- 联系方式弹窗 -->
+    <div id="contactModal" class="contact-modal">
+        <div class="contact-modal-content">
+            <span class="close" onclick="closeContactModal()">&times;</span>
+            <h2>Contact Customer Service</h2>
+            <p><a href="mailto:ling@kfcatering.com" class="btn">Email：ling@kfcatering.com</a></p>
+            <div class="contact-options">
+                <div class="contact-option">
+                    <h3><i class="fab fa-whatsapp" style="color: #25D366; margin-right: 8px;"></i> WhatsApp</h3>
+                    <a href="https://wa.me/8619927525746" class="btn">Add WhatsApp</a>
+                    <img src="../../images/whatsapp_qr.webp" alt="WhatsApp QR Code" class="qr-code">
+                    <p class="note">Scan to add WhatsApp</p>
+                </div>
+                <div class="contact-option">
+                    <h3><i class="fab fa-weixin" style="color: #07C160; margin-right: 8px;"></i> WeChat</h3>
+                    <a href="#" class="btn" onclick="triggerQrAnimation(); return false;">Add WeChat</a>
+                    <img id="wechatQr" src="../../images/wechat_qr.webp" alt="WeChat QR Code" class="qr-code">
+                    <p class="note">Scan to add WeChat</p>
+                </div>
+                <div class="contact-option">
+                    <h3><i class="fab fa-facebook" style="color: #1877F2; margin-right: 8px;"></i> Facebook</h3>
+                    <a href="https://www.facebook.com/profile.php?id=100076730304582" class="btn">Browse Facebook</a>
+                    <img src="../../images/facebook_qr.webp" alt="Facebook QR Code" class="qr-code">
+                    <p class="note">Scan to add Facebook</p>
+                </div>
+                <div class="contact-option">
+                    <h3><i class="fab fa-instagram" style="color: #E1306C; margin-right: 8px;"></i> Instagram</h3>
+                    <a href="https://www.instagram.com/kingfoodcatering/" class="btn">Browse Instagram</a>
+                    <img src="../../images/instagram_qr.webp" alt="Instagram QR Code" class="qr-code">
+                    <p class="note">Scan to add Instagram</p>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 如果需要弹窗功能，可复制原 modal；否则可删除以下部分 -->
+    <!-- （此处暂不包含完整 modal，保持轻量；如需可告知） -->
+
+    <script>
+        // 简易汉堡菜单（复用原逻辑）
+        document.getElementById('hamburger')?.addEventListener('click', () => {
+            const nav = document.getElementById('mainNav');
+            nav.style.display = nav.style.display === 'flex' ? 'none' : 'flex';
+        });
+
+        // 如果保留悬浮按钮，可添加简单模态框逻辑或跳转
+        // function openContactModal() {
+        //     window.location.href = '../index.html#contact';
+        // }
+    </script>
+</body>
+</html>
