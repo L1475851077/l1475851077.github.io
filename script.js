@@ -84,7 +84,7 @@ function renderHotProducts() {
 
   const hotProducts = allProducts.filter(p => hotProductIds.includes(p.id));
   container.innerHTML = hotProducts.map(product => `
-    <a href="products/product_details/${product.id}.html" class="product-link">
+    <a href="./products/product_details/product.html?id=${product.id}" class="product-card-link">
       <div class="product-card">
         <img src="${product.image}" alt="${product.name}">
         <h3>${product.name}</h3>
