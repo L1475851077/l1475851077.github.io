@@ -800,3 +800,10 @@ main.product-detail {
     min-height: 81.8vh; 
     padding-bottom: 100px; 
 }
+/* 桌面端（≥768px）额外补偿滚动条宽度 */
+@media (min-width: 768px) {
+  .carousel-section {
+    padding-left: 17px; /* 补偿 Windows 滚动条 */
+    box-sizing: border-box;
+  }
+}
