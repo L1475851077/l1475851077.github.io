@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>雷霆战机-极速性能优化版</title>
+    <title>雷霆战机-最终完美版</title>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
@@ -11,19 +11,67 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&display=swap');
 
-        body { margin: 0; background: #000; overflow: hidden; font-family: 'Rajdhani', sans-serif; cursor: none; user-select: none; }
+        /* 修改1：删除了 cursor: none，现在鼠标可见了 */
+        body { margin: 0; background: #000; overflow: hidden; font-family: 'Rajdhani', sans-serif; user-select: none; }
+        
         #game-canvas { display: block; width: 100vw; height: 100vh; z-index: 1; }
+
+        /* 开始屏幕遮罩 */
+        #start-screen {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0, 0, 0, 0.85);
+            display: flex; flex-direction: column; justify-content: center; align-items: center;
+            z-index: 999; backdrop-filter: blur(5px);
+        }
+
+        /* 游戏标题 */
+        #game-title {
+            font-size: 80px; color: #fff; font-weight: 700;
+            text-shadow: 0 0 20px #00f3ff, 0 0 40px #00f3ff;
+            margin-bottom: 10px; letter-spacing: 5px;
+            font-style: italic;
+        }
+
+        #game-subtitle {
+            font-size: 20px; color: #aaa; margin-bottom: 50px; letter-spacing: 2px;
+        }
+
+        /* 开始按钮 */
+        #btn-start {
+            padding: 20px 80px;
+            font-size: 32px; font-weight: bold; font-family: 'Rajdhani', sans-serif;
+            color: #000; background: #00f3ff;
+            border: none; border-radius: 4px;
+            cursor: pointer;
+            box-shadow: 0 0 30px rgba(0, 243, 255, 0.6);
+            transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            animation: pulse 2s infinite;
+        }
+
+        #btn-start:hover {
+            background: #fff; box-shadow: 0 0 50px rgba(255, 255, 255, 0.8); transform: scale(1.05);
+        }
+
+        #btn-start:active { transform: scale(0.95); }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 20px rgba(0, 243, 255, 0.4); }
+            50% { box-shadow: 0 0 40px rgba(0, 243, 255, 0.8); }
+            100% { box-shadow: 0 0 20px rgba(0, 243, 255, 0.4); }
+        }
 
         /* HUD 仪表盘 */
         #hud-container {
             position: absolute; top: 20px; right: 20px;
-            width: 240px; height: 180px; /* 缩小HUD尺寸以匹配降低的分辨率 */
+            width: 240px; height: 180px;
             border: 2px solid #00f3ff;
             background: rgba(0, 10, 20, 0.8);
             border-radius: 8px;
             box-shadow: 0 0 20px rgba(0, 243, 255, 0.3);
-            z-index: 100;
-            overflow: hidden;
+            z-index: 100; overflow: hidden;
+            display: none; /* 游戏开始前隐藏 */
         }
 
         #hud-canvas { width: 100%; height: 100%; transform: scaleX(-1); }
@@ -37,16 +85,16 @@
 
         /* 性能监控面板 */
         #debug-panel {
-            position: absolute; top: 10px; left: 20px;
+            position: absolute; top: 20px; left: 20px;
             color: #00ff00; font-family: monospace; font-size: 12px;
             background: rgba(0,0,0,0.7); padding: 5px; border: 1px solid #00ff00;
-            z-index: 600; pointer-events: none;
+            z-index: 600; pointer-events: none; display: none; /* 游戏开始前隐藏 */
         }
 
         .input_video { display: none; }
 
         /* UI 层 */
-        #ui-layer { position: absolute; top: 60px; left: 20px; z-index: 50; color: #fff; pointer-events: none; }
+        #ui-layer { position: absolute; top: 60px; left: 20px; z-index: 50; color: #fff; pointer-events: none; display: none; }
         #score-board { font-size: 36px; color: #fff; text-shadow: 0 0 15px #00f3ff; letter-spacing: 2px; }
         #hp-bar-box {
             width: 350px; height: 12px; background: rgba(255,255,255,0.1);
@@ -74,43 +122,35 @@
             color: #00f3ff; font-size: 24px; z-index: 300;
             text-shadow: 0 0 10px #00f3ff;
             background: rgba(0,0,0,0.8); padding: 20px; border-radius: 5px;
+            display: block;
         }
 
-        #start-btn {
-            position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            padding: 20px 60px;
-            font-size: 24px; color: #00f3ff; background: rgba(0, 20, 30, 0.9);
-            border: 2px solid #00f3ff; border-radius: 5px;
-            cursor: pointer; z-index: 500;
-            box-shadow: 0 0 20px rgba(0, 243, 255, 0.5);
-            font-family: 'Rajdhani', sans-serif;
-            text-transform: uppercase;
-            letter-spacing: 4px;
-            transition: all 0.3s;
-        }
-        #start-btn:hover { background: #00f3ff; color: #000; box-shadow: 0 0 40px #00f3ff; }
-        
         #mode-indicator {
             position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
             color: rgba(255,255,255,0.7); font-size: 16px; text-shadow: 0 0 5px #fff; text-align: center;
+            display: none;
         }
         .highlight { color: #00f3ff; font-weight: bold; }
     </style>
 </head>
 <body>
 
-<div id="debug-panel">
-    游戏帧率 FPS: <span id="render-fps">0</span><br>
-    手势检测帧率 FPS: <span id="detect-fps">0</span><br>
-    Logic: <span id="logic-status">OK</span>
+<div id="start-screen" style="display: none;">
+    <div id="game-title">THUNDER GESTURE</div>
+    <div id="game-subtitle">手势操控 / 捏合射击 / 能量回复</div>
+    <button id="btn-start">开始任务</button>
 </div>
 
-<div id="loading">初始化神经连接...</div>
-<div id="start-btn" style="display:none">初始化系统<br><span style="font-size:12px; opacity:0.7">点击以建立音频连接</span></div>
+<div id="debug-panel">
+    Render FPS: <span id="render-fps">0</span><br>
+    Detect FPS: <span id="detect-fps">0</span>
+</div>
+
+<div id="loading">系统初始化中...</div>
 <canvas id="game-canvas"></canvas>
 
 <div id="ui-layer">
-    <div id="score-board">得分: <span id="score">0</span></div>
+    <div id="score-board">SCORE: <span id="score">0</span></div>
     <div id="hp-bar-box"><div id="hp-bar"></div></div>
     <div id="regen-msg">/// 纳米修复中 ///</div>
 </div>
@@ -121,15 +161,15 @@
 
 <div id="hud-container">
     <div class="hud-overlay-text">
-        系统: 激活<br>
-        手势追踪: <span id="tracking-status">激活中</span><br>
-        <span id="fire-mode" style="color: #fff">模式: 自动</span>
+        SYSTEM: ONLINE<br>
+        TRACKING: <span id="tracking-status">ACTIVE</span><br>
+        <span id="fire-mode" style="color: #fff">MODE: AUTO</span>
     </div>
     <canvas id="hud-canvas" width="240" height="180"></canvas>
 </div>
 
 <div id="game-over">
-    <h1 style="font-size: 50px; margin:0 0 20px 0">游戏结束</h1>
+    <h1 style="font-size: 50px; margin:0 0 20px 0">MISSION FAILED</h1>
     <p style="font-size: 18px">长按张开手掌 (3秒) 重启核心</p>
 </div>
 
@@ -137,36 +177,29 @@
 <video class="input_video"></video>
 
 <script>
-    // --- 性能监控变量 ---
-    let lastRenderTime = 0;
-    let renderFrameCount = 0;
-    let lastDetectTime = 0;
-    let detectFrameCount = 0;
+    // --- 变量定义 ---
+    let lastRenderTime = 0; let renderFrameCount = 0;
+    let lastDetectTime = 0; let detectFrameCount = 0;
     const renderFpsEl = document.getElementById('render-fps');
     const detectFpsEl = document.getElementById('detect-fps');
 
     setInterval(() => {
         renderFpsEl.innerText = renderFrameCount;
         detectFpsEl.innerText = detectFrameCount;
-        renderFrameCount = 0;
-        detectFrameCount = 0;
+        renderFrameCount = 0; detectFrameCount = 0;
     }, 1000);
 
-    // --- 0. 音效系统 ---
     const AudioContext = window.AudioContext || window.webkitAudioContext;
     const audioCtx = new AudioContext();
     const masterGain = audioCtx.createGain();
     masterGain.gain.value = 0.4;
     masterGain.connect(audioCtx.destination);
 
-    const startBtn = document.getElementById('start-btn');
-    startBtn.addEventListener('click', () => {
-        if (audioCtx.state === 'suspended') { audioCtx.resume(); }
-        startBtn.style.display = 'none';
-        if(!isGameOver && frameCount > 0) startBGM();
-        playSound('countdown_final');
-    });
+    // 游戏状态控制
+    let isGameRunning = false; // 还没点击开始
+    let hasInitialized = false;
 
+    // --- 音效相关 ---
     let bgmInterval = null;
     let bgmNoteIndex = 0;
     const melody = [523.25, 659.25, 783.99, 1046.50, 783.99, 659.25, 587.33, 739.99, 880.00, 1174.66, 880.00, 739.99, 523.25, 523.25, 0, 0];
@@ -244,10 +277,26 @@
             osc.type = 'square'; osc.frequency.setValueAtTime(1200, now); osc.frequency.linearRampToValueAtTime(2000, now + 0.4);
             gain.gain.setValueAtTime(0.2, now); gain.gain.linearRampToValueAtTime(0, now + 0.4);
             osc.start(now); osc.stop(now + 0.4);
+        } else if (type === 'start_game') { // 新增：开始游戏确认音
+            osc.type = 'square'; osc.frequency.setValueAtTime(440, now); 
+            osc.frequency.linearRampToValueAtTime(880, now + 0.1);
+            osc.frequency.linearRampToValueAtTime(1760, now + 0.3);
+            gain.gain.setValueAtTime(0.3, now); gain.gain.linearRampToValueAtTime(0, now + 0.3);
+            osc.start(now); osc.stop(now + 0.3);
         }
     }
 
-    // --- 1. 初始化 ---
+    // --- 界面与初始化 ---
+    const startScreen = document.getElementById('start-screen');
+    const btnStart = document.getElementById('btn-start');
+    const loadingEl = document.getElementById('loading');
+    
+    // UI 元素
+    const uiLayer = document.getElementById('ui-layer');
+    const hudContainer = document.getElementById('hud-container');
+    const debugPanel = document.getElementById('debug-panel');
+    const modeIndicator = document.getElementById('mode-indicator');
+
     const gameCanvas = document.getElementById('game-canvas');
     const gameCtx = gameCanvas.getContext('2d', { alpha: false, desynchronized: true });
     const hudCanvas = document.getElementById('hud-canvas');
@@ -255,12 +304,34 @@
     const videoElement = document.getElementsByClassName('input_video')[0];
     const hpBar = document.getElementById('hp-bar');
     const scoreEl = document.getElementById('score');
-    const loadingEl = document.getElementById('loading');
     const regenMsg = document.getElementById('regen-msg');
     const gameOverEl = document.getElementById('game-over');
     const countdownEl = document.getElementById('countdown-layer');
     const fireModeEl = document.getElementById('fire-mode');
     const trackingStatusEl = document.getElementById('tracking-status');
+
+    // 点击开始按钮逻辑
+    btnStart.addEventListener('click', () => {
+        // 1. 解锁音频
+        if (audioCtx.state === 'suspended') { audioCtx.resume(); }
+        playSound('start_game');
+        
+        // 2. 隐藏开始界面
+        startScreen.style.display = 'none';
+        
+        // 3. 显示游戏UI
+        uiLayer.style.display = 'block';
+        hudContainer.style.display = 'block';
+        debugPanel.style.display = 'block';
+        modeIndicator.style.display = 'block';
+        
+        // 4. 启动游戏逻辑
+        isGameRunning = true;
+        startBGM();
+        
+        // 5. 隐藏鼠标 (如果想在游戏开始后隐藏鼠标，取消下面注释，现在保持可见)
+        // document.body.style.cursor = 'none'; 
+    });
 
     let width, height;
     let input = { x: 0.5, y: 0.8, active: false, isPinching: false };
@@ -301,7 +372,8 @@
         gameOverEl.style.display = 'none'; countdownEl.style.display = 'none';
         lastHitFrame = 0; isRestarting = false; palmHoldStartTime = 0; shakeIntensity = 0;
         lostTrackingFrames = 0;
-        if(startBtn.style.display === 'none') startBGM();
+        // 如果游戏已经开始了，重启BGM
+        if(isGameRunning) startBGM();
     }
 
     function startRestartCountdown() {
@@ -321,17 +393,22 @@
     window.addEventListener('resize', resize);
     resize();
 
-    // --- 2. 游戏循环 ---
+    // --- 游戏循环 ---
     function gameLoop() {
-        renderFrameCount++; // 统计FPS
+        renderFrameCount++; 
 
         if(isGameOver) {
             gameCtx.fillStyle = "rgba(0,0,0,0.1)"; gameCtx.fillRect(0, 0, width, height);
             stopBGM(); requestAnimationFrame(gameLoop); return;
         }
         requestAnimationFrame(gameLoop);
-        frameCount++;
+        
+        // 只有游戏正式开始才增加帧数和运行逻辑，否则只渲染背景
+        if(isGameRunning) {
+            frameCount++;
+        }
 
+        // 震动效果
         gameCtx.save();
         if(shakeIntensity > 0) {
             let dx = (Math.random() - 0.5) * shakeIntensity;
@@ -341,14 +418,22 @@
             if(shakeIntensity < 0.5) shakeIntensity = 0;
         }
 
+        // 绘制背景
         gameCtx.fillStyle = "#050a10"; gameCtx.fillRect(0, 0, width, height);
         gameCtx.fillStyle = "#fff";
         for(let s of stars) {
-            s.y += s.speed;
+            // 待机时星星速度变慢
+            s.y += isGameRunning ? s.speed : s.speed * 0.2;
             if(s.y > height) { s.y = 0; s.x = Math.random()*width; }
             gameCtx.globalAlpha = Math.random(); gameCtx.fillRect(s.x, s.y, s.s, s.s);
         }
         gameCtx.globalAlpha = 1.0;
+
+        // 如果游戏还没开始，只画背景，不跑后面的逻辑
+        if(!isGameRunning) {
+            gameCtx.restore();
+            return;
+        }
 
         let targetX = (1 - input.x) * width;
         let targetY = input.y * height;
@@ -480,8 +565,6 @@
     // --- MediaPipe & HUD ---
     let isProcessingFrame = false;
     let lastSendTime = 0;
-    
-    // 优化：限制手势识别的帧率（Throttle），每40ms检测一次（约25fps），留出更多CPU给渲染
     const DETECT_INTERVAL = 40; 
 
     function isHandOpen(landmarks) {
@@ -505,11 +588,9 @@
 
     function onResults(results) {
         isProcessingFrame = false;
-        detectFrameCount++; // 统计识别FPS
+        detectFrameCount++; 
 
-        // 分辨率降低：HUD 尺寸变为 240x180
         const w = 240, h = 180;
-
         hudCtx.save();
         hudCtx.clearRect(0, 0, w, h);
         if(results.image) hudCtx.drawImage(results.image, 0, 0, w, h);
@@ -520,13 +601,15 @@
 
         if (results.multiHandLandmarks && results.multiHandLandmarks.length > 0) {
             loadingEl.style.display = 'none';
-            if(audioCtx.state === 'suspended' && startBtn.style.display === 'none') startBtn.style.display = 'block';
+            // 显示开始屏幕 (仅首次)
+            if(!isGameRunning && startScreen.style.display === 'none') {
+                startScreen.style.display = 'flex';
+            }
 
             lostTrackingFrames = 0;
-            trackingStatusEl.innerText = "信号正常"; trackingStatusEl.style.color = "#00f3ff";
+            trackingStatusEl.innerText = "LOCKED"; trackingStatusEl.style.color = "#00f3ff";
 
             const landmarks = results.multiHandLandmarks[0];
-            // 计算中心点
             const centerX = (landmarks[0].x + landmarks[5].x + landmarks[17].x) / 3 * w;
             const centerY = (landmarks[0].y + landmarks[5].y + landmarks[17].y) / 3 * h;
 
@@ -577,16 +660,16 @@
         } else {
             if (lostTrackingFrames < MAX_LOST_FRAMES) {
                 lostTrackingFrames++;
-                trackingStatusEl.innerText = "重新连接中..."; trackingStatusEl.style.color = "#ffff00";
+                trackingStatusEl.innerText = "SEARCHING..."; trackingStatusEl.style.color = "#ffff00";
                 input.active = true;
                 const tx = input.x * w; const ty = input.y * h;
                 hudCtx.setLineDash([5, 5]); hudCtx.strokeStyle = "rgba(0, 243, 255, 0.3)";
                 hudCtx.beginPath(); hudCtx.arc(tx, ty, 15, 0, Math.PI*2); hudCtx.stroke(); hudCtx.setLineDash([]);
             } else {
                 input.active = false; input.isPinching = false; palmHoldStartTime = 0; stopChargingSound();
-                trackingStatusEl.innerText = "飞机信号丢失"; trackingStatusEl.style.color = "#ff0055";
+                trackingStatusEl.innerText = "LOST SIGNAL"; trackingStatusEl.style.color = "#ff0055";
                 hudCtx.scale(-1, 1); hudCtx.fillStyle = "#ff0055"; hudCtx.font = "16px monospace";
-                hudCtx.fillText("飞机信号丢失...", -w/2 - 40, h/2);
+                hudCtx.fillText("SIGNAL LOST...", -w/2 - 40, h/2);
             }
         }
         hudCtx.restore();
@@ -599,14 +682,12 @@
     const camera = new Camera(videoElement, {
         onFrame: async () => { 
             const now = Date.now();
-            // --- 帧率节流 (Throttling) ---
             if (!isProcessingFrame && (now - lastSendTime > DETECT_INTERVAL)) { 
                 isProcessingFrame = true; 
                 lastSendTime = now;
                 await hands.send({image: videoElement}); 
             } 
         },
-        // --- 降低分辨率 (Downsampling) ---
         width: 192, height: 144 
     });
     
