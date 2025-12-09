@@ -136,21 +136,22 @@
 <body>
 
 <div id="start-screen" style="display: none;">
-    <div id="game-title">THUNDER GESTURE</div>
+    <div id="game-title">雷霆战机-隔空手势版</div>
+    <div id="game-subtitle">作者：L小炫</div>
     <div id="game-subtitle">手势操控 / 捏合射击 / 能量回复</div>
-    <button id="btn-start">开始任务</button>
+    <button id="btn-start">开始游戏</button>
 </div>
 
 <div id="debug-panel">
-    Render FPS: <span id="render-fps">0</span><br>
-    Detect FPS: <span id="detect-fps">0</span>
+    游戏帧率 FPS: <span id="render-fps">0</span><br>
+    追踪帧率 FPS: <span id="detect-fps">0</span>
 </div>
 
 <div id="loading">系统初始化中...</div>
 <canvas id="game-canvas"></canvas>
 
 <div id="ui-layer">
-    <div id="score-board">SCORE: <span id="score">0</span></div>
+    <div id="score-board">得分: <span id="score">0</span></div>
     <div id="hp-bar-box"><div id="hp-bar"></div></div>
     <div id="regen-msg">/// 纳米修复中 ///</div>
 </div>
@@ -161,16 +162,16 @@
 
 <div id="hud-container">
     <div class="hud-overlay-text">
-        SYSTEM: ONLINE<br>
-        TRACKING: <span id="tracking-status">ACTIVE</span><br>
+        系统: 在线<br>
+        手势追踪: <span id="tracking-status">信号正常</span><br>
         <span id="fire-mode" style="color: #fff">MODE: AUTO</span>
     </div>
     <canvas id="hud-canvas" width="240" height="180"></canvas>
 </div>
 
 <div id="game-over">
-    <h1 style="font-size: 50px; margin:0 0 20px 0">MISSION FAILED</h1>
-    <p style="font-size: 18px">长按张开手掌 (3秒) 重启核心</p>
+    <h1 style="font-size: 50px; margin:0 0 20px 0">游戏结束</h1>
+    <p style="font-size: 18px">长按张开手掌 (3秒) 重启游戏</p>
 </div>
 
 <div id="countdown-layer">3</div>
@@ -660,16 +661,16 @@
         } else {
             if (lostTrackingFrames < MAX_LOST_FRAMES) {
                 lostTrackingFrames++;
-                trackingStatusEl.innerText = "SEARCHING..."; trackingStatusEl.style.color = "#ffff00";
+                trackingStatusEl.innerText = "重新连接..."; trackingStatusEl.style.color = "#ffff00";
                 input.active = true;
                 const tx = input.x * w; const ty = input.y * h;
                 hudCtx.setLineDash([5, 5]); hudCtx.strokeStyle = "rgba(0, 243, 255, 0.3)";
                 hudCtx.beginPath(); hudCtx.arc(tx, ty, 15, 0, Math.PI*2); hudCtx.stroke(); hudCtx.setLineDash([]);
             } else {
                 input.active = false; input.isPinching = false; palmHoldStartTime = 0; stopChargingSound();
-                trackingStatusEl.innerText = "LOST SIGNAL"; trackingStatusEl.style.color = "#ff0055";
+                trackingStatusEl.innerText = "中断"; trackingStatusEl.style.color = "#ff0055";
                 hudCtx.scale(-1, 1); hudCtx.fillStyle = "#ff0055"; hudCtx.font = "16px monospace";
-                hudCtx.fillText("SIGNAL LOST...", -w/2 - 40, h/2);
+                hudCtx.fillText("信号中断...", -w/2 - 40, h/2);
             }
         }
         hudCtx.restore();
@@ -697,3 +698,4 @@
 </script>
 </body>
 </html>
+
