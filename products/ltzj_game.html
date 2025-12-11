@@ -2,7 +2,8 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <title>雷霆战机-最终完美版</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>雷霆战机-手势版</title>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/camera_utils/camera_utils.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/control_utils/control_utils.js" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js" crossorigin="anonymous"></script>
@@ -11,8 +12,7 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Rajdhani:wght@600;700&display=swap');
 
-        /* 修改1：删除了 cursor: none，现在鼠标可见了 */
-        body { margin: 0; background: #000; overflow: hidden; font-family: 'Rajdhani', sans-serif; user-select: none; }
+        body { margin: 0; background: #000; overflow: hidden; font-family: 'Rajdhani', sans-serif; user-select: none; touch-action: none; }
         
         #game-canvas { display: block; width: 100vw; height: 100vh; z-index: 1; }
 
@@ -29,16 +29,17 @@
             font-size: 80px; color: #fff; font-weight: 700;
             text-shadow: 0 0 20px #00f3ff, 0 0 40px #00f3ff;
             margin-bottom: 10px; letter-spacing: 5px;
-            font-style: italic;
+            font-style: italic; text-align: center;
+            line-height: 1.1;
         }
 
         #game-subtitle {
-            font-size: 20px; color: #aaa; margin-bottom: 50px; letter-spacing: 2px;
+            font-size: 20px; color: #aaa; margin-bottom: 10px; letter-spacing: 2px;
         }
 
         /* 开始按钮 */
         #btn-start {
-            padding: 20px 80px;
+            padding: 20px 80px; margin-top: 30px;
             font-size: 32px; font-weight: bold; font-family: 'Rajdhani', sans-serif;
             color: #000; background: #00f3ff;
             border: none; border-radius: 4px;
@@ -74,7 +75,19 @@
             display: none; /* 游戏开始前隐藏 */
         }
 
-        #hud-canvas { width: 100%; height: 100%; transform: scaleX(-1); }
+        /* 切换镜头按钮 */
+        #btn-switch-cam {
+            position: absolute; bottom: 5px; right: 5px;
+            background: rgba(0, 243, 255, 0.2);
+            border: 1px solid #00f3ff;
+            color: #fff; font-size: 10px; padding: 4px 8px;
+            cursor: pointer; z-index: 110; border-radius: 4px;
+            font-family: 'Rajdhani', sans-serif;
+            pointer-events: auto; /* 确保可点击 */
+        }
+        #btn-switch-cam:active { background: #00f3ff; color: #000; }
+
+        #hud-canvas { width: 100%; height: 100%; transform: scaleX(-1); transition: transform 0.3s; }
 
         .hud-overlay-text {
             position: absolute; top: 5px; left: 10px;
@@ -88,7 +101,7 @@
             position: absolute; top: 20px; left: 20px;
             color: #00ff00; font-family: monospace; font-size: 12px;
             background: rgba(0,0,0,0.7); padding: 5px; border: 1px solid #00ff00;
-            z-index: 600; pointer-events: none; display: none; /* 游戏开始前隐藏 */
+            z-index: 600; pointer-events: none; display: none;
         }
 
         .input_video { display: none; }
@@ -100,6 +113,7 @@
             width: 350px; height: 12px; background: rgba(255,255,255,0.1);
             margin-top: 15px; border: 1px solid rgba(255,255,255,0.3);
             border-radius: 6px; overflow: hidden;
+            max-width: 80vw; /* 适配手机宽度 */
         }
         #hp-bar { width: 100%; height: 100%; background: linear-gradient(90deg, #00f3ff, #0066ff); transition: width 0.1s linear; box-shadow: 0 0 15px #00f3ff; }
         #regen-msg { color: #00ff00; font-size: 14px; margin-top: 5px; opacity: 0; transition: opacity 0.3s; text-shadow: 0 0 5px #00ff00; letter-spacing: 1px;}
@@ -109,6 +123,7 @@
             text-align: center; color: #ff0055; z-index: 200;
             background: rgba(0,0,0,0.95); padding: 50px; border: 3px solid #ff0055;
             box-shadow: 0 0 50px rgba(255, 0, 85, 0.4); border-radius: 10px;
+            width: 80%; max-width: 500px;
         }
 
         #countdown-layer {
@@ -119,35 +134,49 @@
         
         #loading {
             position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
-            color: #00f3ff; font-size: 24px; z-index: 300;
-            text-shadow: 0 0 10px #00f3ff;
+            color: #00f3ff; font-size: 20px; z-index: 300;
+            text-shadow: 0 0 10px #00f3ff; text-align: center;
             background: rgba(0,0,0,0.8); padding: 20px; border-radius: 5px;
-            display: block;
+            display: block; width: 80%;
         }
 
         #mode-indicator {
             position: absolute; bottom: 20px; left: 50%; transform: translateX(-50%);
             color: rgba(255,255,255,0.7); font-size: 16px; text-shadow: 0 0 5px #fff; text-align: center;
-            display: none;
+            display: none; width: 100%;
         }
         .highlight { color: #00f3ff; font-weight: bold; }
+
+        /* 移动端适配 */
+        @media (max-width: 768px) {
+            #game-title { font-size: 50px; }
+            #hud-container { width: 120px; height: 90px; top: 10px; right: 10px; }
+            #btn-switch-cam { padding: 2px 5px; font-size: 9px; }
+            .hud-overlay-text { font-size: 9px; left: 5px; top: 2px; }
+            #ui-layer { top: 10px; left: 10px; }
+            #score-board { font-size: 24px; }
+            #btn-start { padding: 15px 40px; font-size: 24px; }
+        }
     </style>
 </head>
 <body>
 
 <div id="start-screen" style="display: none;">
-    <div id="game-title">雷霆战机-隔空手势版</div>
+    <div id="game-title">雷霆战机<br>移动版</div>
     <div id="game-subtitle">作者：L小炫</div>
-    <div id="game-subtitle">手势操控 / 捏合射击 / 能量回复</div>
+    <div id="game-subtitle">请允许摄像头权限</div>
+    <div id="game-subtitle" style="font-size: 14px; margin-top:10px; color:#00f3ff">
+        <span id="cam-hint">正在启动前置摄像头...</span>
+    </div>
     <button id="btn-start">开始游戏</button>
 </div>
 
 <div id="debug-panel">
-    游戏帧率 FPS: <span id="render-fps">0</span><br>
-    追踪帧率 FPS: <span id="detect-fps">0</span>
+    游戏 FPS: <span id="render-fps">0</span><br>
+    追踪 FPS: <span id="detect-fps">0</span>
 </div>
 
-<div id="loading">游戏系统初始化中，请在摄像头前张开你的手掌...</div>
+<div id="loading">系统初始化中<br>请在摄像头前张开手掌...</div>
 <canvas id="game-canvas"></canvas>
 
 <div id="ui-layer">
@@ -161,21 +190,23 @@
 </div>
 
 <div id="hud-container">
+    <button id="btn-switch-cam">切换镜头</button>
     <div class="hud-overlay-text">
         系统: 在线<br>
-        手势追踪: <span id="tracking-status">信号正常</span><br>
+        镜头: <span id="camera-type-text">前置</span><br>
+        信号: <span id="tracking-status">扫描中</span><br>
         <span id="fire-mode" style="color: #fff">MODE: AUTO</span>
     </div>
     <canvas id="hud-canvas" width="240" height="180"></canvas>
 </div>
 
 <div id="game-over">
-    <h1 style="font-size: 50px; margin:0 0 20px 0">游戏结束</h1>
-    <p style="font-size: 18px">长按张开手掌 (3秒) 重启游戏</p>
+    <h1 style="font-size: 40px; margin:0 0 20px 0">任务失败</h1>
+    <p style="font-size: 16px">长按张开手掌 (3秒) 重启游戏</p>
 </div>
 
 <div id="countdown-layer">3</div>
-<video class="input_video"></video>
+<video class="input_video" playsinline webkit-playsinline></video>
 
 <script>
     // --- 变量定义 ---
@@ -197,7 +228,7 @@
     masterGain.connect(audioCtx.destination);
 
     // 游戏状态控制
-    let isGameRunning = false; // 还没点击开始
+    let isGameRunning = false; 
     let hasInitialized = false;
 
     // --- 音效相关 ---
@@ -278,7 +309,7 @@
             osc.type = 'square'; osc.frequency.setValueAtTime(1200, now); osc.frequency.linearRampToValueAtTime(2000, now + 0.4);
             gain.gain.setValueAtTime(0.2, now); gain.gain.linearRampToValueAtTime(0, now + 0.4);
             osc.start(now); osc.stop(now + 0.4);
-        } else if (type === 'start_game') { // 新增：开始游戏确认音
+        } else if (type === 'start_game') { 
             osc.type = 'square'; osc.frequency.setValueAtTime(440, now); 
             osc.frequency.linearRampToValueAtTime(880, now + 0.1);
             osc.frequency.linearRampToValueAtTime(1760, now + 0.3);
@@ -291,6 +322,7 @@
     const startScreen = document.getElementById('start-screen');
     const btnStart = document.getElementById('btn-start');
     const loadingEl = document.getElementById('loading');
+    const camHintEl = document.getElementById('cam-hint');
     
     // UI 元素
     const uiLayer = document.getElementById('ui-layer');
@@ -310,28 +342,25 @@
     const countdownEl = document.getElementById('countdown-layer');
     const fireModeEl = document.getElementById('fire-mode');
     const trackingStatusEl = document.getElementById('tracking-status');
+    
+    // 摄像头切换 UI
+    const btnSwitchCam = document.getElementById('btn-switch-cam');
+    const cameraTypeText = document.getElementById('camera-type-text');
 
     // 点击开始按钮逻辑
     btnStart.addEventListener('click', () => {
-        // 1. 解锁音频
         if (audioCtx.state === 'suspended') { audioCtx.resume(); }
         playSound('start_game');
         
-        // 2. 隐藏开始界面
         startScreen.style.display = 'none';
         
-        // 3. 显示游戏UI
         uiLayer.style.display = 'block';
         hudContainer.style.display = 'block';
         debugPanel.style.display = 'block';
         modeIndicator.style.display = 'block';
         
-        // 4. 启动游戏逻辑
         isGameRunning = true;
         startBGM();
-        
-        // 5. 隐藏鼠标 (如果想在游戏开始后隐藏鼠标，取消下面注释，现在保持可见)
-        // document.body.style.cursor = 'none'; 
     });
 
     let width, height;
@@ -373,7 +402,6 @@
         gameOverEl.style.display = 'none'; countdownEl.style.display = 'none';
         lastHitFrame = 0; isRestarting = false; palmHoldStartTime = 0; shakeIntensity = 0;
         lostTrackingFrames = 0;
-        // 如果游戏已经开始了，重启BGM
         if(isGameRunning) startBGM();
     }
 
@@ -404,7 +432,6 @@
         }
         requestAnimationFrame(gameLoop);
         
-        // 只有游戏正式开始才增加帧数和运行逻辑，否则只渲染背景
         if(isGameRunning) {
             frameCount++;
         }
@@ -423,14 +450,12 @@
         gameCtx.fillStyle = "#050a10"; gameCtx.fillRect(0, 0, width, height);
         gameCtx.fillStyle = "#fff";
         for(let s of stars) {
-            // 待机时星星速度变慢
             s.y += isGameRunning ? s.speed : s.speed * 0.2;
             if(s.y > height) { s.y = 0; s.x = Math.random()*width; }
             gameCtx.globalAlpha = Math.random(); gameCtx.fillRect(s.x, s.y, s.s, s.s);
         }
         gameCtx.globalAlpha = 1.0;
 
-        // 如果游戏还没开始，只画背景，不跑后面的逻辑
         if(!isGameRunning) {
             gameCtx.restore();
             return;
@@ -563,11 +588,14 @@
         for(let i=0; i<count; i++) particles.push({ x: x, y: y, vx: (Math.random()-0.5)*10, vy: (Math.random()-0.5)*10, life: 1.0, color: color });
     }
 
-    // --- MediaPipe & HUD ---
+    // --- MediaPipe & Camera Logic ---
     let isProcessingFrame = false;
     let lastSendTime = 0;
     const DETECT_INTERVAL = 40; 
+    let currentFacingMode = 'user'; // 默认为前置摄像头
+    let activeCamera = null;
 
+    // 手势辅助函数
     function isHandOpen(landmarks) {
         const wrist = landmarks[0];
         const tips = [4, 8, 12, 16, 20];
@@ -605,6 +633,7 @@
             // 显示开始屏幕 (仅首次)
             if(!isGameRunning && startScreen.style.display === 'none') {
                 startScreen.style.display = 'flex';
+                camHintEl.innerText = "摄像头就绪";
             }
 
             lostTrackingFrames = 0;
@@ -614,12 +643,27 @@
             const centerX = (landmarks[0].x + landmarks[5].x + landmarks[17].x) / 3 * w;
             const centerY = (landmarks[0].y + landmarks[5].y + landmarks[17].y) / 3 * h;
 
-            input.x = landmarks[8].x;
+            // --- 核心修复：坐标映射 ---
+            // 如果是前置(user)，已经是镜像的，直接使用。
+            // 如果是后置(environment)，画面未镜像，但我们需要将“屏幕左边”映射为 input.x=1 (因为游戏逻辑 targetX = (1-input.x)*width)
+            // 实际上为了简化，我们让 input.x 始终代表“屏幕位置从左到右 0~1”
+            
+            let rawX = landmarks[8].x;
+            if (currentFacingMode === 'environment') {
+                // 后置摄像头模式下，我们需要反转坐标以匹配人类直觉
+                // 物理向左移 -> 画面物体向左移 -> X变小
+                // 游戏逻辑是 (1-input.x)，意味着 input.x 越小，targetX 越大(右) -- 这反了。
+                // 我们需要让 input.x 保持镜像逻辑
+                input.x = 1 - rawX; 
+            } else {
+                input.x = rawX;
+            }
+
             input.y = landmarks[8].y;
             input.active = true;
             input.isPinching = calculatePinch(landmarks);
 
-            fireModeEl.innerText = input.isPinching ? "MODE: RAPID FIRE" : "MODE: AUTO";
+            fireModeEl.innerText = input.isPinching ? "MODE: RAPID" : "MODE: AUTO";
             fireModeEl.style.color = input.isPinching ? "#ffaa00" : "#fff";
 
             if(isGameOver && !isRestarting) {
@@ -655,22 +699,24 @@
             hudCtx.lineWidth = 2; hudCtx.beginPath(); hudCtx.arc(tx, ty, 15, 0, Math.PI*2);
             hudCtx.stroke();
             
-            hudCtx.font = "10px monospace"; hudCtx.fillStyle = "#00f3ff"; hudCtx.scale(-1, 1); 
-            hudCtx.fillText(`X:${input.x.toFixed(2)} Y:${input.y.toFixed(2)}`, -w + 10, h - 10);
-
         } else {
             if (lostTrackingFrames < MAX_LOST_FRAMES) {
                 lostTrackingFrames++;
                 trackingStatusEl.innerText = "重新连接..."; trackingStatusEl.style.color = "#ffff00";
                 input.active = true;
-                const tx = input.x * w; const ty = input.y * h;
+                const tx = (currentFacingMode === 'environment' ? 1 - input.x : input.x) * w;
+                const ty = input.y * h;
                 hudCtx.setLineDash([5, 5]); hudCtx.strokeStyle = "rgba(0, 243, 255, 0.3)";
                 hudCtx.beginPath(); hudCtx.arc(tx, ty, 15, 0, Math.PI*2); hudCtx.stroke(); hudCtx.setLineDash([]);
             } else {
                 input.active = false; input.isPinching = false; palmHoldStartTime = 0; stopChargingSound();
                 trackingStatusEl.innerText = "中断"; trackingStatusEl.style.color = "#ff0055";
-                hudCtx.scale(-1, 1); hudCtx.fillStyle = "#ff0055"; hudCtx.font = "16px monospace";
-                hudCtx.fillText("信号中断...", -w/2 - 40, h/2);
+                hudCtx.save();
+                // 确保文字在不同镜像模式下都能看懂
+                if(currentFacingMode === 'user') hudCtx.scale(-1, 1);
+                hudCtx.fillStyle = "#ff0055"; hudCtx.font = "16px monospace";
+                hudCtx.fillText("信号中断...", currentFacingMode === 'user' ? -w/2 - 40 : w/2 - 40, h/2);
+                hudCtx.restore();
             }
         }
         hudCtx.restore();
@@ -680,23 +726,52 @@
     hands.setOptions({ maxNumHands: 1, modelComplexity: 0, minDetectionConfidence: 0.35, minTrackingConfidence: 0.35 });
     hands.onResults(onResults);
 
-    const camera = new Camera(videoElement, {
-        onFrame: async () => { 
-            const now = Date.now();
-            if (!isProcessingFrame && (now - lastSendTime > DETECT_INTERVAL)) { 
-                isProcessingFrame = true; 
-                lastSendTime = now;
-                await hands.send({image: videoElement}); 
-            } 
-        },
-        width: 192, height: 144 
+    // --- 摄像头控制逻辑 ---
+    async function startCamera(facingMode) {
+        // 如果已经有运行的camera实例，尝试停止旧的流
+        if (videoElement.srcObject) {
+            videoElement.srcObject.getTracks().forEach(track => track.stop());
+        }
+
+        currentFacingMode = facingMode;
+        
+        // 更新 UI 文本
+        cameraTypeText.innerText = facingMode === 'user' ? "前置" : "后置";
+        
+        // 设置 HUD 镜像样式：前置需要镜像，后置不需要
+        hudCanvas.style.transform = facingMode === 'user' ? 'scaleX(-1)' : 'scaleX(1)';
+
+        activeCamera = new Camera(videoElement, {
+            onFrame: async () => { 
+                const now = Date.now();
+                if (!isProcessingFrame && (now - lastSendTime > DETECT_INTERVAL)) { 
+                    isProcessingFrame = true; 
+                    lastSendTime = now;
+                    await hands.send({image: videoElement}); 
+                } 
+            },
+            facingMode: facingMode, // 关键：指定摄像头
+            width: 320, // 降低一点分辨率以提高移动端性能
+            height: 240 
+        });
+        
+        await activeCamera.start();
+    }
+
+    // 绑定切换按钮事件
+    btnSwitchCam.addEventListener('click', (e) => {
+        e.stopPropagation(); // 防止点击穿透到游戏
+        e.preventDefault();
+        
+        // 切换模式
+        const newMode = currentFacingMode === 'user' ? 'environment' : 'user';
+        startCamera(newMode);
     });
-    
-    camera.start();
+
+    // 启动默认摄像头 (前置)
+    startCamera('user');
     gameLoop();
 
 </script>
 </body>
 </html>
-
-
