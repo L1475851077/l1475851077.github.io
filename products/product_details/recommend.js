@@ -15,7 +15,7 @@ let currentMode = 'same'; // 'same' 或 'other'
  * 初始化推荐数据（分离同类目与异类目）
  */
 function initRecommendData(currentId, currentCategory) {
-  if (!window.PRODUCTS || !Array.isArray(window.PRODUCTS)) {
+  if (typeof PRODUCTS === 'undefined' || !Array.isArray(PRODUCTS)) {
     console.warn('⚠️ window.PRODUCTS not loaded. Check data.js.');
     return;
   }
