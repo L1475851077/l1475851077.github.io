@@ -5,7 +5,9 @@
     "subtitle": "304 Stainless Steel · Energy Saving · 3-Year Warranty",
     "image": "/products/product_details/product_images/fridge/img_1773138521009.jpg",
     "category": "fridge",
-    "features": [],
+    "features": [
+      "\"Full 304 food-grade stainless steel interior & exterior\", //商品特点             \"Dual evaporator system for stable temperature control\", //商品特点             \"Energy-efficient compressor with R290 eco-refrigerant\", //商品特点             \"Adjustable shelves, total capacity 800L\", //商品特点             \"Factory direct – no middleman markup\""
+    ],
     "specs": {}
   }
 ]
