@@ -13,7 +13,7 @@ const CATEGORIES = [
 PRODUCTS = [
     {
         'id': 'fridge-b2000',
-        'name': 'Commercial Double Door Fridge B-2000',
+        'name': 'testCommercial Double Door Fridge B-2000',
         'description': '304-5 Stainless Steel · Energy Saving · 3-Year Warranty',
         'category': 'fridge',
         'image': '../images/photo-冰箱.jpg'
