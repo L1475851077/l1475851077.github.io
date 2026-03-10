@@ -15,7 +15,7 @@ let currentMode = 'same'; // 'same' 或 'other'
  * 初始化推荐数据（分离同类目与异类目）
  */
 function initRecommendData(currentId, currentCategory) {
-  if (typeof PRODUCTS === 'undefined' || !Array.isArray(PRODUCTS)) {
+  if (!window.PRODUCTS || !Array.isArray(window.PRODUCTS)) {
     console.warn('⚠️ window.PRODUCTS not loaded. Check data.js.');
     return;
   }
@@ -23,12 +23,12 @@ function initRecommendData(currentId, currentCategory) {
   const shuffle = arr => [...arr].sort(() => Math.random() - 0.5);
 
   // 同类目（排除当前商品）
-  sameCategoryItems = PRODUCTS.filter(p =>
+  sameCategoryItems = window.PRODUCTS.filter(p =>
     p.category === currentCategory && p.id !== currentId
   );
 
   // 其他分类（排除当前商品）
-  otherCategoryItems = PRODUCTS.filter(p =>
+  otherCategoryItems = window.PRODUCTS.filter(p =>
     p.category !== currentCategory && p.id !== currentId
   );
 
