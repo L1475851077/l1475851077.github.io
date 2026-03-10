@@ -23,12 +23,12 @@ function initRecommendData(currentId, currentCategory) {
   const shuffle = arr => [...arr].sort(() => Math.random() - 0.5);
 
   // 同类目（排除当前商品）
-  sameCategoryItems = window.PRODUCTS.filter(p =>
+  sameCategoryItems = PRODUCTS.filter(p =>
     p.category === currentCategory && p.id !== currentId
   );
 
   // 其他分类（排除当前商品）
-  otherCategoryItems = window.PRODUCTS.filter(p =>
+  otherCategoryItems = PRODUCTS.filter(p =>
     p.category !== currentCategory && p.id !== currentId
   );
 
