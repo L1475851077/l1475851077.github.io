@@ -25,7 +25,7 @@ const CATEGORIES = [
     }
 ];
 
-const PRODUCTS = [
+ PRODUCTS = [
     {
         "id": "fridge-b2000",
         "name": "冰箱Commercial Double Door Fridge B-2000",
