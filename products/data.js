@@ -16,7 +16,7 @@ PRODUCTS = [
         'name': 'testCommercial Double Door Fridge B-2000',
         'description': '304-5 Stainless Steel · Energy Saving · 3-Year Warranty',
         'category': 'fridge',
-        'image': '../images/photo-冰箱.jpg'
+        'image': './product_images/images/img_1773122287519.jpg'
     },
     {
         'id': 'oven-o300',
