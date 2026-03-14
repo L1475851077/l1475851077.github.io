@@ -29,10 +29,12 @@
     "image": "/product_images/uploaded/img_1773467707854.jpg",
     "subtitle": "car,power255",
     "features": [
-      "dfdfdf"
+      "dfdfdf",
+      "carcra"
     ],
     "specs": {
-      "power": "255"
+      "power": "255",
+      "with": "222"
     }
   }
 ]
