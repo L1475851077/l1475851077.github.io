@@ -25,7 +25,7 @@ const CATEGORIES = [
     }
 ];
 
- PRODUCTS = [
+const PRODUCTS = [
     {
         "id": "fridge-b2000",
         "name": "冰箱Commercial Double Door Fridge B-2000",
@@ -158,5 +158,12 @@ const CATEGORIES = [
         "description": "Flexible Design · Space Saving · Customizable",
         "category": "fridge",
         "image": "../images/fridge-KF-0.5F-2F.webp"
+    },
+    {
+        "id": "car-222",
+        "name": "汽车",
+        "description": "性能跑车",
+        "category": "fridge",
+        "image": "/product_images/uploaded/img_1773467707854.jpg"
     }
 ];
