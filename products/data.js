@@ -162,7 +162,7 @@ const PRODUCTS = [
     {
         "id": "car-222",
         "name": "汽车",
-        "description": "性能跑车",
+        "description": "性能跑车，超级",
         "category": "fridge",
         "image": "/product_images/uploaded/img_1773467707854.jpg"
     }
