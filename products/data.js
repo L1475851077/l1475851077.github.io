@@ -123,20 +123,6 @@ var PRODUCTS = [
         "image": "../images/fridge-KF-0.5F-2F.webp"
     },
     {
-        "id": "fridge-KF-0.5F-9F",
-        "name": "Commercial Upright Double Doors Freezer KF-0.5F-9F",
-        "description": "Flexible Design · Space Saving · Customizable",
-        "category": "fridge",
-        "image": "../images/fridge-KF-0.5F-2F.webp"
-    },
-    {
-        "id": "fridge-KF-0.5F-9F",
-        "name": "Commercial Upright Double Doors Freezer KF-0.5F-9F",
-        "description": "Flexible Design · Space Saving · Customizable",
-        "category": "fridge",
-        "image": "../images/fridge-KF-0.5F-2F.webp"
-    },
-    {
         "id": "fridge-KF-0.5F-10F",
         "name": "Commercial Upright Double Doors Freezer KF-0.5F-10F",
         "description": "Flexible Design · Space Saving · Customizable",
