@@ -1,4 +1,4 @@
-const CATEGORIES = [
+var CATEGORIES = [
     {
         "id": "all",
         "name": "All Products"
@@ -25,7 +25,7 @@ const CATEGORIES = [
     }
 ];
 
-const PRODUCTS = [
+var PRODUCTS = [
     {
         "id": "fridge-b2000",
         "name": "冰箱Commercial Double Door Fridge B-2000",
