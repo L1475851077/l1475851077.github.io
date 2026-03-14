@@ -55,7 +55,8 @@ var PRODUCTS = [
         "name": "Commercial Dishwasher D-800",
         "description": "High-Temp Sanitize · Fast Wash · Water Saving",
         "category": "dishwasher",
-        "image": "../images/photo-冰箱.jpg"
+        "image": "../images/photo-冰箱.jpg",
+        "isHot": true
     },
     {
         "id": "cabinet-s100",
