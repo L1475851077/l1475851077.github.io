@@ -39,7 +39,8 @@ var PRODUCTS = [
         "name": "3-Layer Electric Oven O-300",
         "description": "Precise Temperature · Independent Control · For Bakeries",
         "category": "oven",
-        "image": "../images/photo-冰箱.jpg"
+        "image": "../images/photo-冰箱.jpg",
+        "isHot": true
     },
     {
         "id": "worktable-w500",
