@@ -63,7 +63,8 @@ var PRODUCTS = [
         "name": "Heated Display Cabinet S-100",
         "description": "Double Glass · Constant Temp · For Dessert Shops",
         "category": "cabinet",
-        "image": "../images/photo-冰箱.jpg"
+        "image": "../images/photo-冰箱.jpg",
+        "isHot": true
     },
     {
         "id": "workstation-c600",
