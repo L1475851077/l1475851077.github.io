@@ -64,7 +64,7 @@ var PRODUCTS = [
         "description": "Double Glass · Constant Temp · For Dessert Shops",
         "category": "cabinet",
         "image": "../images/photo-冰箱.jpg",
-        "isHot": true
+        "isHot": false
     },
     {
         "id": "workstation-c600",
