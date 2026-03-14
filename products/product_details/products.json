@@ -21,5 +21,18 @@
       "Warranty": "3 Years Global",
       "Power": "1600W"
     }
+  },
+  {
+    "id": "car-222",
+    "name": "汽车",
+    "category": "fridge",
+    "image": "/product_images/uploaded/img_1773467707854.jpg",
+    "subtitle": "car,power255",
+    "features": [
+      "dfdfdf"
+    ],
+    "specs": {
+      "power": "255"
+    }
   }
 ]
