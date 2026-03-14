@@ -62,28 +62,7 @@ window.addEventListener('pageshow', (event) => {
 // // ===== 配置哪些是热销品（只需改这里！）=====
 // const hotProductIds = ['fridge-b2000', 'oven-o300','worktable-w500','dishwasher-d800','cabinet-s100','workstation-c600',];
 
-// ✅ 添加：直接引用 data.js 里的全局变量
-// 提示：如果是在首页运行，请确保 HTML 中引入了 kf_data/data.js
-const allProducts = typeof PRODUCTS !== 'undefined' ? PRODUCTS : [];
 
-// ✅ 修改：更新渲染函数里的过滤条件
-function renderHotProducts() {
-  const container = document.getElementById('hotProductsGrid');
-  if (!container) return;
-
-  // 【核心改动】：把 filter 里的 ID 判断改为 isHot 判断
-  const hotProducts = allProducts.filter(p => p.isHot === true);
-
-  container.innerHTML = hotProducts.map(product => `
-    <a href="./products/product_details/product.html?id=${product.id}" class="product-card-link">
-      <div class="product-card">
-        <img src="${product.image}" alt="${product.name}">
-        <h3>${product.name}</h3>
-        <p>${product.description || ''}</p>
-      </div>
-    </a>
-  `).join('');
-}
 
 
 // 打开联系弹窗
@@ -102,17 +81,40 @@ function closeContactModal() {
 };
 
 // ===== 渲染首页 Hot Products =====
+// function renderHotProducts() {
+//   const container = document.getElementById('hotProductsGrid');
+//   if (!container) return;
+
+//   const hotProducts = allProducts.filter(p => hotProductIds.includes(p.id));
+//   container.innerHTML = hotProducts.map(product => `
+//     <a href="./products/product_details/product.html?id=${product.id}" class="product-card-link">
+//       <div class="product-card">
+//         <img src="${product.image}" alt="${product.name}">
+//         <h3>${product.name}</h3>
+//         <p>${product.description}</p>
+//       </div>
+//     </a>
+//   `).join('');
+// }
+
+// ✅ 添加：直接引用 data.js 里的全局变量
+// 提示：如果是在首页运行，请确保 HTML 中引入了 kf_data/data.js
+const allProducts = typeof PRODUCTS !== 'undefined' ? PRODUCTS : [];
+
+// ✅ 修改：更新渲染函数里的过滤条件
 function renderHotProducts() {
   const container = document.getElementById('hotProductsGrid');
   if (!container) return;
 
-  const hotProducts = allProducts.filter(p => hotProductIds.includes(p.id));
+  // 【核心改动】：把 filter 里的 ID 判断改为 isHot 判断
+  const hotProducts = allProducts.filter(p => p.isHot === true);
+
   container.innerHTML = hotProducts.map(product => `
     <a href="./products/product_details/product.html?id=${product.id}" class="product-card-link">
       <div class="product-card">
         <img src="${product.image}" alt="${product.name}">
         <h3>${product.name}</h3>
-        <p>${product.description}</p>
+        <p>${product.description || ''}</p>
       </div>
     </a>
   `).join('');
