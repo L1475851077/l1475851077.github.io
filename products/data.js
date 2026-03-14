@@ -47,7 +47,8 @@ var PRODUCTS = [
         "name": "Stainless Steel Worktable W-500",
         "description": "Thick Surface · Anti-Slip · Multi-Functional Rack",
         "category": "worktable",
-        "image": "../images/photo-冰箱.jpg"
+        "image": "../images/photo-冰箱.jpg",
+        "isHot": true
     },
     {
         "id": "dishwasher-d800",
