@@ -149,12 +149,5 @@ var PRODUCTS = [
         "description": "Flexible Design · Space Saving · Customizable",
         "category": "fridge",
         "image": "../images/fridge-KF-0.5F-2F.webp"
-    },
-    {
-        "id": "car-222",
-        "name": "汽车",
-        "description": "性能跑车，超级",
-        "category": "cabinet",
-        "image": "/product_images/uploaded/img_1773467707854.jpg"
     }
 ];
