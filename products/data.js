@@ -22,6 +22,10 @@ var CATEGORIES = [
     {
         "id": "cabinet",
         "name": "Kitchen Equipment"
+    },
+    {
+        "id": "test_type",
+        "name": "test Products"
     }
 ];
 
