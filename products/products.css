@@ -24,6 +24,10 @@ body.loaded {
   display: none; /* 桌面隐藏汉堡按钮 */
 }
 
+.cat-collapse {
+  display: none; /* 桌面分类常显，隐藏折叠按钮 */
+}
+
 nav {
   display: flex;
   gap: 20px;
@@ -69,6 +73,99 @@ nav {
     color: white;
 }
 
+/* ===== 两级分类（手风琴） ===== */
+.category-list .cat-row {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+
+.category-list .cat-row a {
+    flex: 1;
+    min-width: 0;
+}
+
+.category-list .cat-toggle {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 26px;
+    height: 26px;
+    padding: 0;
+    background: none;
+    border: none;
+    border-radius: 5px;
+    color: #999;
+    cursor: pointer;
+}
+
+.category-list .cat-toggle:hover {
+    color: #111;
+    background: #f0f0f0;
+}
+
+.category-list .cat-toggle svg {
+    width: 14px;
+    height: 14px;
+    transform: rotate(-90deg); /* 收起时箭头朝右 */
+    transition: transform 0.2s ease;
+}
+
+.category-list .cat-group.expanded .cat-toggle svg {
+    transform: rotate(0deg);
+}
+
+/* 子分类面板：height 0↔auto 高度过渡（interpolate-size 让 auto 可参与过渡，
+   Chrome 129+ 生效；不支持的浏览器直接切换、无动画但功能正常） */
+.category-list {
+    interpolate-size: allow-keywords;
+}
+
+.category-list .sub-wrap {
+    height: 0;
+    overflow: hidden;
+    transition: height 0.28s ease;
+}
+
+.category-list .cat-group.expanded .sub-wrap {
+    height: auto;
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .category-list .sub-wrap {
+        transition: none;
+    }
+}
+
+.category-list .sub-list {
+    list-style: none;
+    margin: 0;
+    padding: 0 0 0 8px;
+}
+
+.category-list .sub-list li:first-child {
+    margin-top: 4px;
+}
+
+.category-list .sub-list li {
+    margin-bottom: 4px;
+}
+
+.category-list .sub-list a {
+    padding: 6px 10px 6px 16px;
+    font-size: 0.93rem;
+    color: #666;
+    border-left: 2px solid #eee; /* 子分类引导线 */
+    border-radius: 0 5px 5px 0;
+}
+
+.category-list .sub-list a:hover,
+.category-list .sub-list a.active {
+    color: #fff; /* 覆盖上方的灰色基础色，选中/悬停时白字黑底 */
+    border-left-color: #111;
+}
+
 .main-content {
     flex: 1;
     min-width: 300px;
@@ -112,10 +209,69 @@ nav {
     }
     .sidebar {
         width: 100%;
-        padding-top: 20px;
+    }
+
+    /* 搜索 + 分类按钮固定悬浮在吸顶页头下方：滚到任何位置都能快速搜索/切换 */
+    .sidebar-float {
+        position: fixed;
+        top: var(--header-h, 60px);
+        left: 0;
+        right: 0;
+        z-index: 40; /* 页头(50)之下 */
+        background: #fff;
+        padding: 12px 3vw;
+        box-shadow: 0 6px 16px rgba(17, 17, 17, 0.08);
     }
     .search-box {
-        margin-bottom: 20px;
+        margin-bottom: 12px;
+    }
+
+    /* 移动端分类折叠：默认收起，点按钮展开 */
+    .cat-collapse {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        padding: 12px 16px;
+        margin-bottom: 16px;
+        background: none;
+        border: 1px solid #ddd;
+        border-radius: 6px;
+        font-size: 1rem;
+        font-family: inherit;
+        color: #333;
+        cursor: pointer;
+    }
+    .cat-collapse svg {
+        width: 14px;
+        height: 14px;
+        transition: transform 0.2s ease;
+    }
+    .cat-collapse[aria-expanded="true"] svg {
+        transform: rotate(180deg);
+    }
+    /* 分类下拉面板：悬浮层，覆盖在商品上方 */
+    .category-list {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        display: none;
+        margin: 0;
+        padding: 8px 3vw 14px;
+        background: #fff;
+        box-shadow: 0 14px 20px rgba(17, 17, 17, 0.12);
+        max-height: calc(100vh - var(--mobile-bar-h, 142px) - var(--header-h, 60px) - 12px);
+        overflow-y: auto;
+    }
+    .category-list.open {
+        display: block;
+    }
+
+    /* 主内容避让悬浮栏（高度由 products.js 量测同步；
+       用 main 前缀提高优先级，避免被文件后方的 padding 简写覆盖） */
+    main.products-page .container {
+        padding-top: var(--mobile-bar-h, 150px);
     }
 }
 
@@ -246,20 +402,20 @@ footer {
   flex-shrink: 0; /* 防止页脚被压缩 */
 }
 
-/* ===== 固定侧边栏（仅桌面端） ===== */
+/* ===== 悬浮分类栏（仅桌面端）：面板固定于视口，与主内容列左对齐；
+   展开收起只在面板内部发生，上方分类与页面滚动都不受影响 ===== */
 @media (min-width: 769px) {
   .products-page {
-    display: block; /* 退出 flex 布局，避免干扰 sticky */
+    display: block;
     position: relative;
   }
 
-  .sidebar {
-    position: sticky;
+  .sidebar-float {
+    position: fixed;
     top: 15%; /* 与 header 高度对齐（header ≈80px） */
-    height: fit-content;
-    max-height: calc(100vh - 120px); /* 防止过高溢出 */
-    overflow-y: auto; /* 内容多时侧边栏可滚动 */
-    align-self: flex-start;
+    width: 240px;
+    max-height: calc(100vh - 120px);
+    overflow-y: auto; /* 分类过多时面板内部滚动 */
   }
 }
 

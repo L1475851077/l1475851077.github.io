@@ -83,7 +83,7 @@ l1475851077.github.io/
 - 头部含 Organization 类型 JSON-LD 结构化数据（公司名、logo、社交账号、联系方式）。
 
 ### 2. 产品列表页 `products/index.html`
-- 数据来自 `products/data.js`（`CATEGORIES` 分类 + `PRODUCTS` 商品数组）。
+- 数据来自 `products/data.js`（`CATEGORIES` 两级分类（大分类 + `parent` 指针子分类）+ `PRODUCTS` 商品数组）；选中大分类时按子树过滤，商品挂子分类或大分类均可命中。
 - `products.js` 实现：分类过滤（左侧栏）、关键字搜索（名称/描述）、前端分页（每页 12 条，无商品总数大于一页时自动生成分页按钮）。
 
 ### 3. 产品详情页 `products/product_details/product.html?id=xxx`

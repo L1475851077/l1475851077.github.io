@@ -22,6 +22,25 @@ var CATEGORIES = [
     {
         "id": "cabinet",
         "name": "Kitchen Equipment"
+    },
+    {
+        "id": "fryer",
+        "name": "Fryer Series"
+    },
+    {
+        "id": "cmr",
+        "name": "CMR Series",
+        "parent": "fryer"
+    },
+    {
+        "id": "amr",
+        "name": "AMR Series",
+        "parent": "fryer"
+    },
+    {
+        "id": "bmr",
+        "name": "BMR Series",
+        "parent": "fryer"
     }
 ];
 

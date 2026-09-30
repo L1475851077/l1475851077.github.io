@@ -21,15 +21,17 @@ let currentRecommendPage = 0;
 // 每页固定 3 张；窄屏靠 CSS 收缩卡片宽度（.recommend-card: flex-shrink）来容纳
 const RECOMMEND_PAGE_SIZE = 3;
 
-let sameCategoryItems = []; // 当前分类下的其他商品
-let otherCategoryItems = []; // 其他分类的商品
-let recommendPool = []; // 统一商品池：同类在前、其他分类在后；翻页像数组一样循环，末页之后绕回开头的同类
+let sameCategoryItems = []; // 同子分类下的其他商品
+let siblingCategoryItems = []; // 同大分类下兄弟子分类的商品（子分类为空时为空）
+let otherCategoryItems = []; // 其余分类的商品
+// 推荐优先级：同子分类 → 同大分类（兄弟子分类）→ 其他分类；
+// recommendPool 按此顺序拼接，翻页像数组一样循环，末页之后绕回开头的同类
 
 // --- 不再需要 hasUserNavigated 或 hasUserLeftInitialPage 标志 ---
 // --- 结束移除 ---
 
 /**
- * 初始化推荐数据（分离同类目与异类目）
+ * 初始化推荐数据（按 同子分类 / 兄弟子分类 / 其他分类 分池）
  */
 function initRecommendData(currentId, currentCategory) {
   if (!window.PRODUCTS || !Array.isArray(window.PRODUCTS)) {
@@ -39,28 +41,42 @@ function initRecommendData(currentId, currentCategory) {
 
   const shuffle = arr => [...arr].sort(() => Math.random() - 0.5);
 
-  // 同类目（排除当前商品）
+  // 当前商品的兄弟分类 id 集合：同大分类下的其他子分类（含当前分类自己，靠下面的排除项去掉）
+  const currentCat = window.CATEGORIES ? window.CATEGORIES.find(c => c.id === currentCategory) : null;
+  const siblingIds = new Set(
+    (currentCat && currentCat.parent)
+      ? window.CATEGORIES.filter(c => c.parent === currentCat.parent).map(c => c.id)
+      : []
+  );
+
+  // 同子分类（排除当前商品）
   sameCategoryItems = window.PRODUCTS.filter(p =>
     p.category === currentCategory && p.id !== currentId
   );
 
-  // 其他分类（排除当前商品）
+  // 兄弟子分类（排除当前商品与同子分类）
+  siblingCategoryItems = window.PRODUCTS.filter(p =>
+    p.id !== currentId && p.category !== currentCategory && siblingIds.has(p.category)
+  );
+
+  // 其他分类（排除以上两种）
   otherCategoryItems = window.PRODUCTS.filter(p =>
-    p.category !== currentCategory && p.id !== currentId
+    p.id !== currentId && p.category !== currentCategory && !siblingIds.has(p.category)
   );
 
   // 打乱顺序
   sameCategoryItems = shuffle(sameCategoryItems);
+  siblingCategoryItems = shuffle(siblingCategoryItems);
   otherCategoryItems = shuffle(otherCategoryItems);
 }
 
 /**
- * 构建统一商品池：同类在前、其他分类在后（推荐规则：优先同类；
- * 同类不足一页时首页自然由其他分类补满，同类为 0 时即纯其他分类）。
- * 翻页在此数组上循环：翻过最后一个商品后回到数组开头（同类）
+ * 构建统一商品池：同子分类 → 兄弟子分类 → 其他分类（推荐规则：优先同类；
+ * 不足一页时首页自然由后一档补满，同级为 0 时直接由下一档顶上）。
+ * 翻页在此数组上循环：翻过最后一个商品后回到数组开头（同子分类）
  */
 function buildRecommendPool() {
-  recommendPool = sameCategoryItems.concat(otherCategoryItems);
+  recommendPool = sameCategoryItems.concat(siblingCategoryItems, otherCategoryItems);
   return recommendPool;
 }
 

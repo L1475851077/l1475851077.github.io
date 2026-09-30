@@ -68,11 +68,13 @@ function escapeHtml(value) {
 }
 
 // ✅ 修改：更新渲染函数里的过滤条件
-// 分类 id → 展示名（data.js 的 CATEGORIES）
+// 分类 id → 展示名（data.js 的 CATEGORIES；子分类显示全链 "大分类 · 子分类"）
 function categoryName(id) {
   const cats = typeof CATEGORIES !== 'undefined' ? CATEGORIES : [];
   const hit = cats.find(c => c.id === id);
-  return hit ? hit.name : '';
+  if (!hit) return '';
+  const parent = hit.parent ? cats.find(c => c.id === hit.parent) : null;
+  return parent ? parent.name + ' · ' + hit.name : hit.name;
 }
 
 function renderHotProducts() {

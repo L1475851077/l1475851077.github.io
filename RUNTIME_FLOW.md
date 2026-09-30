@@ -38,7 +38,7 @@ GitHub Pages（读仓库 main 分支的静态文件）
 1. **解析阶段**：`.main-content { opacity: 0; transform: translateY(10px) }`（style.css），页面内容此刻不可见；`loading.css` 定义全屏白色遮罩样式。
 2. **defer 脚本执行**（HTML 解析完毕后、DOMContentLoaded 之前，按文档顺序）：
    - `loading.js`：动态创建 `#global-loading` 遮罩节点，插入 `body` 第一个子元素；注册 `load` / `pageshow` 监听；同时启动一个 **3 秒兜底定时器**。
-   - `data.js`（需要商品数据的页面）：定义全局变量 `CATEGORIES` 和 `PRODUCTS`。
+   - `data.js`（需要商品数据的页面）：定义全局变量 `CATEGORIES`（两级：`parent` 字段指向大分类）和 `PRODUCTS`。
    - `script.js`（defer，位于 body 末尾）：注册 `DOMContentLoaded` 回调（热销渲染、汉堡菜单、平滑滚动）。
 3. **DOMContentLoaded**：页面脚本开始渲染动态内容（此时遮罩仍盖着，用户看不到渲染过程）。
 4. **window load**（所有资源含图片加载完）：`loading.js` 的 `initPage()` 执行——给 `body` 加 `loaded` 类 →
@@ -70,7 +70,7 @@ GitHub Pages（读仓库 main 分支的静态文件）
 数据在 `<head>` 里**同步**加载（`data.js` + `products.js` 不带 defer），渲染逻辑全部在 `products.js`：
 
 1. **初始化**（DOMContentLoaded）：
-   - `renderCategories()`：用 `CATEGORIES` 渲染左侧分类列表，当前分类高亮；
+   - `renderCategories()`：用 `CATEGORIES` 渲染左侧两级分类列表（手风琴：点大分类展开子分类），当前分类高亮；
    - `renderProducts()`：核心渲染函数，见下。
 2. **`renderProducts()` 每次执行的流水线**：
    ```
@@ -119,7 +119,7 @@ GitHub Pages（读仓库 main 分支的静态文件）
 
 **推荐轮播（recommend.js）逻辑**：
 
-1. `initRecommendData()`：把 `window.PRODUCTS`（来自 data.js，**不是** products.json）一分为二——同 category 的进 `sameCategoryItems`，其余进 `otherCategoryItems`（都排除当前商品），并打乱顺序。
+1. `initRecommendData()`：把 `window.PRODUCTS`（来自 data.js，**不是** products.json）分成三池——同子分类进 `sameCategoryItems`，同大分类的兄弟子分类进 `siblingCategoryItems`，其余进 `otherCategoryItems`（都排除当前商品），并打乱顺序。
 2. 同类池为空 → `switchToOtherCategory()` 自动切到全站推荐模式。
 3. 渲染：每页固定 3 张卡片，翻页用 `(startIndex + i) % total` **循环取模**，可以无限前后翻。
 4. ⚠️ **已知静默 bug**（见 OPTIMIZATION_PLAN 第四节）：products.json 的 category 是 `fridges`，data.js 里是 `fridge`，所以同类池永远为空——目前所有详情页的推荐实际都走的"其他分类"模式。
