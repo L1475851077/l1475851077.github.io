@@ -7,8 +7,11 @@
     loadingEl.id = 'global-loading';
     loadingEl.className = 'global-loading';
     loadingEl.innerHTML = `
-    <div class="spinner"></div>
-    <p>Loading...</p>
+    <div class="loading-brand">
+      <img src="/images/logo.webp" alt="">
+      <div class="loading-word">KINGFOOD<small>Catering Equipment</small></div>
+    </div>
+    <div class="loading-line"><i></i></div>
   `;
     document.body.insertBefore(loadingEl, document.body.firstChild);
   }

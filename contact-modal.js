@@ -59,15 +59,25 @@
   window.openContactModal = function () {
     lastFocused = document.activeElement;
     loadQrImages();
+    modal.classList.remove('closing');
     modal.style.display = 'block';
+    void modal.offsetHeight; // 强制同步布局，让元素先完成渲染再挂动画类（与关闭路径同构）
+    modal.classList.add('open');
     const closeBtn = modal.querySelector('.close');
     if (closeBtn) closeBtn.focus();
   };
 
   window.closeContactModal = function () {
-    modal.style.display = 'none';
-    if (lastFocused && typeof lastFocused.focus === 'function') lastFocused.focus();
-    lastFocused = null;
+    if (modal.classList.contains('closing')) return; // 淡出动画进行中，避免重复触发
+    modal.classList.remove('open');
+    modal.classList.add('closing');
+    // 等淡出动画播完再隐藏（时长与 CSS .closing 的 .2s 匹配）
+    setTimeout(() => {
+      modal.style.display = 'none';
+      modal.classList.remove('closing');
+      if (lastFocused && typeof lastFocused.focus === 'function') lastFocused.focus();
+      lastFocused = null;
+    }, 190);
   };
 
   // 无障碍：ESC 关闭；Tab 把焦点圈定在弹窗内（focus trap）

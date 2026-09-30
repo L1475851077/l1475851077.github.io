@@ -312,3 +312,7 @@
   }
 }
 /* --- 结束移动端适配 --- */
+
+/* 点击推荐卡按压反馈 */
+.recommend-card a { transition: transform .25s ease; }
+.recommend-card a:active { transform: scale(0.97); }

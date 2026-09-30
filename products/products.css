@@ -319,3 +319,6 @@ footer {
   font-size: 1.1em;
   color: #777;
 }
+
+/* 点击卡片按压反馈（进场 transition 复用，不另加） */
+.product-card-link:active .product-card { transform: scale(0.98); }

@@ -19,11 +19,11 @@
     <meta name="twitter:description" content="Kingfood (KF Catering) supplies commercial kitchen equipment — fridges, ovens, worktables, dishwashers and more — for hotels, restaurants and bakeries worldwide. Factory direct.">
     <meta name="twitter:image" content="https://kfcatering.com/images/og-cover.jpg">
     <meta name="keywords" content="commercial kitchen equipment, western kitchen, restaurant equipment, catering, ovens, fridges">
-    <link rel="stylesheet" href="style.css?v=20260930a">
+    <link rel="stylesheet" href="style.css?v=20260930b">
     <link rel="icon" type="image/x-icon" href="/favicon.ico"/>
     <link rel="preload" href="/fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="images/logo.webp" as="image">
-    <link rel="stylesheet" href="loading.css?v=20260930a">
+    <link rel="stylesheet" href="loading.css?v=20260930b">
     <script src="loading.js" defer></script>
     <script>/* 刷新时不再恢复上次滚动位置：加载期布局在变（字体交换/样式到达），
        恢复+滚动锚定会把布局变化补偿进 scrollY，反复刷新滚动条会逐次下移 */history.scrollRestoration = 'manual';</script>
@@ -53,8 +53,11 @@
 </head>
 <body>
     <div id="global-loading" class="global-loading" aria-hidden="true">
-        <div class="spinner"></div>
-        <p>Loading...</p>
+        <div class="loading-brand">
+            <img src="/images/logo.webp" alt="">
+            <div class="loading-word">KINGFOOD<small>Catering Equipment</small></div>
+        </div>
+        <div class="loading-line"><i></i></div>
     </div>
     <noscript><style>.global-loading{display:none}</style></noscript>
     <div id="mainContent" class="main-content">
@@ -204,7 +207,7 @@
 
     </div>
 
-    <script src="script.js?v=20260930a" defer></script>
+    <script src="script.js?v=20260930b" defer></script>
     <script src="/contact-modal.js" defer></script>
 </body>
 </html>

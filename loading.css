@@ -16,23 +16,67 @@
   transition: opacity 0.4s, visibility 0.4s;
 }
 
-.spinner {
-  width: 40px;
-  height: 40px;
-  border: 4px solid #f3f3f3;
-  border-top: 4px solid #d63031;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin-bottom: 16px;
+/* 品牌加载屏：徽标 + 字标轻呼吸，下方红色细进度线（方案 A） */
+.loading-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  animation: load-breath 1.6s ease-in-out infinite;
 }
 
-@keyframes spin {
-  to { transform: rotate(360deg); }
+.loading-brand img {
+  width: 57px;
+  height: 44px;
 }
 
-.global-loading p {
-  color: #555;
-  font-size: 1.1rem;
+.loading-word {
+  font-family: 'Inter', 'Inter Fallback', sans-serif;
+  font-weight: 700;
+  font-size: 24px;
+  letter-spacing: .04em;
+  color: #111;
+  line-height: 1.1;
+}
+
+.loading-word small {
+  display: block;
+  font-weight: 400;
+  font-size: 9.5px;
+  letter-spacing: .18em;
+  color: #6B7280;
+  text-transform: uppercase;
+  margin-top: 2px;
+}
+
+@keyframes load-breath {
+  0%, 100% { opacity: 1; }
+  50% { opacity: .45; }
+}
+
+.loading-line {
+  width: 160px;
+  height: 2px;
+  background: #E5E7EB;
+  margin-top: 22px;
+  border-radius: 1px;
+  overflow: hidden;
+}
+
+.loading-line i {
+  display: block;
+  width: 40%;
+  height: 100%;
+  background: #d63031;
+  animation: load-slide 1.2s ease-in-out infinite;
+}
+
+@keyframes load-slide {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(400%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .loading-brand, .loading-line i { animation: none !important; }
 }
 
 /* 主内容动画（需配合 JS 添加 .loaded 类）；只做透明度，不加位移，

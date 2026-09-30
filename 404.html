@@ -19,8 +19,11 @@
 </head>
 <body>
     <div id="global-loading" class="global-loading" aria-hidden="true">
-        <div class="spinner"></div>
-        <p>Loading...</p>
+        <div class="loading-brand">
+            <img src="/images/logo.webp" alt="">
+            <div class="loading-word">KINGFOOD<small>Catering Equipment</small></div>
+        </div>
+        <div class="loading-line"><i></i></div>
     </div>
     <noscript><style>.global-loading{display:none}</style></noscript>
     <header>
@@ -40,11 +43,11 @@
     <!-- 替换的 main 内容 -->
     <main class="product-detail">
         <div class="container" style="padding: 120px 20px; text-align: center;">
-            <h1 class="notfound-title"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>Page Not Found</h1>
-            <p>Sorry, we couldn't find the page you're looking for.</p>
-            <p>It may have been removed or the link is incorrect.</p>
-            <a href="/products/" class="btn" style="margin-top: 20px; display: inline-block;">Browse All Products</a>
-            <p style="margin-top: 30px; font-size: 0.9em; color: #777;">
+            <h1 class="notfound-title" data-reveal><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>Page Not Found</h1>
+            <p data-reveal style="--reveal-delay: 220ms;">Sorry, we couldn't find the page you're looking for.</p>
+            <p data-reveal style="--reveal-delay: 300ms;">It may have been removed or the link is incorrect.</p>
+            <a href="/products/" class="btn" data-reveal style="margin-top: 20px; display: inline-block; --reveal-delay: 380ms;">Browse All Products</a>
+            <p data-reveal style="margin-top: 30px; font-size: 0.9em; color: #777; --reveal-delay: 460ms;">
                 Need help? <a href="mailto:ling@kfcatering.com?subject=Inquiry%20from%20kfcatering.com" style="color: #d63031; text-decoration: underline;">Contact us</a>
             </p>
         </div>

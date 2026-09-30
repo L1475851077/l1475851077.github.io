@@ -52,6 +52,11 @@ body {
   font-weight: 400;
 }
 
+/* 禁止横向滚动：进场隐藏态的 hero-media（translateX(64px)）在滚出首屏重置后会把文档
+   撑出 ~39px 横向可滚动区，手机上页面能被平移，fixed 联系按钮会随视觉视口缩进右下角。
+   用 clip 而非 hidden——clip 不产生滚动容器，sticky 页头与竖向滚动不受影响 */
+html, body { overflow-x: clip; }
+
 img { display: block; max-width: 100%; }
 a { text-decoration: none; color: inherit; }
 
@@ -250,10 +255,8 @@ nav a:hover { color: var(--ink); }
   transition: transform .3s ease, box-shadow .3s ease;
 }
 .p-card:hover { transform: translateY(-5px); box-shadow: 0 4px 10px rgba(17,17,17,.12), 0 18px 38px rgba(17,17,17,.24); }
-/* 触屏无 hover，用按压缩放代替 */
-@media (hover: none) {
-  .p-card:active { transform: scale(0.98); box-shadow: 0 2px 6px rgba(17,17,17,.12), 0 6px 16px rgba(17,17,17,.22); }
-}
+/* 点击卡片即时按压反馈（触屏/鼠标一致），跳转由目标页加载淡入衔接 */
+.p-card:active { transform: scale(0.98); box-shadow: 0 2px 6px rgba(17,17,17,.12), 0 6px 16px rgba(17,17,17,.22); }
 
 /* 热销卡片级联进场：网格（data-reveal="container"）滚入视口拿到 .revealed 后逐个浮起；
    入场用 animation 而非 transition，结束后不占用 transform，hover 上浮不受影响。
@@ -420,6 +423,17 @@ footer { text-align: center; flex-shrink: 0; }
   background: rgba(0,0,0,0.8);
   overflow: auto;
 }
+/* 弹窗进出场：打开时背景淡入 + 内容上浮缩放；关闭时 JS 挂 .closing 播完淡出再 display:none。
+   进场动画必须挂在 .open 类上而非基础样式——display:none 期间动画会隐形跑完，
+   打开时就直接是终态（表现为"闪现"） */
+.contact-modal.open { animation: modal-fade .25s ease-out; }
+@keyframes modal-fade { from { opacity: 0; } }
+.contact-modal.open .contact-modal-content { animation: modal-pop .28s cubic-bezier(.22,.61,.36,1); }
+@keyframes modal-pop { from { opacity: 0; transform: scale(.94) translateY(10px); } }
+.contact-modal.closing { animation: modal-fade-out .2s ease-in forwards; }
+@keyframes modal-fade-out { to { opacity: 0; } }
+.contact-modal.closing .contact-modal-content { animation: modal-pop-out .2s ease-in forwards; }
+@keyframes modal-pop-out { to { opacity: 0; transform: scale(.96) translateY(6px); } }
 .contact-modal-content {
   background: #fff;
   margin: 5% auto;
@@ -619,4 +633,5 @@ main.product-detail {
     animation: none !important;
   }
   .contact-float-btn { animation: none !important; }
+  .contact-modal, .contact-modal .contact-modal-content { animation: none !important; }
 }
