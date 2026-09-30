@@ -56,10 +56,12 @@
     /* align-self: start; /1* 可选：对齐方式 *1/ */
 }
 
-/* 轮播容器：限制宽度，允许内部滚动 */
+/* 轮播容器：三列栅格。按钮各占一条 auto 轨道，中间轨道用 minmax(0,1fr)
+   允许被压缩，这样窄屏下卡片只会挤不进按钮的轨道，不会再叠到按钮上面。 */
 .related-carousel {
     position: relative;
-    display: flex;
+    display: grid;
+    grid-template-columns: auto minmax(0, 1fr) auto;
     align-items: center;
     width: 100%;
     max-width: 100%;
@@ -72,8 +74,9 @@
     justify-content: center; /* 水平居中卡片 */
     align-items: flex-start; /* 垂直对齐到顶部 */
     gap: 12px; /* 保持卡片间距 */
-    width: 100%; /* 占满父容器 */
-    min-width: 0; /* 防止 flex 子项撑开容器 */
+    width: 100%; /* 占满所在栅格轨道 */
+    min-width: 0; /* 允许被压缩到内容宽度以下 */
+    overflow: hidden; /* 兜底：极端窄屏裁掉多余卡片，不外溢 */
     padding: 8px 0; /* 可选：内部间距 */
 }
 
@@ -83,13 +86,15 @@
 
 /* === 推荐商品卡片 - 固定尺寸，防割裂，链接优化 === */
 .recommend-card {
-  flex: 0 0 auto;
+  flex: 0 1 auto;      /* 空间不足时允许等比收缩，不去挤按钮 */
+  min-width: 0;
   width: 150px;
   height: 250px; /* 固定高度 */
   padding: 15px;
   background: #fff;
-  border: 1px solid #eee;
+  border: 1px solid #e5e7eb;
   border-radius: 6px;
+  box-shadow: 0 2px 5px rgba(17, 17, 17, 0.10), 0 8px 18px rgba(17, 17, 17, 0.14);
   display: flex; /* 保持 flex */
   flex-direction: column; /* 保持 column */
   opacity: 1;
@@ -196,7 +201,7 @@
   }
   .recommend-card:hover { /* 对卡片本身应用悬停效果 */
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    box-shadow: 0 4px 8px rgba(17, 17, 17, 0.12), 0 12px 26px rgba(17, 17, 17, 0.24);
     border-color: #ddd;
   }
 }
@@ -204,7 +209,7 @@
 /* 点击/触摸反馈 */
 .recommend-card:active {
   transform: scale(0.96);
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 2px 5px rgba(17, 17, 17, 0.12), 0 5px 12px rgba(17, 17, 17, 0.24);
   border-color: #ccc;
 }
 
@@ -229,6 +234,9 @@
   justify-content: center;
   margin: 0 4px;
   flex-shrink: 0; /* 不收缩 */
+  /* 卡片是 position:relative 且内部 <a> 带 z-index:1，按钮若保持 static 就会被卡片盖住 */
+  position: relative;
+  z-index: 5;
   transition: background 0.2s ease;
 }
 
@@ -269,9 +277,14 @@
     /* padding: 0 10px; /1* 可选：移动端边距 *1/ */
   }
 
-  /* 移动端卡片样式调整 */
+  /* 移动端卡片样式调整：三张卡片平分轨道宽度（原来固定 110px 会挤爆箭头） */
+  .carousel-track { gap: 8px; }
+
   .recommend-card {
-    width: 110px;
+    flex: 1 1 0;
+    min-width: 0;
+    max-width: 150px; /* 宽屏（平板）下不无限拉伸，回到接近桌面卡片的尺寸 */
+    width: auto;
     height: 230px;
     padding: 8px;
   }

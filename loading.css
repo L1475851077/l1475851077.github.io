@@ -35,14 +35,13 @@
   font-size: 1.1rem;
 }
 
-/* 主内容动画（需配合 JS 添加 .loaded 类） */
+/* 主内容动画（需配合 JS 添加 .loaded 类）；只做透明度，不加位移，
+   理由见 style.css 中 .main-content 的注释（避免刷新时滚动位置漂移） */
 .main-content {
   opacity: 0;
-  transform: translateY(10px);
-  transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+  transition: opacity 0.4s ease-out;
 }
 
 body.loaded .main-content {
   opacity: 1;
-  transform: translateY(0);
 }

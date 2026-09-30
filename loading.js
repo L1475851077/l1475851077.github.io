@@ -1,14 +1,17 @@
 // loading.js
 (function () {
-  // 1. 动态插入加载遮罩
-  const loadingEl = document.createElement('div');
-  loadingEl.id = 'global-loading';
-  loadingEl.className = 'global-loading';
-  loadingEl.innerHTML = `
+  // 1. 遮罩节点：优先复用页面内联的 #global-loading，缺失时才动态插入
+  let loadingEl = document.getElementById('global-loading');
+  if (!loadingEl) {
+    loadingEl = document.createElement('div');
+    loadingEl.id = 'global-loading';
+    loadingEl.className = 'global-loading';
+    loadingEl.innerHTML = `
     <div class="spinner"></div>
     <p>Loading...</p>
   `;
-  document.body.insertBefore(loadingEl, document.body.firstChild);
+    document.body.insertBefore(loadingEl, document.body.firstChild);
+  }
 
   // 2. 隐藏加载遮罩的函数
   function hideLoading() {
@@ -30,16 +33,20 @@
     hideLoading();
   }
 
-  // 4. 监听加载事件
-  window.addEventListener('load', initPage);
+  // 4. 监听加载事件：DOM 就绪即隐藏（图片已全部懒加载，不必等 window.load 的外部资源）
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initPage, { once: true });
+  } else {
+    initPage();
+  }
   window.addEventListener('pageshow', (e) => {
     if (e.persisted) setTimeout(initPage, 100);
   });
 
-  // 5. 兜底：3秒后强制显示
+  // 5. 兜底：1 秒后强制显示，防止后续脚本报错把内容永久遮住
   setTimeout(() => {
     if (!document.body.classList.contains('loaded')) {
       initPage();
     }
-  }, 3000);
+  }, 1000);
 })();

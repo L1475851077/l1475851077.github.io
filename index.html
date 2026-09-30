@@ -3,23 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- <title>Guangzhou Kingfood Catering Equipment</title> -->
-    <!-- <meta name="description" content="Professional Western Kitchen Equipment Supplier - Commercial Fridges, Ovens, Worktables, Dishwashers. Factory Direct, Global Shipping."> -->
     <title>Kingfood | Commercial Kitchen Equipment Supplier</title>
-    <meta name="description" content="Kingfood (KF Catering) offers commercial kitchen equipment for hotels &  Commercial Fridges, Ovens, Worktables, Dishwashers. restaurants. Factory direct.">
+    <meta name="description" content="Kingfood (KF Catering) supplies commercial kitchen equipment — fridges, ovens, worktables, dishwashers and more — for hotels, restaurants and bakeries worldwide. Factory direct.">
+
+    <link rel="canonical" href="https://kfcatering.com/">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Kingfood Catering Equipment">
+    <meta property="og:title" content="Kingfood | Commercial Kitchen Equipment Supplier">
+    <meta property="og:description" content="Kingfood (KF Catering) supplies commercial kitchen equipment — fridges, ovens, worktables, dishwashers and more — for hotels, restaurants and bakeries worldwide. Factory direct.">
+    <meta property="og:url" content="https://kfcatering.com/">
+    <meta property="og:image" content="https://kfcatering.com/images/og-cover.jpg">
+    <meta property="og:locale" content="en_US">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Kingfood | Commercial Kitchen Equipment Supplier">
+    <meta name="twitter:description" content="Kingfood (KF Catering) supplies commercial kitchen equipment — fridges, ovens, worktables, dishwashers and more — for hotels, restaurants and bakeries worldwide. Factory direct.">
+    <meta name="twitter:image" content="https://kfcatering.com/images/og-cover.jpg">
     <meta name="keywords" content="commercial kitchen equipment, western kitchen, restaurant equipment, catering, ovens, fridges">
-    <link rel="stylesheet" href="style.css">
-    <link rel="icon" type="image/x-icon" href="favicon.ico"/>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css?v=20260930a">
+    <link rel="icon" type="image/x-icon" href="/favicon.ico"/>
+    <link rel="preload" href="/fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="preload" href="images/logo.webp" as="image">
-    <!-- <link rel="preload" href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@300;400;500;700&display=swap" as="style" onload="this.onload=null;this.rel='stylesheet'"> -->
-    <!-- <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"> -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" media="print" onload="this.media='all'">
-    <noscript><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"></noscript>
-    <link rel="stylesheet" href="loading.css">
+    <link rel="stylesheet" href="loading.css?v=20260930a">
     <script src="loading.js" defer></script>
+    <script>/* 刷新时不再恢复上次滚动位置：加载期布局在变（字体交换/样式到达），
+       恢复+滚动锚定会把布局变化补偿进 scrollY，反复刷新滚动条会逐次下移 */history.scrollRestoration = 'manual';</script>
     <script src="/products/data.js" defer></script>
     <script type="application/ld+json">
     {
@@ -45,126 +52,75 @@
     </script>
 </head>
 <body>
+    <div id="global-loading" class="global-loading" aria-hidden="true">
+        <div class="spinner"></div>
+        <p>Loading...</p>
+    </div>
+    <noscript><style>.global-loading{display:none}</style></noscript>
     <div id="mainContent" class="main-content">
+
     <!-- 顶部导航 -->
-    <header>
-        <div class="container">
-            <div class="logo">
-            <img src="images/logo.webp" alt="Kingfood catering Logo" class="logo-img" width="120" height="40" loading="eager">
-                Kingfood</div>
+    <header class="site-header">
+        <div class="container header-inner">
+            <a class="logo" href="index.html"><img src="images/logo.webp" alt="Kingfood Catering Logo" class="logo-img" width="57" height="44"><span class="logo-text">KINGFOOD<span class="logo-sub">Catering Equipment</span></span></a>
 
-        <!-- 汉堡按钮（仅小屏显示） -->
-        <button class="hamburger" id="hamburger" aria-label="Toggle navigation">
-            &#9776; <!-- 或使用 <span></span> 自定义图标 -->
-        </button>
+            <!-- 汉堡按钮（仅小屏显示） -->
+            <button class="hamburger" id="hamburger" aria-label="Toggle navigation"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" aria-hidden="true"><path d="M3 6h18M3 12h18M3 18h18"/></svg></button>
 
-            <nav id="mainNav" >
+            <nav id="mainNav">
                 <a href="products/index.html">Products</a>
                 <a href="#why">Why Us</a>
                 <a href="#contact">Contact</a>
             </nav>
+
+            <a href="#contact" class="btn header-cta">Send Inquiry</a>
         </div>
     </header>
 
-    <!-- 首屏 Banner -->
-    <!-- <section class="hero">
-        <div class="container">
-            <h1>Professional Western Kitchen Equipment</h1>
-            <p>10+ Years Experience · Factory Direct · Free Layout Design · Global Warranty</p>
-            <a href="#contact" class="btn">Send Inquiry</a>
-        </div>
-    </section> -->
-
-    <!-- 轮播图区域 -->
-<section class="carousel-section">
-    <div class="carousel">
-        <!-- 幻灯片 1 -->
-        <div class="slide active">
-            <img src="images/equipment_lb/1760707271.webp" alt="Professional Western Kitchen Equipment">
-            <div class="slide-content">
-                <h1>Professional Western Kitchen Equipment</h1>
-                <p>10+ Years Experience · Factory Direct · Free Layout Design · Global Warranty</p>
-                <a href="#contact" class="btn">Send Inquiry</a>
+    <!-- 首屏 Hero：左文右图 -->
+    <section class="hero">
+        <div class="container hero-grid">
+            <div class="hero-copy">
+                <span class="eyebrow" data-reveal="left">Commercial Kitchen Equipment · Factory Direct</span>
+                <h1 data-reveal="left">Professional<br>Western Kitchen<br><em>Equipment</em></h1>
+                <p class="hero-sub" data-reveal="left">Commercial kitchen equipment fit for a king — gold-standard craftsmanship for hotels, restaurants and bakeries worldwide.</p>
+                <div class="hero-actions" data-reveal="left">
+                    <a href="#contact" class="btn">Send Inquiry</a>
+                    <a href="products/index.html" class="link-arrow">Browse the catalog
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                    </a>
+                </div>
             </div>
-        </div>
-        <!-- 幻灯片 2 -->
-        <div class="slide">
-            <img src="images/equipment_lb/1760707271.webp" alt="Commercial Kitchen Solutions for Hotels">
-            <div class="slide-content">
-                <h2>Trusted by Global Restaurants</h2>
-                <p>Custom Layouts · Energy-Efficient Equipment · 24/7 Support</p>
-                <a href="#contact" class="btn">Get a Free Quote</a>
+            <div class="hero-media" data-reveal="right">
+                <img src="images/equipment_lb/1760707271.webp" alt="Professional kitchen equipment" fetchpriority="high">
             </div>
-        </div>
-        <!-- 幻灯片 3 -->
-        <div class="slide">
-            <img src="images/equipment_lb/1760707271.webp" alt="High-End Bakery Equipment">
-            <div class="slide-content">
-                <h2>Complete Bakery & Restaurant Solutions</h2>
-                <p>Ovens, Fridges, Workstations – All in One Place</p>
-                <a href="products/index.html" class="btn">View Products</a>
-            </div>
-        </div>
-
-            <!-- 左右切换按钮 -->
-            <button class="carousel-btn prev" aria-label="Previous slide">‹</button>
-            <button class="carousel-btn next" aria-label="Next slide">›</button>
-    
-            <!-- 指示器 -->
-            <div class="carousel-indicators">
-                <span class="indicator active" data-slide="1"></span>
-                <span class="indicator" data-slide="2"></span>
-                <span class="indicator" data-slide="3"></span>
-            </div>
-    </div>
-</section>
-
-    <!-- 公司简介 -->
-    <section class="intro">
-        <div class="container">
-            <!-- <h2>About Us <br> Guangzhou Kingfood Catering Equipment Co., Ltd.</h2> -->
-            <!-- <p>We specialize in providing high-end western kitchen equipment for hotels, restaurants, and bakeries worldwide. Our product range includes commercial fridges, ovens, worktables, dishwashers, and more. Customization available. Global shipping & installation support.</p> -->
-            <h2>About Kingfood (KF Catering)</h2>
-            <p>
-                <strong>Kingfood</strong> — officially <em>Guangzhou Kingfood Catering Equipment Co., Ltd.</em> — is a
-                leading manufacturer and exporter of professional commercial kitchen equipment. Operating under the brand
-                <strong>Kingfood (KF Catering)</strong>, we have become a trusted supplier for hotels, restaurants, and bakeries in
-                numerous countries worldwide.
-            </p>
-            <p>
-                Our product range includes commercial refrigerators, electric ovens, stainless steel worktables,
-                dishwashers, heated display cabinets, and modular kitchen workstations — all built with 304 stainless steel,
-                energy-efficient technology, and compliance with international safety standards.
-            </p>
-            <p>
-                As a factory-direct supplier, we offer competitive pricing, reliable quality control, and comprehensive
-                global shipping services.
-            </p>
         </div>
     </section>
-        
-    <!-- 产品展示区 -->
-    <!-- <section id="products" class="products">
-        <div class="container">
-            <h2>
-                Hot Products
-                <a href="products/index.html" class="view-all-link">View All →</a>
-            </h2>
-            <div class="product-grid" id="hotProductsGrid">
-                热销商品将由 script.js 动态渲染 -->
-            <!-- </div>
+
+    <!-- 数据条 -->
+    <section class="stats">
+        <div class="container stats-grid">
+            <div class="stat" data-reveal><strong>10+</strong><span>Years Experience</span></div>
+            <div class="stat" data-reveal><strong>50+</strong><span>Countries Served</span></div>
+            <div class="stat" data-reveal><strong>100%</strong><span>Quality Inspected</span></div>
+            <div class="stat" data-reveal><strong>95%</strong><span>Repeat Order Rate</span></div>
         </div>
-    </section> -->
+    </section>
 
     <!-- 产品展示区 -->
     <section id="products" class="products">
         <div class="container">
-            <h2>Hot Products</h2>
-            <div class="products-wrapper">
-                <div class="product-grid" id="hotProductsGrid">
-                <!-- 热销商品由 JS 渲染 -->
+            <div class="section-head" data-reveal>
+                <div>
+                    <span class="eyebrow">Catalog</span>
+                    <h2>Hot Products</h2>
                 </div>
-                <a href="products/index.html" class="view-all-float">View All →</a>
+                <a class="link-arrow" href="products/index.html">View all products
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+                </a>
+            </div>
+            <div class="p-grid" id="hotProductsGrid" data-reveal="container">
+            <!-- 热销商品由 JS 渲染 -->
             </div>
         </div>
     </section>
@@ -180,102 +136,75 @@
     <!-- 为什么选择我们 -->
     <section id="why" class="why">
         <div class="container">
-            <h2>Why Choose Kingfood (KF Catering)?</h2>
-            <div class="advantages">
-                <div class="advantage">
-                    <div class="icon">🏭</div>
+            <span class="eyebrow" data-reveal>Why Kingfood</span>
+            <h2 data-reveal>Built for Professionals</h2>
+            <div class="why-grid">
+                <div class="why-col" data-reveal>
+                    <div class="why-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M2 20a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8l-7 5V8l-7 5V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="M17 18h1"/><path d="M12 18h1"/><path d="M7 18h1"/></svg>
+                    </div>
                     <h3>Factory Direct</h3>
-                    <p>Direct from our factory. Better price. Guaranteed quality.</p>
+                    <p>Shipped direct from our partner factories under the Kingfood brand — better price, no distributor markup.</p>
                 </div>
-                <div class="advantage">
-                    <div class="icon">🛠️</div>
+                <div class="why-col" data-reveal>
+                    <div class="why-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 13c0 5-3.5 7.5-7.66 8.95a1 1 0 0 1-.67-.01C7.5 20.5 4 18 4 13V6a1 1 0 0 1 1-1c2 0 4.5-1.2 6.24-2.72a1.17 1.17 0 0 1 1.52 0C14.51 3.81 17 5 19 5a1 1 0 0 1 1 1z"/><path d="m9 12 2 2 4-4"/></svg>
+                    </div>
                     <h3>Premium Quality</h3>
-                    <p>Precision engineering and robust assembly ensure unwavering reliability over years of operation.</p>
+                    <p>Built to Kingfood specifications with food-grade materials, inspected piece by piece before shipment.</p>
                 </div>
-                <div class="advantage">
-                    <div class="icon">🌍</div>
-                    <h3>Global Support</h3>
-                    <p>Seamless worldwide shipping and expert technical support.</p>
+                <div class="why-col" data-reveal>
+                    <div class="why-icon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M2 12h20"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+                    </div>
+                    <h3>Worldwide Export</h3>
+                    <p>Seamless door-to-door shipping with export-grade packing, to 50+ countries.</p>
                 </div>
             </div>
         </div>
     </section>
 
-    
     <!-- 联系我们 -->
     <section id="contact" class="contact">
-        <div class="container">
-            <h2>Contact Us</h2>
-            <div class="contact-wrapper">
-                <div class="contact-info">
-                    <p>📞 <strong>Phone:</strong> +86 19927525746</p>
-                    <p>📧 <strong>Email:</strong> <a href="mailto:ling@kfcatering.com">ling@kfcatering.com</a></p>
-                    <p><i class="fab fa-youtube" style="color: #ff0000; margin-right: 8px;"></i> <strong>YouTube:</strong> <a href="https://youtube.com/@kingfoodcatering?si=YAkW3xX0A_rMt-ai" target="_blank">Browse @kingfoodcatering</a></p>
-                    <!-- <p>📞 <strong>Youtube:</strong> <a href="https://youtube.com/@kingfoodcatering?si=YAkW3xX0A_rMt-ai">@kingfoodcatering</a></p> -->
-                    <p>🏭 <strong>Address:</strong> No. 16, Hongqi Road, Hongqi Village, Zhongluotan Town, Baiyun District, Guangzhou, China</p>
-                </div>
-                <!-- ✅ 修复 Formspree 表单 -->
-                <form class="contact-form" action="https://formspree.io/f/mwprabde" method="POST">
-                    <input type="text" name="name" placeholder="Your Name" required>
-                    <input type="email" name="email" placeholder="Your Email" required>
-                    <input type="tel" name="phone" placeholder="Your WhatsApp Number">
-                    <textarea name="message" placeholder="Please specify product model, quantity or special requirements..." rows="4" required></textarea>
-                    <button type="submit" class="btn">Send Inquiry</button>
-                </form>
+        <div class="container contact-grid">
+            <div class="contact-info" data-reveal>
+                <span class="eyebrow">Contact</span>
+                <h2>Get a factory-direct quote</h2>
+                <p class="contact-lead">Tell us your product needs and target quantities — our team replies within 24 hours.</p>
+                <ul class="contact-list">
+                    <li><svg class="li-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.8 19.8 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.12 4.2 2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.7 2.81a2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.91.34 1.85.57 2.81.7A2 2 0 0 1 22 16.92z"/></svg><span>Phone</span>+86 19927525746</li>
+                    <li><svg class="li-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg><span>Email</span><a class="cue-arrow" href="mailto:ling@kfcatering.com?subject=Inquiry%20from%20kfcatering.com"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>ling@kfcatering.com</a></li>
+                    <li><svg class="li-icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M23.498 6.186a3.016 3.016 0 0 0-2.122-2.136C19.505 3.545 12 3.545 12 3.545s-7.505 0-9.377.505A3.017 3.017 0 0 0 .502 6.186C0 8.07 0 12 0 12s0 3.93.502 5.814a3.016 3.016 0 0 0 2.122 2.136c1.871.505 9.376.505 9.376.505s7.505 0 9.377-.505a3.015 3.015 0 0 0 2.122-2.136C24 15.93 24 12 24 12s0-3.93-.502-5.814zM9.545 15.568V8.432L15.818 12l-6.273 3.568z"/></svg><span>YouTube</span><a class="cue-arrow" href="https://youtube.com/@kingfoodcatering?si=YAkW3xX0A_rMt-ai" target="_blank" rel="noopener noreferrer"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>Browse @kingfoodcatering</a></li>
+                    <li><svg class="li-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 20a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8l-7 5V8l-7 5V4a2 2 0 0 0-2-2H4a2 2 0 0 0-2 2Z"/><path d="M17 18h1"/><path d="M12 18h1"/><path d="M7 18h1"/></svg><span>Factory</span>No. 16, Hongqi Road, Hongqi Village, Zhongluotan Town, Baiyun District, Guangzhou, China</li>
+                </ul>
             </div>
+            <!-- 询盘表单：仅 WhatsApp 直发（不做服务端提交，避免被脚本刷） -->
+            <form class="contact-form" id="inquiryForm" data-reveal onsubmit="sendViaWhatsApp(); return false;">
+                <label>Your Name<input type="text" id="inqName"></label>
+                <label>Your Email<input type="email" id="inqEmail"></label>
+                <label>WhatsApp Number<input type="tel" id="inqPhone"></label>
+                <label>Message<textarea rows="3" id="inqMessage" placeholder="Product model, quantity, special requirements..."></textarea></label>
+                <div class="form-actions">
+                    <button type="submit" class="btn btn-whatsapp">
+                        <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8-.2-.1-.4-.1-.6.1-.2.2-.6.8-.8 1-.1.2-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4 0-.5.2-.7l.4-.5c.1-.2.2-.3.3-.5v-.5c0-.1-.6-1.4-.8-1.9-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.2.3-.9.9-.9 2.2s.9 2.5 1.1 2.7c.1.2 1.8 2.8 4.4 3.9.6.3 1.1.4 1.5.6.6.2 1.2.2 1.6.1.5-.1 1.5-.6 1.7-1.2.2-.6.2-1.1.2-1.2-.1-.1-.3-.2-.5-.3z"/></svg>
+                        Send via WhatsApp
+                    </button>
+                </div>
+            </form>
         </div>
     </section>
 
     <!-- 页脚 -->
-    <footer>
-        <div class="container">
-            <p>© 2025 Guangzhou Kingfood Catering Equipment Co., Ltd.</p>
+    <footer class="site-footer">
+        <div class="container footer-inner">
+            <a class="logo footer-logo" href="/index.html"><img src="/images/logo-light.webp" alt="Kingfood Catering Logo" class="logo-img" width="57" height="44"><span class="logo-text">KINGFOOD<span class="logo-sub">Catering Equipment</span></span></a>
+            <p>© 2026 Guangzhou Kingfood Catering Equipment Co., Ltd.</p>
         </div>
     </footer>
-</div>
-    <!-- WhatsApp/微信联系悬浮按钮 -->
-    <div id="contactFloatBtn" class="contact-float-btn" onclick="openContactModal()">
-        📞 Contact Us
+
     </div>
 
-    <!-- 联系方式弹窗 -->
-    <div id="contactModal" class="contact-modal">
-        <div class="contact-modal-content">
-            <span class="close" onclick="closeContactModal()">&times;</span>
-            <h2>Contact Customer Service</h2>
-            <p><a href="mailto:ling@kfcatering.com" class="btn">Email：ling@kfcatering.com</a></p>
-            <div class="contact-options">
-                <div class="contact-option">
-                    <h3><i class="fab fa-whatsapp" style="color: #25D366; margin-right: 8px;"></i> WhatsApp</h3>
-                    <a href="https://wa.me/8619927525746" class="btn">Add WhatsApp</a>
-                    <img src="images/whatsapp_qr.webp" alt="WhatsApp QR Code" class="qr-code">
-                    <p class="note">Scan to add WhatsApp</p>
-                </div>
-                <div class="contact-option">
-                    <h3><i class="fab fa-weixin" style="color: #07C160; margin-right: 8px;"></i> WeChat</h3>
-                    <!-- <a href="#" class="btn qr-interactive" onclick="animateQr(this); return false;">Add WhatsApp</a> -->
-                     <a href="#" class="btn" onclick="triggerQrAnimation(); return false;">Add WhatsApp</a>
-                    <!-- <img src="images/wechat_qr.jpg" alt="WeChat QR Code" class="qr-code"> -->
-                     <!-- <img src="images/wechat_qr.jpg" alt="WeChat QR Code" class="qr-code qr-interactive" onclick="animateQr(this)"> -->
-                    <img id="wechatQr" src="images/wechat_qr.webp" alt="WeChat QR Code" class="qr-code">
-                    <p class="note">Scan to add WeChat</p>
-                </div>
-                <div class="contact-option">
-                    <h3><i class="fab fa-facebook" style="color: #1877F2; margin-right: 8px;"></i> Facebook</h3>
-                    <a href="https://www.facebook.com/profile.php?id=100076730304582" class="btn">Browse Facebook</a>
-                    <img src="images/facebook_qr.webp" alt="Facebook QR Code" class="qr-code">
-                    <p class="note">Scan to add Facebook</p>
-                </div>
-                <div class="contact-option">
-                    <h3><i class="fab fa-instagram" style="color: #E1306C; margin-right: 8px;"></i> Instagram</h3>
-                    <a href="https://www.instagram.com/kingfoodcatering/" class="btn">Browse Instagram</a>
-                    <img src="images/instagram_qr.webp" alt="Instagram QR Code" class="qr-code">
-                    <p class="note">Scan to add Instagram</p>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <script src="script.js" defer></script>
+    <script src="script.js?v=20260930a" defer></script>
+    <script src="/contact-modal.js" defer></script>
 </body>
 </html>

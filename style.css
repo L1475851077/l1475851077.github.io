@@ -1,809 +1,622 @@
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+/* ============================================================
+   Kingfood — Style B · Minimal Catalog（极简白目录风）
+   全站共用样式：设计 token + 首页组件 + 子站共享组件
+   ============================================================ */
+
+/* Inter 自托管：可变字重单文件（latin 子集，@fontsource-variable/inter，SIL OFL 1.1）
+   一份 48 KB 覆盖 100-900 全字重，替代原先 Google Fonts 的 5 个静态字重；
+   路径用根绝对，products/ 子目录页面共用同一份 */
+@font-face {
+  font-family: 'Inter';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: url('/fonts/inter-latin-wght-normal.woff2') format('woff2');
+}
+/* 度量匹配回退面：字体交换前用 size-adjust 校正过的 Arial 顶位，
+   使换行数/行高与 Inter 一致——否则 swap 瞬间 hero-sub 等会从 2 行变 3 行，
+   文档高度突变，叠加刷新恢复滚动位置就会造成滚动条逐次漂移 */
+@font-face {
+  font-family: 'Inter Fallback';
+  font-style: normal;
+  font-weight: 100 900;
+  font-display: swap;
+  src: local('Arial');
+  size-adjust: 107.40%;
+  ascent-override: 90.44%;
+  descent-override: 22.52%;
+  line-gap-override: 0%;
 }
 
-/* body {
-    font-family: 'Noto Sans', sans-serif;
-    line-height: 1.6;
-    color: #333;
-    background: #f9f9f9;
-    opacity: 0;
-    transform: translateY(10px);
-    transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+:root {
+  --ink: #111111;
+  --sub: #6B7280;
+  --line: #E5E7EB;
+  --line-dark: #111111;
+  --bg-alt: #FAFAFA;
+  --white: #ffffff;
+  --accent: #D63031; /* 品牌红点缀：只用于小标签与悬停态，克制使用 */
+  --error: #E11D48;
+  --wa: #25D366;
+  --wa-dark: #1FB855;
+  --font: 'Inter', 'Inter Fallback', 'Noto Sans', sans-serif;
 }
 
-body.loaded,
-.loaded {
-    opacity: 1;
-    transform: translateY(0);
-} */
+* { margin: 0; padding: 0; box-sizing: border-box; }
 
+body {
+  font-family: var(--font);
+  color: var(--ink);
+  background: var(--white);
+  line-height: 1.65;
+  font-weight: 400;
+}
+
+img { display: block; max-width: 100%; }
+a { text-decoration: none; color: inherit; }
+
+.container { width: 94%; max-width: 1600px; margin: 0 auto; }
+
+h1, h2, h3 { font-weight: 300; line-height: 1.15; letter-spacing: -0.02em; }
+h1 em, h2 em { font-style: normal; font-weight: 600; }
+h2 { font-size: 36px; }
+
+/* 页面淡入（配合 loading.js 的 body.loaded）。
+   只做透明度：不能加 translateY 位移——加载期整页下移 10px 会改变文档可滚动高度，
+   Chrome 刷新恢复滚动位置时会把它补偿进 scrollY，反复刷新滚动条就逐次下移 */
 .main-content {
   opacity: 0;
-  transform: translateY(10px);
-  transition: opacity 0.4s ease-out, transform 0.4s ease-out;
+  transition: opacity 0.4s ease-out;
 }
-
 body.loaded .main-content {
   opacity: 1;
-  transform: translateY(0);
 }
 
-.container {
-    width: 90%;
-    max-width: 1600px;
-    margin: 0 auto;
-    padding: 0 20px;
+/* ---- 进场动效系统（script.js 给 [data-reveal] 加 .revealed）----
+   html.anim-ready 由 JS 尽早添加：进场前的隐藏态只在 JS 可用时生效，
+   脚本加载失败或 noscript 时内容直接可见，不会白屏。
+   入场用 animation 而非 transition：animation 的起始帧由关键帧给定，
+   不要求浏览器先绘制过隐藏态——极速缓存刷新里 .revealed 与首帧绘制同至时
+   transition 会被整体跳过（表现为"刷新后头部文字/图片直接出现、没有进场动画"），
+   animation 在样式提交时即开始播放，无此竞态；
+   移除 .revealed 回到隐藏态、再次添加重新播放，滚动重播语义不变。
+   起始位移放在 --reveal-from 变量上，关键帧按元素取值区分方向 */
+.anim-ready [data-reveal] {
+  opacity: 0;
+  transform: var(--reveal-from, translateY(26px));
+}
+.anim-ready [data-reveal].revealed {
+  opacity: 1;
+  transform: none;
+  animation: kf-reveal-in .65s cubic-bezier(.22,.61,.36,1) backwards;
+  animation-delay: var(--reveal-delay, 0ms);
+}
+@keyframes kf-reveal-in {
+  from { opacity: 0; transform: var(--reveal-from, translateY(26px)); }
+}
+/* 图片类元素用轻微放大代替位移 */
+.anim-ready [data-reveal="zoom"] { --reveal-from: scale(.965); }
+/* 水平进场：左列从左、右列从右，往中间汇聚（Hero 左文右图用） */
+.anim-ready [data-reveal="left"] { --reveal-from: translateX(-48px); }
+.anim-ready [data-reveal="right"] { --reveal-from: translateX(64px); }
+/* 容器型：自身不变身，仅作为子元素级联的触发器（热销卡片网格用） */
+.anim-ready [data-reveal="container"] { opacity: 1; transform: none; animation: none; }
+/* 兜底可见态：页面在后台/被节流加载时，渲染帧、IO 回调与入场动画都会被挂起，
+   [data-reveal] 会卡在隐藏态（opacity:0）造成"刷新后首屏空白"。
+   JS 检测到首屏内容仍不可见时加此类，直接落终态并关掉动画，保证一定可见。 */
+.anim-ready [data-reveal].revealed-now {
+  opacity: 1 !important;
+  transform: none !important;
+  animation: none !important;
 }
 
-/* Header */
+/* 首屏 Hero 级联时序（与 loading 遮罩淡出错开）；
+   时长单独拉长到 0.8s，水平汇聚更从容 */
+.hero [data-reveal].revealed { animation-duration: .8s; }
+.hero-copy .eyebrow { --reveal-delay: 120ms; }
+.hero-copy h1 { --reveal-delay: 200ms; }
+.hero-sub { --reveal-delay: 280ms; }
+.hero-actions { --reveal-delay: 360ms; }
+.hero-media { --reveal-delay: 240ms; }
+
+/* 数据条 / Why 三栏 / 表单 级联时序 */
+.stats-grid .stat:nth-child(2) { --reveal-delay: 90ms; }
+.stats-grid .stat:nth-child(3) { --reveal-delay: 180ms; }
+.stats-grid .stat:nth-child(4) { --reveal-delay: 270ms; }
+.why-grid .why-col:nth-child(2) { --reveal-delay: 110ms; }
+.why-grid .why-col:nth-child(3) { --reveal-delay: 220ms; }
+.contact-form { --reveal-delay: 140ms; }
+
+/* ---- 通用小件 ---- */
+.eyebrow {
+  display: block; font-size: 11px; font-weight: 500; letter-spacing: 0.2em;
+  text-transform: uppercase; color: var(--sub); margin-bottom: 18px;
+}
+.section-head {
+  display: flex; align-items: flex-end; justify-content: space-between;
+  gap: 20px; flex-wrap: wrap; margin-bottom: 44px;
+}
+
+/* ---- Buttons：黑色方块，无圆角 ---- */
+.btn {
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--ink); color: #fff; font-size: 13px; font-weight: 500;
+  letter-spacing: 0.08em; text-transform: uppercase;
+  padding: 14px 32px; border: 1px solid var(--ink); border-radius: 2px;
+  cursor: pointer; transition: background .2s, color .2s, transform .12s ease;
+  font-family: inherit;
+}
+.btn:hover { background: #fff; color: var(--ink); }
+.btn:active { transform: scale(.96); }
+
+.btn-whatsapp { background: var(--wa); color: #fff; border-color: var(--wa); }
+.btn-whatsapp:hover { background: var(--wa-dark); color: #fff; }
+.btn-whatsapp svg { width: 18px; height: 18px; margin-right: 8px; }
+
+.link-arrow {
+  display: inline-flex; align-items: center; gap: 8px;
+  font-size: 13px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase;
+  border-bottom: 1px solid var(--line); padding-bottom: 3px; transition: border-color .2s;
+}
+.link-arrow svg { width: 15px; height: 15px; transition: transform .2s; }
+.link-arrow:hover { border-color: var(--ink); }
+.link-arrow:hover svg { transform: translateX(4px); }
+
+/* ---- Header（所有页面共用）---- */
 header {
-    background: #fff;
-    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-    position: sticky;
-    top: 0;
-    z-index: 100;
+  position: sticky; top: 0; z-index: 50;
+  background: rgba(255,255,255,.95); backdrop-filter: blur(8px);
+  border-bottom: 1px solid var(--line);
+  transition: box-shadow .3s ease;
 }
-
+/* 页面下滚后加一层投影，让吸附页头有"落定"感（script.js 切换 .scrolled） */
+header.scrolled { box-shadow: 0 6px 24px rgba(17,17,17,.10); }
 header .container {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 20px 0;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 12px 0;
 }
+/* 首页专用：固定高度导航行 */
+.header-inner { height: 72px; gap: 48px; }
 
 .logo {
-    font-size: 1.8rem;
-    font-weight: 700;
-    color: #d63031;
+  font-size: 17px; font-weight: 600; letter-spacing: 0.26em;
+  text-transform: uppercase; /* 子站写的是 "Kingfood"，统一显示为 "KINGFOOD" */
+  color: var(--ink); display: inline-flex; align-items: flex-start;
+  line-height: 1;
 }
-
-/* 控制 logo 图片大小 */
 .logo .logo-img {
-  height: 70px;        /* 设置高度（推荐用高度，宽度自动等比缩放） */
-  width: auto;         /* 保持原始宽高比 */
-  vertical-align: middle; /* 让图片和文字垂直居中对齐 */
-  transform: translateY(-15px); /* 向上移动 3 像素，按需调整 */
-  margin-right: 5px;  /* 图片和文字之间的间距 */
+  height: 44px;
+  width: auto;
+  margin-right: 12px;
 }
+/* 实测源图 665×512 内黑色字母 "KING"：顶 y=279、基线 y=422 → 44px 高等比后
+   字带 24.0~36.3px（字高 12.29px，与 Inter 17px 的 capHeight 12.37px 几乎等大）。
+   两行文字块高 29px，若把主行基线压到 36.3px 会让副行整条垂到图标下方、视觉偏低，
+   故按"文字块对图标光学居中"取主行基线 33.3px：
+   Inter 17px / line-height:1 基线距盒顶 14.69px → padding-top = 33.3 - 14.69 = 18.6px。
+   想更贴图标内 KING 的基线就把这个值调到 21.6px，想更高就往下减。 */
+.logo-text { display: flex; flex-direction: column; padding-top: 14.6px; }
+.logo-sub { font-size: 9px; font-weight: 500; letter-spacing: 0.14em; color: var(--sub); margin-top: 3px; }
 
-.hamburger {
-  display: none; /* 桌面隐藏汉堡按钮 */
-}
+.hamburger { display: none; }
+.hamburger svg { width: 22px; height: 22px; }
 
-nav {
-  display: flex;
-  gap: 20px;
-}
-
+nav { display: flex; gap: 36px; }
+.header-inner nav { margin-left: auto; }
 nav a {
-    margin-left: 30px;
-    text-decoration: none;
-    color: #555;
-    font-weight: 500;
-    transition: color 0.3s;
+  font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase;
+  color: var(--sub); transition: color .2s;
+}
+nav a:hover { color: var(--ink); }
+
+.header-inner .btn { padding: 11px 24px; font-size: 12px; }
+
+/* ---- Hero：左右分栏，无遮罩 ---- */
+.hero-grid {
+  display: grid; grid-template-columns: 1.05fr 1fr;
+  align-items: stretch; min-height: 560px;
+}
+.hero-copy { display: flex; flex-direction: column; justify-content: center; padding: 40px 60px 40px 0; }
+.hero-copy h1 { font-size: 56px; margin-bottom: 26px; }
+.hero-copy em { display: block; }
+.hero-sub {
+  font-size: 15.5px; font-weight: 300; color: var(--sub);
+  max-width: 440px; margin-bottom: 40px;
+}
+.hero-actions { display: flex; align-items: center; gap: 30px; flex-wrap: wrap; }
+.hero-media { position: relative; min-height: 520px; overflow: hidden; }
+/* scale(1.15) 给视差留出上下 7.5% 的余量，translateY 由 script.js 随滚动写入；
+   静止态（y=0）与 JS 初值一致，不会跳变 */
+.hero-media img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover;
+  transform: translateY(0) scale(1.15); will-change: transform; }
+
+/* ---- Stats：细分隔线 ---- */
+.stats { border-bottom: 1px solid var(--line); }
+.stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); }
+.stat { padding: 38px 24px; text-align: left; }
+.stat + .stat { border-left: 1px solid var(--line); }
+.stat strong { display: block; font-size: 30px; font-weight: 600; letter-spacing: -0.02em; }
+.stat span { font-size: 12px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--sub); }
+
+/* ---- Hot Products：卡片式 ---- */
+.products { padding: 110px 0; }
+.products .eyebrow { color: var(--accent); }
+.p-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 36px 32px; }
+.p-card {
+  display: flex; flex-direction: column;
+  background: #fff; border: 1px solid var(--line); border-radius: 8px;
+  padding: 16px;
+  box-shadow: 0 2px 6px rgba(17,17,17,.10), 0 10px 24px rgba(17,17,17,.14);
+  transition: transform .3s ease, box-shadow .3s ease;
+}
+.p-card:hover { transform: translateY(-5px); box-shadow: 0 4px 10px rgba(17,17,17,.12), 0 18px 38px rgba(17,17,17,.24); }
+/* 触屏无 hover，用按压缩放代替 */
+@media (hover: none) {
+  .p-card:active { transform: scale(0.98); box-shadow: 0 2px 6px rgba(17,17,17,.12), 0 6px 16px rgba(17,17,17,.22); }
 }
 
-nav a:hover {
-    color: #d63031;
+/* 热销卡片级联进场：网格（data-reveal="container"）滚入视口拿到 .revealed 后逐个浮起；
+   入场用 animation 而非 transition，结束后不占用 transform，hover 上浮不受影响。
+   时长与间隔刻意放缓（0.9s / 140ms 步进），落定更从容 */
+.anim-ready .p-grid .p-card { opacity: 0; }
+.p-grid.revealed .p-card {
+  opacity: 1;
+  animation: kf-card-in .9s cubic-bezier(.22,.61,.36,1) backwards;
+}
+.p-grid.revealed .p-card:nth-child(4n+2) { animation-delay: 140ms; }
+.p-grid.revealed .p-card:nth-child(4n+3) { animation-delay: 280ms; }
+.p-grid.revealed .p-card:nth-child(4n+4) { animation-delay: 420ms; }
+@keyframes kf-card-in {
+  from { opacity: 0; transform: translateY(28px); }
+}
+.p-media {
+  aspect-ratio: 4 / 3; overflow: hidden; background: var(--bg-alt);
+  margin-bottom: 14px; border-radius: 4px;
+}
+.p-media img { width: 100%; height: 100%; object-fit: cover; transition: transform .5s ease; }
+.p-card:hover .p-media img { transform: scale(1.04); }
+.p-cat {
+  font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase;
+  color: var(--accent); margin-bottom: 6px;
+}
+.p-card h3 { font-size: 16px; font-weight: 500; letter-spacing: 0; margin-bottom: 6px; }
+.p-card:hover h3 { text-decoration: underline; text-underline-offset: 4px; text-decoration-color: var(--accent); }
+.p-card p { font-size: 13px; color: var(--sub); font-weight: 300; }
+.products .link-arrow:hover { border-color: var(--accent); color: var(--accent); }
+
+/* ---- Why：三栏细线，不用卡片 ---- */
+.why { background: var(--bg-alt); border-top: 1px solid var(--line); padding: 100px 0; }
+.why .eyebrow { margin-bottom: 12px; }
+.why h2 { margin-bottom: 56px; }
+.why-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 48px; }
+.why-col { border-top: 1px solid var(--ink); padding-top: 28px; }
+.why-icon { width: 30px; height: 30px; margin-bottom: 18px; color: var(--ink);
+  transition: transform .35s cubic-bezier(.22,.61,.36,1), color .35s ease; }
+.why-icon svg { width: 100%; height: 100%; }
+.why-col:hover .why-icon { transform: translateY(-5px); color: var(--accent); }
+.why-col h3 { font-size: 18px; font-weight: 500; margin-bottom: 10px; }
+.why-col p { font-size: 14px; font-weight: 300; color: var(--sub); }
+
+/* ---- Contact：下划线输入框 ---- */
+.contact { padding: 110px 0; }
+.contact-grid { display: grid; grid-template-columns: 1fr 440px; gap: 80px; align-items: start; }
+.contact .eyebrow { margin-bottom: 12px; }
+.contact-info h2 { margin-bottom: 0; }
+.contact-lead { font-size: 15px; font-weight: 300; color: var(--sub); margin: 18px 0 36px; max-width: 420px; }
+.contact-list { list-style: none; }
+.contact-list li {
+  display: flex; align-items: flex-start; gap: 14px; padding: 16px 0;
+  border-bottom: 1px solid var(--line); font-size: 14.5px;
+}
+.contact-list li .li-icon {
+  flex: none; width: 18px; height: 18px; margin-top: 3px; color: var(--accent);
+}
+.contact-list li span {
+  flex-shrink: 0; width: 64px; margin-right: 10px; font-size: 11px; letter-spacing: 0.14em;
+  text-transform: uppercase; color: var(--accent); padding-top: 3px;
+}
+/* 联系区可点击项：静止态用"看得见的下划线"（28% 黑）而不是彩色文字，
+   避免与左侧 --accent 红的标签糊成一块；悬停才转品牌红 */
+.contact-list a {
+  text-decoration: underline; text-decoration-thickness: 1px;
+  text-underline-offset: 3px; text-decoration-color: rgb(17 17 17 / .28);
+  transition: color .2s, text-decoration-color .2s;
+}
+.contact-list a:hover { color: var(--accent); text-decoration-color: var(--accent); }
+/* 可点击提示箭头：放在文字左侧、箭头朝右，静止时以 6px 幅度往文字方向推，hover 后动画停住。
+   gap 给到 10px，推到最远仍留 4px 间距，不会贴上文字。
+   带箭头的链接撤掉下划线（箭头本身就是可点击信号），其余仍按下划线方案。 */
+.cue-arrow {
+  display: inline-flex; align-items: center; gap: 10px;
+  text-decoration: none !important;
+  transition: color .2s, text-decoration-color .2s;
+}
+.cue-arrow svg {
+  width: 14px; height: 14px; flex: none;
+  animation: cue-nudge 1.4s ease-in-out infinite;
+}
+.cue-arrow:hover svg { animation-play-state: paused; }
+@keyframes cue-nudge {
+  0%, 100% { transform: translateX(0); }
+  50%      { transform: translateX(6px); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cue-arrow svg { animation: none; }
 }
 
-/* Hero */
-.hero {
-    background: linear-gradient(rgba(0,0,0,0.9), rgba(0,0,0,0.9)), 
-    url('images/logo.png') center/cover no-repeat;
-    color: white;
-    text-align: center;
-    padding: 120px 20px;
+.contact-form { display: flex; flex-direction: column; gap: 26px; }
+.contact-form label {
+  display: flex; flex-direction: column; gap: 8px;
+  font-size: 11px; letter-spacing: 0.14em; text-transform: uppercase; color: var(--sub);
+  transition: color .2s;
 }
-
-.hero h1 {
-    font-size: 3rem;
-    margin-bottom: 20px;
+/* 输入聚焦时让字段标签同步加深，强调当前填写项 */
+.contact-form label:focus-within { color: var(--ink); }
+.contact-form input, .contact-form textarea {
+  font-family: var(--font); font-size: 15px; color: var(--ink);
+  border: none; border-bottom: 1px solid var(--line); padding: 8px 0;
+  outline: none; background: transparent; resize: vertical;
+  transition: border-color .2s;
 }
+.contact-form input:focus, .contact-form textarea:focus { border-color: var(--ink); }
+.contact-form .field-error { border-bottom-color: var(--error); }
 
-.hero p {
-    font-size: 1.2rem;
-    margin-bottom: 30px;
+.form-actions { display: flex; gap: 12px; }
+.form-actions .btn { flex: 1; }
+
+/* ---- Footer（6 个页面结构完全一致：.site-footer > .container.footer-inner）---- */
+footer,
+.site-footer {
+  background: var(--ink); color: #9CA3AF;
+  padding: 30px 0; font-size: 13px; font-weight: 300;
 }
-
-.btn {
-    display: inline-block;
-    background: #d63031;
-    color: white;
-    padding: 12px 30px;
-    border-radius: 30px;
-    text-decoration: none;
-    font-weight: 500;
-    transition: background 0.3s;
+footer { text-align: center; flex-shrink: 0; }
+.footer-inner {
+  display: flex; flex-direction: column; align-items: center; gap: 8px;
+  text-align: center;
 }
+/* 页脚字标：复用页头的 .logo 布局（图标 + KINGFOOD/品类两行），仅换成深色页配色。
+   图形用 images/logo-light.webp（黑字→白字、白底→透明的反白版，深色底上才可读） */
+.footer-logo { color: #fff; }
+.footer-logo .logo-sub { color: #9CA3AF; }
 
-.btn:hover {
-    background: #c02628;
-}
-
-/* Sections */
-section {
-    padding: 80px 0;
-}
-
-.intro, .why, .contact {
-    background: #fff;
-}
-
-h2 {
-    text-align: center;
-    font-size: 2.2rem;
-    margin-bottom: 50px;
-    color: #222;
-}
-
-/* Products */
-.product-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 30px;
-}
-
-.product-card {
-    background: #fff;
-    border-radius: 10px;
-    overflow: hidden;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
-    cursor: pointer;
-    transition: transform 0.3s;
-}
-
-.product-card:hover {
-    transform: translateY(-5px);
-}
-
-.product-card img {
-    width: 100%;
-    height: 220px;
-    object-fit: cover;
-}
-
-.product-card h3 {
-    padding: 15px;
-    font-size: 1.3rem;
-    color: #222;
-}
-
-.product-card p {
-    padding: 0 15px 20px;
-    color: #666;
-}
-
-/* Modal */
+/* ---- 产品详情弹窗（Hot Products 点击弹出）---- */
 .modal {
-    display: none;
-    position: fixed;
-    z-index: 200;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.8);
-    overflow: auto;
+  display: none;
+  position: fixed; z-index: 200; left: 0; top: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.8);
+  overflow: auto;
 }
-
 .modal-content {
-    background: #fff;
-    margin: 5% auto;
-    padding: 30px;
-    width: 90%;
-    max-width: 800px;
-    border-radius: 10px;
-    position: relative;
+  background: #fff;
+  margin: 5% auto;
+  padding: 30px;
+  width: 90%;
+  max-width: 800px;
+  border-radius: 2px;
+  position: relative;
+  animation: kf-modal-in .3s ease;
 }
-
+@keyframes kf-modal-in {
+  from { opacity: 0; transform: translateY(16px) scale(.98); }
+}
 .close {
-    position: absolute;
-    right: 25px;
-    top: 15px;
-    font-size: 2rem;
-    cursor: pointer;
-    color: #aaa;
+  position: absolute; right: 25px; top: 15px;
+  font-size: 2rem; cursor: pointer; color: #aaa;
 }
+.close:hover { color: var(--ink); }
 
-.close:hover {
-    color: #333;
-}
+/* Modal 内参数表 */
+.specs-table { width: 100%; border-collapse: collapse; margin: 10px 0; }
+.specs-table td { padding: 8px 0; border-bottom: 1px solid var(--line); }
+.specs-table td:first-child { font-weight: 600; width: 45%; }
 
-/* Modal 内表格样式 */
-.specs-table {
-    width: 100%;
-    border-collapse: collapse;
-    margin: 10px 0;
-}
-
-.specs-table td {
-    padding: 8px 0;
-    border-bottom: 1px solid #eee;
-}
-
-.specs-table td:first-child {
-    font-weight: 600;
-    width: 45%;
-}
-
-/* Advantages */
-.advantages {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 30px;
-}
-
-.advantage {
-    text-align: center;
-    padding: 30px;
-}
-
-.icon {
-    font-size: 3rem;
-    margin-bottom: 20px;
-    color: #d63031;
-}
-
-.advantage h3 {
-    font-size: 1.4rem;
-    margin-bottom: 15px;
-}
-
-/* Contact */
-.contact-wrapper {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    gap: 50px;
-}
-
-.contact-info p {
-    font-size: 1.1rem;
-    margin-bottom: 15px;
-    line-height: 2;
-}
-
-.contact-info a {
-    color: #d63031;
-    text-decoration: none;
-}
-
-.contact-info a:hover {
-    text-decoration: underline;
-}
-
-.contact-form input,
-.contact-form textarea {
-    width: 100%;
-    padding: 12px;
-    margin-bottom: 15px;
-    border: 1px solid #ddd;
-    border-radius: 5px;
-    font-family: inherit;
-}
-
-.contact-form button {
-    width: 100%;
-    padding: 12px;
-    background: #d63031;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    font-size: 1rem;
-    cursor: pointer;
-    transition: background 0.3s;
-}
-
-.contact-form button:hover {
-    background: #c02628;
-}
-
-/* Footer */
-footer {
-    background: #222;
-    color: #fff;
-    text-align: center;
-    padding: 30px 0;
-}
-
-/* Contact Float Button & Modal */
-/* .contact-float-btn {
-    position: fixed;
-    bottom: 30px;
-    right: 30px;
-    background: #25D366;
-    color: white;
-    padding: 15px 25px;
-    border-radius: 30px;
-    font-weight: 600;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-    cursor: pointer;
-    z-index: 999;
-    font-size: 1rem;
-    transition: all 0.3s;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-} */
-
-.contact-float-btn {
-    position: fixed;
-    bottom: 60px;
-    right: 30px;
-    background: #25D366;
-    color: white;
-    padding: 15px 25px;
-    border-radius: 30px;
-    font-weight: 600;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-    cursor: pointer;
-    z-index: 999;
-    font-size: 1rem;
-    transition: all 0.3s;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-
-.contact-float-btn:hover {
-    background: #128C7E;
-    transform: translateY(-3px);
-    box-shadow: 0 6px 20px rgba(0,0,0,0.4);
-}
-
+/* ---- 联系方式弹窗（二维码）---- */
 .contact-modal {
-    display: none;
-    position: fixed;
-    z-index: 1000;
-    left: 0;
-    top: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0,0,0,0.8);
-    overflow: auto;
+  display: none;
+  position: fixed; z-index: 1000; left: 0; top: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.8);
+  overflow: auto;
 }
-
 .contact-modal-content {
-    background: #fff;
-    margin: 5% auto;
-    padding: 40px;
-    width: 90%;
-    max-width: 700px;
-    border-radius: 15px;
-    position: relative;
-    text-align: center;
-    opacity: 1 !important;
-    transform: none !important;
+  background: #fff;
+  margin: 5% auto;
+  padding: 40px;
+  width: 90%;
+  max-width: 700px;
+  border-radius: 2px;
+  position: relative;
+  text-align: center;
+  opacity: 1 !important;
+  transform: none !important;
 }
-
-.contact-modal h2 {
-    margin-bottom: 30px;
-    color: #222;
-    font-size: 2rem;
-}
-
+.contact-modal h2 { margin-bottom: 30px; color: var(--ink); font-size: 2rem; }
 .contact-options {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 30px;
-    margin-top: 30px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 30px;
+  margin-top: 30px;
 }
-
-/* .contact-option {
-    background: #f8f9fa;
-    padding: 25px;
-    border-radius: 10px;
-    text-align: center;
-    transition: transform 0.3s;
-} */
-
 .contact-option {
-    background: #f8f9fa;
-    padding: 25px;
-    border-radius: 10px;
-    text-align: center;
-    transition: transform 0.3s;
-    min-height: 280px; /* ← 关键：强制最小高度 */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
+  background: var(--bg-alt);
+  border: 1px solid var(--line);
+  padding: 25px;
+  border-radius: 2px;
+  text-align: center;
+  min-height: 280px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
-
-.contact-option:hover {
-    transform: scale(1.03);
-    background: #e9ecef;
-}
-
-.contact-option h3 {
-    color: #222;
-    margin-bottom: 15px;
-    font-size: 1.3rem;
-}
-/* 
-.qr-code {
-    width: 180px;
-    height: 180px;
-    margin: 15px auto;
-    border: 1px solid #eee;
-    border-radius: 8px;
-    display: block;
-    background: #f8f9fa; 
-    object-fit: cover;
-} */
+.contact-option:hover { background: #f1f1f1; }
+.contact-option h3 { color: var(--ink); margin-bottom: 15px; font-size: 1.1rem; font-weight: 500; }
+.contact-option .btn { padding: 10px 20px; font-size: 12px; }
 
 .qr-code {
-    width: 180px;
-    height: 180px;
-    margin: 15px auto;
-    border: 1px solid #eee;
-    border-radius: 8px;
-    display: block;
-    background: #e9ecef; /* 更明显的 fallback 背景 */
-    object-fit: cover;
+  width: 180px; height: 180px;
+  margin: 15px auto;
+  border: 1px solid var(--line);
+  border-radius: 2px;
+  display: block;
+  background: #e9ecef;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+.qr-code.animate { animation: qrZoomShake 0.6s ease; }
+@keyframes qrZoomShake {
+  0% { transform: scale(1); }
+  20% { transform: scale(1.12) rotate(-2deg); }
+  40% { transform: scale(1.15) rotate(2deg); }
+  60% { transform: scale(1.12) rotate(-1deg); }
+  80% { transform: scale(1.13) rotate(1deg); }
+  100% { transform: scale(1); }
 }
 
-.note {
-    font-size: 0.9rem;
-    color: #666;
-    margin-top: 10px;
+.note { font-size: 0.9rem; color: var(--sub); margin-top: 10px; }
+
+/* ---- Contact 悬浮按钮 ---- */
+.contact-float-btn {
+  position: fixed;
+  bottom: 60px;
+  right: 30px;
+  background: var(--wa);
+  color: white;
+  padding: 15px 25px;
+  border-radius: 30px;
+  font-weight: 600;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  cursor: pointer;
+  z-index: 999;
+  font-size: 1rem;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.contact-float-btn svg { width: 18px; height: 18px; flex: none; }
+/* 落页后从右下角浮现（backwards：延迟期间不显示，结束后不占用 transform，hover 位移正常） */
+.contact-float-btn { animation: kf-float-in .5s cubic-bezier(.22,.61,.36,1) .55s backwards; }
+@keyframes kf-float-in {
+  from { opacity: 0; transform: translateY(14px); }
 }
 
-/* 响应式 */
-@media (max-width: 768px) {
-    .hero h1 {
-        font-size: 2.2rem;
-    }
-
-    .hamburger {
-        display: block;
-        background: none;
-        border: none;
-        font-size: 24px;
-        cursor: pointer;
-        margin-left: auto; /* 靠右对齐 */
-        color: #333;
-  }
-
-    nav {
-        position: absolute;
-        top: 100%;
-        left: 0;
-        width: 100%;
-        background: white;
-        flex-direction: column;
-        padding: 16px 0;
-        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
-        display: none; /* 默认隐藏 */
-        z-index: 1000;
-    }
-
-    nav.show {
-        display: flex;
-    }
-
-    nav a {
-        padding: 12px 20px;
-        text-align: left;
-    }
-
-    .product-grid,
-    .advantages,
-    .contact-wrapper,
-    .contact-options {
-        grid-template-columns: 1fr;
-    }
-
-    /* .contact-float-btn {
-        bottom: 20px;
-        right: 20px;
-        padding: 12px 20px;
-        font-size: 0.9rem;
-    } */
-
-     .contact-float-btn {
-        bottom: calc(50px + env(safe-area-inset-bottom, 20px));
-        right: 20px;
-        padding: 12px 20px;
-        font-size: 0.95rem;
-    }
-
-    .qr-code {
-        width: 150px;
-        height: 150px;
-    }
+/* 404 标题图标 */
+.notfound-title { display: inline-flex; align-items: center; gap: 10px; }
+.notfound-title svg { width: 26px; height: 26px; flex: none; }
+.contact-float-btn:hover {
+  background: #128C7E;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 20px rgba(0,0,0,0.4);
 }
 
-/* ========== Product List & Detail Pages ========== */
-.products-page .container {
-    padding: 80px 0;
-}
+/* ========== 产品列表页 & 详情页（子站共用） ========== */
+.products-page .container { padding: 80px 0; }
 
-.product-card-link {
-    text-decoration: none;
-    color: inherit;
-    display: block;
-}
-
-.product-card-link:hover .product-card {
-    transform: translateY(-5px);
-}
-
-/* Product Detail */
-.product-detail {
-    padding: 80px 0;
-    background: #fff;
-}
-
+/* 产品详情 */
+.product-detail { padding: 80px 0; background: #fff; }
 .product-detail .container {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2.5rem;
-    align-items: start;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2.5rem;
+  align-items: start;
 }
+.product-images img { width: 100%; border-radius: 2px; border: 1px solid var(--line); }
+.product-info h1 { font-size: 1.8rem; margin-bottom: 0.5rem; }
+.subtitle { color: var(--ink); font-weight: 500; margin-bottom: 1.5rem; }
+.product-info ul { padding-left: 1.5rem; margin: 1rem 0; color: #444; }
 
-.product-images img {
-    width: 100%;
-    border-radius: 8px;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-}
-
-.product-info h1 {
-    font-size: 1.8rem;
-    margin-bottom: 0.5rem;
-}
-
-.subtitle {
-    color: #d63031;
-    font-weight: 500;
-    margin-bottom: 1.5rem;
-}
-
-.product-info ul {
-    padding-left: 1.5rem;
-    margin: 1rem 0;
-    color: #444;
-}
-
-.specs-table {
-    width: 100%;
-    margin: 1.2rem 0;
-    border-collapse: collapse;
-}
-
-.specs-table td {
-    padding: 0.6rem 0;
-    border-bottom: 1px solid #eee;
-}
-
-.specs-table td:first-child {
-    font-weight: 600;
-    width: 45%;
-}
-
-.cta-section {
-    margin-top: 2rem;
-    padding-top: 1.5rem;
-    border-top: 1px solid #eee;
-}
-
-.cta-section .btn {
-    margin-top: 0.8rem;
-}
-
-/* Responsive */
-@media (max-width: 768px) {
-    .product-detail .container {
-        grid-template-columns: 1fr;
-    }
-}
-
-/* View All 链接样式 */
-/* .view-all-link {
-    font-size: 1.2rem;
-    font-weight: 400;
-    color: #d63031;
-    text-decoration: none;
-    margin-left: 16px;
-}
-.view-all-link:hover {
-    text-decoration: underline;
-} */
-
-/* Hot Products 包裹容器（相对定位，供浮窗定位） */
-.products-wrapper {
-    position: relative;
-}
-
-@media (max-width: 768px) {
-    .view-all-float {
-        top: -8px;
-        right: 0;
-        font-size: 0.9rem;
-        padding: 4px 12px;
-    }
-}
-
-/* 悬浮“View All”按钮 */
-.view-all-float {
-    position: absolute;
-    top: -42px;
-    right: -12px;
-    background: rgba(214, 48, 49, 0.9); /* KFcatering 主色 #d63031 半透 */
-    color: white;
-    padding: 6px 16px;
-    border-radius: 20px;
-    text-decoration: none;
-    font-size: 0.95rem;
-    font-weight: 500;
-    z-index: 10;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-}
-
-.view-all-float:hover {
-    background: rgba(214, 48, 49, 1);
-    transform: translateY(-2px);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.2);
-}
-
-/* 去掉热销商品卡片链接的下划线 */
-.product-link {
-    text-decoration: none;
-    color: inherit; /* 保持 h3 和 p 原有颜色 */
-}
-
-/* 确保内部元素也不显示下划线（保险起见） */
-.product-link h3,
-.product-link p {
-    text-decoration: none;
-}
-
-/* 轮播图样式 */
-.carousel-section {
-    width: 100%;
-    overflow: hidden;
-    position: relative;
-}
-
-.carousel {
-    position: relative;
-    width: 100%;
-    height: 600px; /* 可根据需要调整 */
-}
-
-.carousel .slide {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    opacity: 0;
-    transition: opacity 0.6s ease-in-out; /* 淡入淡出动画 */
-    pointer-events: none; /* 非激活 slide 不可点击 */
-}
-
-.carousel .slide.active {
-    opacity: 1;
-    pointer-events: auto;
-    z-index: 2; /* 确保在最上层 */
-}
-
-.carousel img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-}
-
-.slide-content {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    text-align: center;
-    color: white;
-    max-width: 800px;
-    padding: 20px;
-    background: rgba(0, 0, 0, 0.4); /* 半透明背景提升文字可读性 */
-    border-radius: 10px;
-}
-
-.slide-content h1 {
-    font-size: 2.5rem;
-    margin-bottom: 1rem;
-    text-shadow: 1px 1px 3px rgba(0,0,0,0.7);
-}
-
-.slide-content p {
-    font-size: 1.2rem;
-    margin-bottom: 1.5rem;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.7);
-}
-
-/* 按钮样式 */
-.carousel-btn {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background: rgba(0, 0, 0, 0.6);
-    color: white;
-    border: none;
-    font-size: 28px;
-    width: 50px;
-    height: 50px;
-    border-radius: 50%; /* 变成圆形 */
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    z-index: 10;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
-}
-
-.carousel-btn:hover {
-    background: rgba(0, 0, 0, 0.85);
-    transform: translateY(-50%) scale(1.1); /* 微微放大 */
-}
-
-.carousel-btn:hover {
-    background: rgba(0,0,0,0.8);
-}
-
-.carousel-btn.prev { left: 20px; }
-.carousel-btn.next { right: 20px; }
-
-/* 指示器 */
-.carousel-indicators {
-    position: absolute;
-    bottom: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    display: flex;
-    gap: 10px;
-    z-index: 10;
-}
-
-.indicator {
-    width: 12px;
-    height: 12px;
-    border-radius: 50%;
-    background: rgba(255,255,255,0.5);
-    cursor: pointer;
-}
-
-.indicator.active {
-    background: white;
-}
-
-  .qr-code {
-    transition: transform 0.3s ease;
-  }
-  .qr-code.animate {
-    animation: qrZoomShake 0.6s ease;
-  }
-  @keyframes qrZoomShake {
-    0% { transform: scale(1); }
-    20% { transform: scale(1.12) rotate(-2deg); }
-    40% { transform: scale(1.15) rotate(2deg); }
-    60% { transform: scale(1.12) rotate(-1deg); }
-    80% { transform: scale(1.13) rotate(1deg); }
-    100% { transform: scale(1); }
-  }
+.cta-section { margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid var(--line); }
+.cta-section .btn { margin-top: 0.8rem; }
 
 main.product-detail {
-    position: relative;
-    min-height: 81.8vh; 
-    padding-bottom: 100px; 
+  position: relative;
+  min-height: 81.8vh;
+  padding-bottom: 100px;
 }
-/* 桌面端（≥768px）额外补偿滚动条宽度 */
-@media (min-width: 768px) {
-  .carousel-section {
-    padding-left: 17px; /* 补偿 Windows 滚动条 */
-    box-sizing: border-box;
+
+/* ========== 响应式 ========== */
+@media (max-width: 960px) {
+  .hero-grid { grid-template-columns: 1fr; }
+  .hero-copy { padding: 70px 0 50px; }
+  .hero-copy h1 { font-size: 42px; }
+  .hero-media { min-height: 360px; }
+  .p-grid { grid-template-columns: repeat(2, 1fr); }
+  .why-grid, .contact-grid { grid-template-columns: 1fr; gap: 40px; }
+  .stats-grid { grid-template-columns: repeat(2, 1fr); }
+  .stat:nth-child(3) { border-left: none; }
+}
+
+@media (max-width: 768px) {
+  .header-inner .btn { display: none; } /* 头部 CTA 让位给汉堡菜单 */
+
+  .hamburger {
+    display: block;
+    background: none;
+    border: none;
+    font-size: 22px;
+    cursor: pointer;
+    margin-left: auto;
+    color: var(--ink);
   }
+
+  nav {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 100%;
+    background: #fff;
+    flex-direction: column;
+    gap: 0;
+    padding: 8px 0;
+    border-bottom: 1px solid var(--line);
+    display: flex;
+    z-index: 1000;
+    /* 用 visibility+opacity 代替 display 切换，菜单可滑入滑出 */
+    visibility: hidden;
+    opacity: 0;
+    transform: translateY(-10px);
+    transition: opacity .28s ease, transform .28s ease, visibility 0s linear .28s;
+  }
+  nav.show {
+    visibility: visible;
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity .28s ease, transform .28s ease;
+  }
+  nav a { padding: 12px 5%; }
+  nav a:hover { background: var(--bg-alt); }
+
+  .product-detail .container { grid-template-columns: 1fr; }
+
+  .contact-float-btn {
+    bottom: calc(50px + env(safe-area-inset-bottom, 20px));
+    right: 20px;
+    padding: 12px 20px;
+    font-size: 0.95rem;
+  }
+  .qr-code { width: 150px; height: 150px; }
+}
+
+@media (max-width: 560px) {
+  .p-grid { grid-template-columns: 1fr; }
+  .stats-grid { grid-template-columns: 1fr; }
+  .stat { border-left: none !important; border-top: 1px solid var(--line); }
+  .stat:first-child { border-top: none; }
+  h2 { font-size: 30px; }
+  .form-actions { flex-direction: column; }
+}
+
+/* ---- 无障碍：用户偏好减少动效时，全部进场/循环动画直接落在终态 ---- */
+@media (prefers-reduced-motion: reduce) {
+  .anim-ready [data-reveal],
+  .anim-ready .p-grid .p-card {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+    animation: none !important;
+  }
+  .contact-float-btn { animation: none !important; }
 }

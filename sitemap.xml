@@ -2,14 +2,20 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
     <url>
         <loc>https://kfcatering.com/</loc>
-        <lastmod>2025-11-05</lastmod>
+        <lastmod>2026-09-30</lastmod>
         <changefreq>weekly</changefreq>
         <priority>1.0</priority>
     </url>
     <url>
         <loc>https://kfcatering.com/products/index.html</loc>
-        <lastmod>2025-11-05</lastmod>
-        <changefreq>monthly</changefreq>
+        <lastmod>2026-09-30</lastmod>
+        <changefreq>weekly</changefreq>
         <priority>0.8</priority>
+    </url>
+    <url>
+        <loc>https://kfcatering.com/products/fridge-b2000.html</loc>
+        <lastmod>2026-09-30</lastmod>
+        <changefreq>monthly</changefreq>
+        <priority>0.6</priority>
     </url>
 </urlset>

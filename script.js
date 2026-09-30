@@ -18,104 +18,78 @@ window.addEventListener('pageshow', (event) => {
     }
 });
 
+// ===== WhatsApp 直发询盘（主 CTA，邮件表单走 Formspree 兜底）=====
+function sendViaWhatsApp() {
+  const name = document.getElementById('inqName');
+  const message = document.getElementById('inqMessage');
+  const phone = document.getElementById('inqPhone');
+  const email = document.getElementById('inqEmail');
 
-// ===== 全局商品数据（与 products/products.js 保持一致）=====
-// const allProducts = [
-//   {
-//     id: 'fridge-b2000',
-//     name: 'Commercial Double Door Fridge B-2000',
-//     description: '304 Stainless Steel · Energy Saving · 3-Year Warranty',
-//     image: 'images/photo-冰箱.jpg'
-//   },
-//   {
-//     id: 'oven-o300',
-//     name: '3-Layer Electric Oven O-300',
-//     description: 'Precise Temperature · Independent Control · For Bakeries',
-//     image: 'images/photo-冰箱.jpg'
-//   },
-//   {
-//     id: 'worktable-w500',
-//     name: 'Stainless Steel Worktable W-500',
-//     description: 'Thick Surface · Anti-Slip · Multi-Functional Rack',
-//     image: 'images/photo-冰箱.jpg'
-//   },
-//   {
-//     id: 'dishwasher-d800',
-//     name: 'Commercial Dishwasher D-800',
-//     description: 'High-Temp Sanitize · Fast Wash · Water Saving',
-//     image: 'images/photo-冰箱.jpg'
-//   },
-//   {
-//     id: 'cabinet-s100',
-//     name: 'Heated Display Cabinet S-100',
-//     description: 'Double Glass · Constant Temp · For Dessert Shops',
-//     image: 'images/photo-冰箱.jpg'
-//   },
-//   {
-//     id: 'workstation-c600',
-//     name: 'Modular Workstation C-600',
-//     description: 'Flexible Design · Space Saving · Customizable',
-//     image: 'images/photo-冰箱.jpg'
-//   }
-// ];
+  let valid = true;
+  [name, message].forEach(field => {
+    if (field && !field.value.trim()) {
+      field.classList.add('field-error');
+      if (valid) field.focus();
+      valid = false;
+    }
+  });
+  if (!valid) return;
 
-// // ===== 配置哪些是热销品（只需改这里！）=====
-// const hotProductIds = ['fridge-b2000', 'oven-o300','worktable-w500','dishwasher-d800','cabinet-s100','workstation-c600',];
+  const lines = [
+    'Hello Kingfood!',
+    '',
+    'Name: ' + name.value.trim(),
+    'Message: ' + message.value.trim()
+  ];
+  if (phone && phone.value.trim()) lines.push('My WhatsApp: ' + phone.value.trim());
+  if (email && email.value.trim()) lines.push('My Email: ' + email.value.trim());
 
+  window.open('https://wa.me/8619927525746?text=' + encodeURIComponent(lines.join('\n')), '_blank', 'noopener');
+}
 
+// 输入时清除校验高亮（事件委托，只绑定一次）
+document.addEventListener('DOMContentLoaded', () => {
+  const form = document.getElementById('inquiryForm');
+  if (form) {
+    form.addEventListener('input', (e) => {
+      if (e.target.classList) e.target.classList.remove('field-error');
+    });
+  }
+});
 
-
-// 打开联系弹窗
-function openContactModal() {
-  //修复弹窗被动画遮挡
-    // document.body.style.transition = 'none';
-    // document.body.style.opacity = '1';
-    // document.body.style.transform = 'none';
-  //打开弹窗
-    document.getElementById('contactModal').style.display = 'block';
-};
-
-// 关闭联系弹窗
-function closeContactModal() {
-    document.getElementById('contactModal').style.display = 'none';
-};
-
-// ===== 渲染首页 Hot Products =====
-// function renderHotProducts() {
-//   const container = document.getElementById('hotProductsGrid');
-//   if (!container) return;
-
-//   const hotProducts = allProducts.filter(p => hotProductIds.includes(p.id));
-//   container.innerHTML = hotProducts.map(product => `
-//     <a href="./products/product_details/product.html?id=${product.id}" class="product-card-link">
-//       <div class="product-card">
-//         <img src="${product.image}" alt="${product.name}">
-//         <h3>${product.name}</h3>
-//         <p>${product.description}</p>
-//       </div>
-//     </a>
-//   `).join('');
-// }
-
-// ✅ 添加：直接引用 data.js 里的全局变量
-// 提示：如果是在首页运行，请确保 HTML 中引入了 kf_data/data.js
+// 首页热销卡片数据源：products/data.js 暴露的全局 PRODUCTS
 const allProducts = typeof PRODUCTS !== 'undefined' ? PRODUCTS : [];
 
+// 商品字段来自 CMS 数据，拼进 innerHTML 前统一转义（与 products/products.js 同款）
+function escapeHtml(value) {
+  return String(value).replace(/[&<>"']/g, ch => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[ch]));
+}
+
 // ✅ 修改：更新渲染函数里的过滤条件
+// 分类 id → 展示名（data.js 的 CATEGORIES）
+function categoryName(id) {
+  const cats = typeof CATEGORIES !== 'undefined' ? CATEGORIES : [];
+  const hit = cats.find(c => c.id === id);
+  return hit ? hit.name : '';
+}
+
 function renderHotProducts() {
   const container = document.getElementById('hotProductsGrid');
   if (!container) return;
 
-  // 【核心改动】：把 filter 里的 ID 判断改为 isHot 判断
+  // 把 filter 里的 ID 判断改为 isHot 判断
   const hotProducts = allProducts.filter(p => p.isHot === true);
 
   container.innerHTML = hotProducts.map(product => `
-    <a href="./products/product_details/product.html?id=${product.id}" class="product-card-link">
-      <div class="product-card">
-        <img src="${product.image}" alt="${product.name}">
-        <h3>${product.name}</h3>
-        <p>${product.description || ''}</p>
+    <a href="./products/product_details/product.html?id=${encodeURIComponent(product.id)}" class="p-card">
+      <div class="p-media">
+        <img src="${escapeHtml(product.image)}" alt="${escapeHtml(product.name)}" loading="lazy">
       </div>
+      <span class="p-cat">${escapeHtml(categoryName(product.category))}</span>
+      <h3>${escapeHtml(product.name)}</h3>
+      <p>${escapeHtml(product.description || '')}</p>
     </a>
   `).join('');
 }
@@ -159,70 +133,154 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
 });
 
 
-// 轮播图控制
-document.addEventListener('DOMContentLoaded', () => {
-    const carousel = document.querySelector('.carousel');
-    if (!carousel) return; // 如果页面没有轮播容器，直接退出
+// 轮播图已随 Style B 改版移除（首屏改为静态 Hero + 数据条）
 
-    const slides = carousel.querySelectorAll('.slide');
-    const indicators = carousel.querySelectorAll('.indicator');
-    const prevBtn = carousel.querySelector('.carousel-btn.prev');
-    const nextBtn = carousel.querySelector('.carousel-btn.next');
 
-    if (slides.length === 0) return;
+// ===== 首页动效：滚动进场 + 数据条数字滚动 + 页头滚动阴影 =====
+(function () {
+  // 尽早标记 JS 可用：进场前的隐藏态（.anim-ready [data-reveal]）只在脚本正常运行时生效
+  document.documentElement.classList.add('anim-ready');
 
-    let currentSlideIndex = 0;
+  var reducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
-    function showSlide(index) {
-        // 循环处理
-        if (index >= slides.length) index = 0;
-        else if (index < 0) index = slides.length - 1;
-        currentSlideIndex = index;
-
-        // 更新幻灯片
-        slides.forEach((slide, i) => {
-            slide.classList.toggle('active', i === currentSlideIndex);
-        });
-
-        // 更新指示器
-        indicators.forEach((ind, i) => {
-            ind.classList.toggle('active', i === currentSlideIndex);
-        });
+  // -- 滚动进场：[data-reveal] 进入视口后加 .revealed --
+  // 上滚联动：元素完全离开视口后撤下 .revealed，再次滚入时重新播放级联
+  var revealEls = Array.prototype.slice.call(document.querySelectorAll('[data-reveal]'));
+  if (reducedMotion || !('IntersectionObserver' in window)) {
+    revealEls.forEach(function (el) { el.classList.add('revealed'); });
+  } else {
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.intersectionRatio >= 0.12) {
+          entry.target.classList.add('revealed');
+        } else if (entry.intersectionRatio === 0) {
+          // 比例归 0（完全离开视口）才重置：中间比例保持现状，避免临界抖动
+          entry.target.classList.remove('revealed');
+        }
+      });
+    }, { threshold: [0, 0.12], rootMargin: '0px 0px -6% 0px' });
+    revealEls.forEach(function (el) { void el.offsetWidth; });
+    revealEls.forEach(function (el) { io.observe(el); });
+    // 兜底：页面在后台/被节流加载时，渲染帧被暂停、IO 回调与 CSS 过渡都会被挂起
+    // （刷新后台标签页、刷新后立刻切走、Chrome paint-holding 等），[data-reveal]
+    // 会卡在隐藏态 opacity:0 —— 表现为"刷新后首屏不显示"。下面三重保险确保可见。
+    function inFirstScreen(el) {
+      var rect = el.getBoundingClientRect();
+      return rect.top < window.innerHeight && rect.bottom > 0;
     }
-
-    // 绑定左右按钮
-    if (prevBtn) {
-        prevBtn.addEventListener('click', () => showSlide(currentSlideIndex - 1));
+    function ensureFirstScreenRevealed() {
+      revealEls.forEach(function (el) {
+        if (inFirstScreen(el)) el.classList.add('revealed');
+      });
     }
-    if (nextBtn) {
-        nextBtn.addEventListener('click', () => showSlide(currentSlideIndex + 1));
+    // 仅强制真正卡死（计算 opacity 仍为 0）的首屏元素，避免打断正在播放的级联
+    function forceStuckFirstScreen() {
+      revealEls.forEach(function (el) {
+        if (inFirstScreen(el) && getComputedStyle(el).opacity === '0') {
+          el.classList.add('revealed', 'revealed-now');
+        }
+      });
     }
-
-    // 绑定指示器
-    indicators.forEach((indicator, i) => {
-        indicator.addEventListener('click', () => showSlide(i));
+    setTimeout(ensureFirstScreenRevealed, 1200);
+    // 终极保险：不论页面是否可见，首屏内容仍不可见就强制落终态，杜绝永久白屏
+    setTimeout(forceStuckFirstScreen, 2200);
+    document.addEventListener('visibilitychange', function () {
+      if (!document.hidden) ensureFirstScreenRevealed();
     });
+  }
 
-    // 自动播放（可选）
-    let autoPlay = true;
-    const interval = setInterval(() => {
-        if (autoPlay) showSlide(currentSlideIndex + 1);
-    }, 5000);
+  // -- 数据条数字滚动："10+"、"50+"、"100%"、"95%" 从 0 数到目标值 --
+  // 与 [data-reveal] 同款可重播策略：数据条完全离开视口后归零并撤下动画，
+  // 再次滚入时重新滚动，保证上滚回到数据条时数字仍会重播
+  var statNums = Array.prototype.slice.call(document.querySelectorAll('.stat strong'));
+  var statsSection = document.querySelector('.stats');
+  if (statNums.length && statsSection && !reducedMotion && 'IntersectionObserver' in window) {
+    // 目标值只在初始化时解析一次：归零重置后 textContent 变成 "0+后缀"，不能再当解析来源
+    var statItems = statNums.map(function (el) {
+      var matches = el.textContent.match(/^(\d+)(.*)$/);
+      var target = matches ? parseInt(matches[1], 10) : NaN;
+      return (isFinite(target) && target > 0)
+        ? { el: el, target: target, suffix: matches[2], raf: 0 }
+        : null;
+    }).filter(Boolean);
 
-    // 可选：鼠标悬停暂停自动播放
-    if (carousel) {
-        carousel.addEventListener('mouseenter', () => autoPlay = false);
-        carousel.addEventListener('mouseleave', () => autoPlay = true);
+    var statTimers = [];
+
+    function countUp(item) {
+      var duration = 1400;
+      var start = null;
+      function frame(now) {
+        if (start === null) start = now;
+        var p = Math.min((now - start) / duration, 1);
+        var eased = 1 - Math.pow(1 - p, 3); // easeOutCubic：先快后慢
+        item.el.textContent = Math.round(item.target * eased) + item.suffix;
+        if (p < 1) item.raf = requestAnimationFrame(frame);
+      }
+      item.raf = requestAnimationFrame(frame);
     }
-});
 
+    function stopStatRoll() {
+      statTimers.forEach(clearTimeout);
+      statTimers = [];
+      statItems.forEach(function (item) {
+        if (item.raf) cancelAnimationFrame(item.raf);
+        item.raf = 0;
+      });
+    }
 
-//微信二维码抖动
-  function triggerQrAnimation() {
-    const qr = document.getElementById('wechatQr');
-    if (qr) {
-      qr.classList.remove('animate');
-      void qr.offsetWidth; // 触发重排，确保动画可重复
-      qr.classList.add('animate');
+    function playStatRoll() {
+      stopStatRoll();
+      statItems.forEach(function (item, i) {
+        statTimers.push(setTimeout(function () { countUp(item); }, i * 130)); // 与 .stat 级联时序对齐
+      });
+    }
+
+    function resetStatRoll() {
+      stopStatRoll();
+      statItems.forEach(function (item) { item.el.textContent = '0' + item.suffix; });
+    }
+
+    var statIo = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.intersectionRatio >= 0.4) {
+          playStatRoll();
+        } else if (entry.intersectionRatio === 0) {
+          // 比例归 0（完全离开视口）才归零，中间比例保持现状，与进场动效的重置策略一致
+          resetStatRoll();
+        }
+      });
+    }, { threshold: [0, 0.4] });
+    statIo.observe(statsSection);
+  }
+
+  // -- 滚动联动动画：Hero 视差 + 页头投影（rAF 合帧，避免滚动卡顿）--
+  var headerEl = document.querySelector('header');
+  var heroCopy = document.querySelector('.hero-copy');
+  var heroImg = document.querySelector('.hero-media img');
+  var scrollTicking = false;
+
+  function applyScrollFx() {
+    scrollTicking = false;
+    var y = window.scrollY;
+    if (headerEl) headerEl.classList.toggle('scrolled', y > 8);
+
+    // Hero 视差只在本屏附近计算；位移是 scrollY 的纯函数，上滚/下滚可逆联动。
+    // 图片 0.15 倍速下沉（scale 1.15 留了余量），文案反向轻移并随滚出渐隐
+    if (!reducedMotion && heroImg && y <= window.innerHeight * 1.2) {
+      heroImg.style.transform = 'translateY(' + Math.min(y * 0.15, 36) + 'px) scale(1.15)';
+      if (heroCopy) {
+        heroCopy.style.transform = 'translateY(' + (y * -0.06) + 'px)';
+        heroCopy.style.opacity = String(Math.max(1 - y / (window.innerHeight * 0.9), 0));
+      }
     }
   }
+
+  function onScroll() {
+    if (scrollTicking) return;
+    scrollTicking = true;
+    requestAnimationFrame(applyScrollFx);
+  }
+  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('resize', onScroll, { passive: true });
+  applyScrollFx();
+})();

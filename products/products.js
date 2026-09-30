@@ -1,5 +1,13 @@
 // products/products.js
 
+// ===== 商品字段转义 =====
+// 数据来自 CMS，拼进 innerHTML 前统一转义，防止内容含 <>/&"' 时破坏页面结构
+function escapeHtml(value) {
+    return String(value).replace(/[&<>"']/g, ch => ({
+        '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    }[ch]));
+}
+
 // ===== 分页配置 =====
 const ITEMS_PER_PAGE = 12; // 每页显示商品数量，可按需调整
 let currentPage = 1;
@@ -14,7 +22,7 @@ function renderCategories() {
     if (!categoryList) return;
 
     categoryList.innerHTML = CATEGORIES.map(cat => 
-        `<li><a href="#" data-id="${cat.id}" class="${cat.id === currentCategory ? 'active' : ''}">${cat.name}</a></li>`
+        `<li><a href="#" data-id="${escapeHtml(cat.id)}" class="${cat.id === currentCategory ? 'active' : ''}">${escapeHtml(cat.name)}</a></li>`
     ).join('');
     
     // 绑定分类点击事件
@@ -126,11 +134,11 @@ function renderProducts() {
     }
 
     const htmlString = paginatedItems.map(product => `
-       <a href="./product_details/product.html?id=${product.id}" class="product-card-link">
+       <a href="./product_details/product.html?id=${encodeURIComponent(product.id)}" class="product-card-link">
             <div class="product-card">
-                <img src="${product.image}" alt="${product.name}">
-                <h3>${product.name}</h3>
-                <p>${product.description}</p>
+                <img src="${escapeHtml(product.image)}" alt="${escapeHtml(product.name)}" loading="lazy">
+                <h3>${escapeHtml(product.name)}</h3>
+                <p>${escapeHtml(product.description)}</p>
             </div>
         </a>
     `).join('');

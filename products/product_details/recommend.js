@@ -1,12 +1,29 @@
 // products/recommend.js
 // 依赖：全局变量 window.PRODUCTS（来自 data.js）
 
+// data.js 的 image 有三种历史形态："/products/..."（根绝对）、
+// "../images/..."（相对列表页）、裸 "images/..."；统一归一为站点根绝对路径
+function normalizeImgSrc(img) {
+  if (!img) return '';
+  if (img.startsWith('/')) return img;
+  if (img.startsWith('../')) return '/' + img.slice(3);
+  return '/' + img;
+}
+
+// 商品字段来自 CMS 数据，拼进 innerHTML 前统一转义（与 products.js 同款）
+function escapeHtml(value) {
+  return String(value).replace(/[&<>"']/g, ch => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[ch]));
+}
+
 let currentRecommendPage = 0;
-const RECOMMEND_PAGE_SIZE = 3; // 每页固定 3 个卡片
+// 每页固定 3 张；窄屏靠 CSS 收缩卡片宽度（.recommend-card: flex-shrink）来容纳
+const RECOMMEND_PAGE_SIZE = 3;
 
 let sameCategoryItems = []; // 当前分类下的其他商品
 let otherCategoryItems = []; // 其他分类的商品
-let currentMode = 'same'; // 'same' 或 'other'
+let recommendPool = []; // 统一商品池：同类在前、其他分类在后；翻页像数组一样循环，末页之后绕回开头的同类
 
 // --- 不再需要 hasUserNavigated 或 hasUserLeftInitialPage 标志 ---
 // --- 结束移除 ---
@@ -38,17 +55,20 @@ function initRecommendData(currentId, currentCategory) {
 }
 
 /**
- * 获取当前模式下的商品池
+ * 构建统一商品池：同类在前、其他分类在后（推荐规则：优先同类；
+ * 同类不足一页时首页自然由其他分类补满，同类为 0 时即纯其他分类）。
+ * 翻页在此数组上循环：翻过最后一个商品后回到数组开头（同类）
  */
-function getCurrentPool() {
-  return currentMode === 'same' ? sameCategoryItems : otherCategoryItems;
+function buildRecommendPool() {
+  recommendPool = sameCategoryItems.concat(otherCategoryItems);
+  return recommendPool;
 }
 
 /**
  * 渲染当前页（循环填充，确保每页 3 个）
  */
 function renderRecommendPage(pageIndex = 0) {
-  const pool = getCurrentPool();
+  const pool = recommendPool;
   const total = pool.length;
 
   const grid = document.getElementById('relatedProductGrid');
@@ -73,45 +93,14 @@ function renderRecommendPage(pageIndex = 0) {
 
   grid.innerHTML = pageItems.map(p => `
   <div class="recommend-card">
-    <a href="./product.html?id=${p.id}">
-      <img src="../${p.image}" alt="${p.name}" loading="lazy">
-      <h3>${p.name}</h3>
-      <p>${p.description || ''}</p>
+    <a href="./product.html?id=${encodeURIComponent(p.id)}">
+      <img src="${escapeHtml(normalizeImgSrc(p.image))}" alt="${escapeHtml(p.name)}" loading="lazy">
+      <h3>${escapeHtml(p.name)}</h3>
+      <p>${escapeHtml(p.description || '')}</p>
     </a>
   </div>
 `).join('');
 }
-
-/**
- * 切换到全站推荐模式
- */
-function switchToOtherCategory() {
-  if (currentMode === 'same' && otherCategoryItems.length > 0) {
-    currentMode = 'other';
-    currentRecommendPage = 0; // 切换模式后重置页码
-    // 不需要导航标志了
-    renderRecommendPage(0);
-    console.log('🔄 Switched to other-category recommendations');
-  }
-}
-
-/**
- * 重新随机化当前模式下的商品池
- */
-function shuffleCurrentPool() {
-    const pool = getCurrentPool();
-    // 使用 Fisher-Yates 洗牌算法进行更可靠的随机打乱
-    for (let i = pool.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [pool[i], pool[j]] = [pool[j], pool[i]];
-    }
-    // 重置页码，因为商品池已随机化
-    currentRecommendPage = 0;
-    // 不需要导航标志了
-    console.log(`🔄 Shuffled ${currentMode} category pool.`);
-    renderRecommendPage(0); // 重新渲染第一页
-}
-
 
 /**
  * 初始化推荐轮播
@@ -120,53 +109,32 @@ function initRecommendCarousel(currentId, currentCategory) {
   initRecommendData(currentId, currentCategory);
   currentRecommendPage = 0;
 
-  // 默认使用同类目
-  currentMode = 'same';
-  // 不需要导航标志了
-
-  // 如果同类目为空，直接切全站
-  if (sameCategoryItems.length === 0) {
-    switchToOtherCategory();
-  } else {
-    renderRecommendPage(0);
-  }
+  // 统一池：同类在前、其他分类在后，左右翻页循环（末页之后回到开头的同类）
+  buildRecommendPool();
+  renderRecommendPage(0);
 
   // 绑定按钮事件
   const prevBtn = document.querySelector('.carousel-btn.prev');
   const nextBtn = document.querySelector('.carousel-btn.next');
 
-  // --- 修改 handlePrev ---
+  const totalPages = () => Math.ceil(recommendPool.length / RECOMMEND_PAGE_SIZE);
+
+  // 左右键：像数组一样循环翻页——首页往前翻到最后一页，末页往后翻绕回同类开头的首页
   const handlePrev = (e) => {
     e.preventDefault();
-    // --- 核心逻辑：如果当前页是第0页，点击左键就刷新 ---
-    if (currentRecommendPage === 0) {
-        console.log('🔄 Left button pressed on initial page (or back to it), shuffling pool.');
-        shuffleCurrentPool(); // 调用随机刷新函数
-    } else {
-        // 否则，正常返回上一页
-        currentRecommendPage--;
-        renderRecommendPage(currentRecommendPage);
-    }
-    // --- 结束修改 ---
+    const pages = totalPages();
+    if (!pages) return;
+    currentRecommendPage = (currentRecommendPage - 1 + pages) % pages;
+    renderRecommendPage(currentRecommendPage);
   };
-  // --- 结束修改 ---
 
-  // --- 修改 handleNext ---
   const handleNext = (e) => {
     e.preventDefault();
-    const currentPool = getCurrentPool();
-
-    // 如果当前模式下商品数 <= 每页数（无法提供新内容），尝试切换模式
-    if (currentPool.length <= RECOMMEND_PAGE_SIZE && currentMode === 'same') {
-      switchToOtherCategory();
-    } else {
-      // 在增加页码之前，确保当前页不是最后一页（虽然循环填充会重复，但逻辑上是前进）
-      // 直接增加页码即可
-      currentRecommendPage++;
-      renderRecommendPage(currentRecommendPage);
-    }
+    const pages = totalPages();
+    if (!pages) return;
+    currentRecommendPage = (currentRecommendPage + 1) % pages;
+    renderRecommendPage(currentRecommendPage);
   };
-  // --- 结束修改 ---
 
   // 防止重复绑定
   prevBtn?.removeEventListener('click', handlePrev);

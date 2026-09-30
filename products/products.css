@@ -65,7 +65,7 @@ nav {
 
 .category-list a:hover,
 .category-list a.active {
-    background: #d63031;
+    background: var(--ink, #111111);
     color: white;
 }
 
@@ -151,17 +151,31 @@ nav {
   height: 100%;
   padding: 16px;
   background: #fff;
-  border: 1px solid #eee;
+  border: 1px solid #e5e7eb;
   border-radius: 8px;
-  /* box-shadow: 0 2px 6px rgba(0,0,0,0.05); */
+  box-shadow: 0 2px 6px rgba(17, 17, 17, 0.10), 0 10px 24px rgba(17, 17, 17, 0.14);
   opacity: 0;
   transform: translateY(20px);
-  transition: opacity 0.4s ease, transform 0.4s ease;
+  transition: opacity 0.4s ease, transform 0.4s ease, box-shadow 0.3s ease;
 }
 
 .product-card.animate-in {
   opacity: 1;
   transform: translateY(0);
+}
+
+.product-card.animate-in:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 10px rgba(17, 17, 17, 0.12), 0 18px 38px rgba(17, 17, 17, 0.24);
+}
+
+/* 触屏无 hover，用按压缩放代替（iOS 只在 <a> 上触发 :active，故两种写法都给） */
+@media (hover: none) {
+  .product-card.animate-in:active,
+  .product-card-link:active .product-card.animate-in {
+    transform: scale(0.98);
+    box-shadow: 0 2px 6px rgba(17, 17, 17, 0.12), 0 6px 16px rgba(17, 17, 17, 0.22);
+  }
 }
 
 /* ===== 关键：适配 550x550 正方形图 ===== */
@@ -280,9 +294,9 @@ footer {
 }
 
 .pagination-btn.active {
-    background: #007bff;
+    background: #111111;
     color: white;
-    border-color: #007bff;
+    border-color: #111111;
 }
 
 .pagination-btn:disabled {
