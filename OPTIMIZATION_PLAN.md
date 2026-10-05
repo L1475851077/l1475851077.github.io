@@ -25,10 +25,10 @@
 - [x] **3. 推荐位图片路径 bug**：`products/product_details/recommend.js` 原用 `src="../${p.image}"` 拼接。
       ✅ 2026-09-20 修复：新增 `normalizeImgSrc()`，把 `/products/...`、`../images/...`、裸 `images/...` 三种历史形态统一归一为站点根绝对路径，模板改为 `<img src="${normalizeImgSrc(p.image)}" ... loading="lazy">`（recommend.js:87）。已在 Node 中用真实 data.js 三种取值验证归一结果。
       修正原诊断：`"../" + "../images/x"` 得 `../../images/x`，相对 `/products/product_details/` 解析后**正是 `/images/x`，原本能命中**；真正必裂的只有 `p.image` 为根绝对路径那一条（拼成 `..//products/...`，即 fridge-b2000）。
-- [ ] **4. CMS 写入的商品名不干净**（未解决，且复核发现新缺陷）：
-      ⏸️ **2026-09-30 暂缓**：当前为临时测试数据（用户确认），中文前缀/`♯`/分隔符问题随正式数据录入自然消失；正式录入时再按本项在 CMS 侧加约束。
-      仍存在 `data.js:31` 的 `"冰箱Commercial Double Door Fridge B-2000"`；另有 **5 个商品 name 结尾带垃圾字符 `♯`**（`"Undercounter Dishwasher♯"`、`"Commercial Convection Oven 10 Trays 40×60♯"` 等），尺寸分隔符混用（`150×75×80` vs `180*70*80`）。这些直接展示给海外客户。
-      做法：手工清洗存量 + 在 CMS 录入侧加约束（禁中文/符号前后缀、统一 `×`）。根因在数据源，见第六节待确认第 5 条。
+- [ ] **4. CMS 写入的商品名不干净**（CMS 录入闸已实现，剩存量数据待正式录入覆盖）：
+      ⏸️ **2026-09-30 暂缓**：当前为临时测试数据（用户确认），中文前缀/`♯`/分隔符问题随正式数据录入自然消失。
+      ❌ **2026-10-03 复核修正**：`♯` 垃圾字符与 `×`/`*` 分隔符混用已随 CMS 数据更新消失，仅剩 `data.js:50` 一条 `"冰箱Commercial Double Door Fridge B-2000"` 中文前缀（同商品在 products.json 侧 name 是干净的）。
+      ✅ **2026-10-05 核实：CMS 录入侧约束已实现**（`product-cms/lib/validate.js`，本项"做法"中要求的约束全部在位）：拒中文（CJK 正则）、清洗 `♯`/`#` 等前后缀垃圾字符、specs 值统一 `×` 分隔符、category 必须在分类表且 list/detail 同源输出、id 规范校验；低优先缺口仅剩 `unifySeparators` 未覆盖 name/description。存量测试数据产生于该闸门上线前，待正式数据覆盖。CMS 侧接口契约与待办记录在 CMS 工具目录 `product-cms/SITE_SYNC_NOTES.md`。
 - [x] **5. category 命名不一致导致同类推荐永远为空**（原记在第 4 项行末，单列以免被"名字已清洗"误导）：
       ✅ 2026-09-30 修复：`products/product_details/products.json` 的 `"category": "fridges"` 已改为 `"fridge"`（与 `data.js` 的 CATEGORIES/商品值对齐），JSON 校验通过，fridge-b2000 同类推荐恢复出商品（浏览器实测 3 个推荐位均为 fridge 分类）。此为结构性不一致（CMS 导出详情的固定行为），不随测试数据自然消失；若后续上方案 A/B 合并数据源，CMS detail 的 category 字段需锁定为 list 侧取值。
       （原"⏸️ 暂缓：临时测试数据"的判断仅适用于第 1/4 项的内容问题，此项为结构问题不适用，已单独修复。）
