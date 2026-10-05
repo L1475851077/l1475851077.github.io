@@ -1,0 +1,31 @@
+name: Product data check
+
+# CMS 每次提交都会改 data.js / products.json，这里做两侧一致性校验。
+# 脚本定位为"纯提示不报错"（见优化计划方案 C）：数据问题只在日志与
+# Step Summary 里输出 WARN/INFO，任务保持绿色，不阻断部署。
+on:
+  push:
+    paths:
+      - 'products/data.js'
+      - 'products/product_details/products.json'
+      - 'scripts/validate-products.mjs'
+      - '.github/workflows/validate-products.yml'
+  pull_request:
+    paths:
+      - 'products/data.js'
+      - 'products/product_details/products.json'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+      - name: Validate product data consistency
+        run: node scripts/validate-products.mjs

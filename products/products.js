@@ -13,6 +13,9 @@ const ITEMS_PER_PAGE = 12; // 每页显示商品数量，可按需调整
 let currentPage = 1;
 
 // ===== 全局状态 =====
+// 数据源：products-data.js 合并 data.js（列表/分类）与 products.json（详情）后在 DCL 注入
+let CATEGORIES_DATA = [];
+let PRODUCTS_DATA = [];
 let currentCategory = 'all';
 let searchTerm = '';
 // 手风琴状态：子分类面板已展开的大分类 id 集合
@@ -21,12 +24,12 @@ const expandedCategories = new Set();
 // ===== 两级分类工具 =====
 // 大分类（含 all 伪分类；有 parent 字段的视为子分类）
 function parentCategories() {
-    return CATEGORIES.filter(cat => !cat.parent);
+    return CATEGORIES_DATA.filter(cat => !cat.parent);
 }
 
 // 某大分类下的直属子分类
 function childCategories(parentId) {
-    return CATEGORIES.filter(cat => cat.parent === parentId);
+    return CATEGORIES_DATA.filter(cat => cat.parent === parentId);
 }
 
 // 分类 id → 自身 + 全部子孙 id 集合。选中大分类时命中整个子树，
@@ -36,7 +39,7 @@ function categorySubtree(id) {
     let grew = true;
     while (grew) {
         grew = false;
-        CATEGORIES.forEach(cat => {
+        CATEGORIES_DATA.forEach(cat => {
             if (cat.parent && ids.has(cat.parent) && !ids.has(cat.id)) {
                 ids.add(cat.id);
                 grew = true;
@@ -48,9 +51,9 @@ function categorySubtree(id) {
 
 // 分类 id → 全链展示名（子分类显示 "大分类 · 子分类"）
 function categoryChainName(id) {
-    const cat = CATEGORIES.find(c => c.id === id);
+    const cat = CATEGORIES_DATA.find(c => c.id === id);
     if (!cat) return '';
-    const parent = cat.parent ? CATEGORIES.find(c => c.id === cat.parent) : null;
+    const parent = cat.parent ? CATEGORIES_DATA.find(c => c.id === cat.parent) : null;
     return parent ? parent.name + ' · ' + cat.name : cat.name;
 }
 
@@ -102,7 +105,7 @@ function syncCategoryListState() {
 function selectCategory(id) {
     currentCategory = id;
     currentPage = 1;
-    const cat = CATEGORIES.find(c => c.id === id);
+    const cat = CATEGORIES_DATA.find(c => c.id === id);
     if (cat && cat.parent) {
         expandedCategories.add(cat.parent); // 选中子分类时展开其大分类
     } else if (cat && childCategories(id).length) {
@@ -133,9 +136,9 @@ function restoreCategoryFromUrl() {
     } catch (e) {
         return;
     }
-    if (!catId || !CATEGORIES.some(c => c.id === catId)) return;
+    if (!catId || !CATEGORIES_DATA.some(c => c.id === catId)) return;
     currentCategory = catId;
-    const cat = CATEGORIES.find(c => c.id === catId);
+    const cat = CATEGORIES_DATA.find(c => c.id === catId);
     if (cat && cat.parent) expandedCategories.add(cat.parent);
     if (childCategories(catId).length) expandedCategories.add(catId);
 }
@@ -202,7 +205,7 @@ function renderProducts() {
 
     // 过滤商品（分类子树 + 搜索）
     const subtree = categorySubtree(currentCategory);
-    const filtered = PRODUCTS.filter(product => {
+    const filtered = PRODUCTS_DATA.filter(product => {
         const matchesCategory = currentCategory === 'all' || subtree.has(product.category);
         const matchesSearch = product.name.toLowerCase().includes(searchTerm) || 
                               product.description.toLowerCase().includes(searchTerm);
@@ -256,7 +259,7 @@ function renderProducts() {
 }
 
 // ===== 初始化 =====
-document.addEventListener('DOMContentLoaded', () => {
+document.addEventListener('DOMContentLoaded', async () => {
     const searchInput = document.getElementById('searchInput');
     const categoryList = document.getElementById('categoryList');
 
@@ -264,6 +267,16 @@ document.addEventListener('DOMContentLoaded', () => {
         console.error('Element #categoryList not found.');
         return;
     }
+
+    // 统一数据入口（根目录 products-data.js）；该文件未引入时回退 data.js 的全局变量
+    const data = window.productsDataReady
+        ? await window.productsDataReady
+        : {
+            categories: typeof CATEGORIES !== 'undefined' ? CATEGORIES : [],
+            products: typeof PRODUCTS !== 'undefined' ? PRODUCTS : []
+        };
+    CATEGORIES_DATA = data.categories;
+    PRODUCTS_DATA = data.products;
 
     restoreCategoryFromUrl();
     renderCategories();

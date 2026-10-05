@@ -26,9 +26,10 @@
     <link rel="preload" href="/fonts/inter-latin-wght-normal.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="stylesheet" href="../../loading.css?v=20260930b">
     <script src="../../loading.js?v=20260930b" defer></script>
-    <script src="../../script.js?v=20260930c" defer></script>
+    <script src="../../script.js?v=20261005a" defer></script>
     <script src="../data.js"></script>
-    <script src="./recommend.js"></script>
+    <script src="/products-data.js?v=20261005a" defer></script>
+    <script src="./recommend.js?v=20261005a"></script>
     <script>/* 刷新不恢复滚动位置：加载期布局在变，恢复+锚定会把变化补偿进 scrollY */
     history.scrollRestoration = 'manual';</script>
 </head>
@@ -101,9 +102,14 @@
     </footer>
 
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // 替换为你当前商品的 ID 和分类
-            initRecommendCarousel('fridge-b2000', 'fridges');
+        document.addEventListener('DOMContentLoaded', async () => {
+            // 推荐数据：等 products-data.js 合并数据源就绪；当前分类取列表侧（data.js）值，
+            // 避免再出现旧数据 'fridges' 这类硬编码漂移
+            const data = window.productsDataReady
+                ? await window.productsDataReady
+                : { products: typeof PRODUCTS !== 'undefined' ? PRODUCTS : [] };
+            const merged = data.products.find(p => p.id === 'fridge-b2000');
+            initRecommendCarousel('fridge-b2000', merged ? merged.category : 'fridge', data.products);
         });
     </script>
 

@@ -57,8 +57,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-// 首页热销卡片数据源：products/data.js 暴露的全局 PRODUCTS
-const allProducts = typeof PRODUCTS !== 'undefined' ? PRODUCTS : [];
+// 首页热销卡片数据源：products-data.js 合并 data.js（列表）与 products.json（详情）后的 products
 
 // 商品字段来自 CMS 数据，拼进 innerHTML 前统一转义（与 products/products.js 同款）
 function escapeHtml(value) {
@@ -77,12 +76,12 @@ function categoryName(id) {
   return parent ? parent.name + ' · ' + hit.name : hit.name;
 }
 
-function renderHotProducts() {
+function renderHotProducts(products) {
   const container = document.getElementById('hotProductsGrid');
   if (!container) return;
 
   // 把 filter 里的 ID 判断改为 isHot 判断
-  const hotProducts = allProducts.filter(p => p.isHot === true);
+  const hotProducts = products.filter(p => p.isHot === true);
 
   container.innerHTML = hotProducts.map(product => `
     <a href="./products/product_details/product.html?id=${encodeURIComponent(product.id)}" class="p-card">
@@ -98,7 +97,11 @@ function renderHotProducts() {
 
 // ===== 页面加载完成后初始化 =====
 document.addEventListener('DOMContentLoaded', () => {
-  renderHotProducts();
+  // 热销位：等合并数据源就绪（products-data.js 未引入的页面回退 data.js 全局 PRODUCTS）
+  const catalogPromise = window.productsDataReady
+    ? window.productsDataReady
+    : Promise.resolve({ products: typeof PRODUCTS !== 'undefined' ? PRODUCTS : [] });
+  catalogPromise.then(data => renderHotProducts(data.products));
 
   const hamburger = document.getElementById('hamburger');
   const nav = document.getElementById('mainNav');

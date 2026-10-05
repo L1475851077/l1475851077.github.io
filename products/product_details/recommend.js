@@ -1,5 +1,6 @@
 // products/recommend.js
-// 依赖：全局变量 window.PRODUCTS（来自 data.js）
+// 商品数组由调用方传入（products-data.js 合并后的 products），不再依赖 window.PRODUCTS；
+// 分类树仍读 data.js 的全局 CATEGORIES（分类只有这一个来源）。
 
 // data.js 的 image 有三种历史形态："/products/..."（根绝对）、
 // "../images/..."（相对列表页）、裸 "images/..."；统一归一为站点根绝对路径
@@ -33,34 +34,35 @@ let otherCategoryItems = []; // 其余分类的商品
 /**
  * 初始化推荐数据（按 同子分类 / 兄弟子分类 / 其他分类 分池）
  */
-function initRecommendData(currentId, currentCategory) {
-  if (!window.PRODUCTS || !Array.isArray(window.PRODUCTS)) {
-    console.warn('⚠️ window.PRODUCTS not loaded. Check data.js.');
+function initRecommendData(currentId, currentCategory, allProducts) {
+  if (!Array.isArray(allProducts)) {
+    console.warn('⚠️ initRecommendCarousel 缺少商品数组参数（应为 products-data.js 合并后的 products）');
     return;
   }
 
   const shuffle = arr => [...arr].sort(() => Math.random() - 0.5);
 
   // 当前商品的兄弟分类 id 集合：同大分类下的其他子分类（含当前分类自己，靠下面的排除项去掉）
-  const currentCat = window.CATEGORIES ? window.CATEGORIES.find(c => c.id === currentCategory) : null;
+  const cats = Array.isArray(window.CATEGORIES) ? window.CATEGORIES : [];
+  const currentCat = cats.find(c => c.id === currentCategory) || null;
   const siblingIds = new Set(
     (currentCat && currentCat.parent)
-      ? window.CATEGORIES.filter(c => c.parent === currentCat.parent).map(c => c.id)
+      ? cats.filter(c => c.parent === currentCat.parent).map(c => c.id)
       : []
   );
 
   // 同子分类（排除当前商品）
-  sameCategoryItems = window.PRODUCTS.filter(p =>
+  sameCategoryItems = allProducts.filter(p =>
     p.category === currentCategory && p.id !== currentId
   );
 
   // 兄弟子分类（排除当前商品与同子分类）
-  siblingCategoryItems = window.PRODUCTS.filter(p =>
+  siblingCategoryItems = allProducts.filter(p =>
     p.id !== currentId && p.category !== currentCategory && siblingIds.has(p.category)
   );
 
   // 其他分类（排除以上两种）
-  otherCategoryItems = window.PRODUCTS.filter(p =>
+  otherCategoryItems = allProducts.filter(p =>
     p.id !== currentId && p.category !== currentCategory && !siblingIds.has(p.category)
   );
 
@@ -121,8 +123,8 @@ function renderRecommendPage(pageIndex = 0) {
 /**
  * 初始化推荐轮播
  */
-function initRecommendCarousel(currentId, currentCategory) {
-  initRecommendData(currentId, currentCategory);
+function initRecommendCarousel(currentId, currentCategory, allProducts) {
+  initRecommendData(currentId, currentCategory, allProducts);
   currentRecommendPage = 0;
 
   // 统一池：同类在前、其他分类在后，左右翻页循环（末页之后回到开头的同类）

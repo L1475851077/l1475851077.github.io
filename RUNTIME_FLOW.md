@@ -18,16 +18,16 @@ GitHub Pages（读仓库 main 分支的静态文件）
    ▼
 浏览器执行
    1. 解析 HTML，加载 CSS（页面被 .main-content 的 opacity:0 暂时隐藏）
-   2. defer 脚本按文档顺序执行：loading.js → data.js → script.js
+   2. defer 脚本按文档顺序执行：loading.js → data.js → products-data.js → script.js
    3. loading.js 插入全屏加载遮罩
-   4. DOMContentLoaded：各页面脚本用内存中的商品数据渲染 DOM
+   4. DOMContentLoaded：各页面脚本 await products-data.js 的合并数据渲染 DOM
    5. window load：body 加 loaded 类 → 内容淡入、遮罩淡出
    ▼
 用户看到完整页面，之后的一切交互（分类/搜索/翻页/弹窗/推荐）
 都是本地 JS 对内存数据的操作，不再请求服务器
 ```
 
-**唯一的运行时网络请求**：详情页的 `fetch('./products.json')`。其余商品数据都是 `<script src="data.js">` 以全局变量形式同步注入的。
+**商品数据统一读入口**：根目录 `products-data.js` 暴露 `window.productsDataReady`（一个 Promise），把 `data.js` 的全局 `CATEGORIES`/`PRODUCTS`（列表/分类字段）与 `fetch('/products/product_details/products.json')` 的详情数组（subtitle/features/specs）按 id 合并成 `{ categories, products, details }`。列表字段以 data.js 为权威，详情侧只补充详情字段。全站唯一的运行时数据请求就是这一个 fetch（带 `cache: 'no-cache'` 走 ETag 复验）。
 
 ---
 
@@ -39,6 +39,7 @@ GitHub Pages（读仓库 main 分支的静态文件）
 2. **defer 脚本执行**（HTML 解析完毕后、DOMContentLoaded 之前，按文档顺序）：
    - `loading.js`：动态创建 `#global-loading` 遮罩节点，插入 `body` 第一个子元素；注册 `load` / `pageshow` 监听；同时启动一个 **3 秒兜底定时器**。
    - `data.js`（需要商品数据的页面）：定义全局变量 `CATEGORIES`（两级：`parent` 字段指向大分类）和 `PRODUCTS`。
+   - `products-data.js`（同上页面，defer）：发起 products.json fetch，构建 `window.productsDataReady` 合并数据源。
    - `script.js`（defer，位于 body 末尾）：注册 `DOMContentLoaded` 回调（热销渲染、汉堡菜单、平滑滚动）。
 3. **DOMContentLoaded**：页面脚本开始渲染动态内容（此时遮罩仍盖着，用户看不到渲染过程）。
 4. **window load**（所有资源含图片加载完）：`loading.js` 的 `initPage()` 执行——给 `body` 加 `loaded` 类 →
@@ -56,7 +57,7 @@ GitHub Pages（读仓库 main 分支的静态文件）
 加载 → 静态 Hero + 数据条直接可见 →（DOMContentLoaded）渲染 Hot Products → 用户交互
 ```
 
-1. `renderHotProducts()`：从全局 `PRODUCTS`（来自 `/products/data.js`）中筛出 `isHot === true` 的商品，注入 `#hotProductsGrid`；每张卡片是 style-b 的 `.p-card`（图 + 分类标签 + 品名 + 描述），链接指向 `products/product_details/product.html?id=商品id`。
+1. `renderHotProducts(products)`：等 `productsDataReady` 就绪后，从合并商品数组中筛出 `isHot === true` 的商品，注入 `#hotProductsGrid`；每张卡片是 style-b 的 `.p-card`（图 + 分类标签 + 品名 + 描述），链接指向 `products/product_details/product.html?id=商品id`。
 2. 汉堡菜单：小屏点击 `#hamburger` 切换 `#mainNav.show`；点击页面其他区域自动收起。
 3. 锚点平滑滚动：`a[href^="#"]` 拦截默认跳转，`scrollIntoView({behavior:'smooth'})`。
 4. 转化入口：
@@ -67,15 +68,15 @@ GitHub Pages（读仓库 main 分支的静态文件）
 
 ## 四、产品列表页流程（`products/index.html`）
 
-数据在 `<head>` 里**同步**加载（`data.js` + `products.js` 不带 defer），渲染逻辑全部在 `products.js`：
+数据加载：`data.js` + `products.js` 同步（无 defer，先建好渲染函数），`products-data.js` defer 提供 `productsDataReady`。DOMContentLoaded 后 `products.js` await 合并数据注入模块变量 `CATEGORIES_DATA` / `PRODUCTS_DATA`，再渲染：
 
 1. **初始化**（DOMContentLoaded）：
    - `renderCategories()`：用 `CATEGORIES` 渲染左侧两级分类列表（手风琴：点大分类展开子分类），当前分类高亮；
    - `renderProducts()`：核心渲染函数，见下。
 2. **`renderProducts()` 每次执行的流水线**：
    ```
-   PRODUCTS（17 个商品）
-     → 按 currentCategory 过滤（'all' 放行全部）
+   PRODUCTS_DATA（合并后 17 个商品，等 productsDataReady 注入）
+     → 按 currentCategory 过滤（'all' 放行全部；选中大分类按子树匹配）
      → 按 searchTerm 过滤（name / description 包含关键字，不区分大小写）
      → 更新标题（"All Products" / "XXX Products"，同时改 document.title）
      → 分页切片：每页 12 条（ITEMS_PER_PAGE），起止 = (currentPage-1)*12
@@ -100,29 +101,30 @@ GitHub Pages（读仓库 main 分支的静态文件）
    │
    ├─ 返回静态 HTML 壳（标题是占位的 "Loading Product"，内容区全空）
    │
-   ├─ 同步加载：../data.js（给推荐用）+ recommend.js + product_details.js
+   ├─ 同步加载：../data.js + recommend.js + product_details.js；defer：products-data.js（合并数据源）
    │
    └─ DOMContentLoaded（product_details.js，async 函数）：
         ├─ 解析 ?id=
         │     └─ 没有 id ──────────────► 跳转 ./404.html
-        ├─ fetch('./products.json')      ★ 全站唯一的运行时数据请求
-        │     └─ 请求失败/解析失败 ─────► 跳转 ./404.html
-        ├─ 在 JSON 数组里 find(id)
-        │     └─ 找不到 ───────────────► 跳转 ./404.html
-        └─ 渲染：
+        ├─ await window.productsDataReady（合并 data.js + products.json，含 fetch）
+        │     └─ fetch 失败 ───────────► details 为空，等同"无详情"，跳 ./404.html
+        ├─ 在 details（详情数组）里 find(id)
+        │     └─ 找不到（商品不存在或未填详情）─► 跳转 ./404.html
+        └─ 渲染（详情字段以 products.json 记录为准）：
              document.title / meta description ← 商品名/副标题（SEO）
+             og/twitter/canonical ← 实时改写（head 里有静态兜底）
              #productName #productSubtitle #productImage
              #productFeatures   ← features[] 渲染成 <li>
              #productSpecs      ← specs 对象渲染成参数表 <tr>
-             然后调用 initRecommendCarousel(id, category) 启动推荐
+             然后调用 initRecommendCarousel(id, 列表侧category, 合并商品数组) 启动推荐
 ```
 
 **推荐轮播（recommend.js）逻辑**：
 
-1. `initRecommendData()`：把 `window.PRODUCTS`（来自 data.js，**不是** products.json）分成三池——同子分类进 `sameCategoryItems`，同大分类的兄弟子分类进 `siblingCategoryItems`，其余进 `otherCategoryItems`（都排除当前商品），并打乱顺序。
-2. 同类池为空 → `switchToOtherCategory()` 自动切到全站推荐模式。
+1. `initRecommendData(currentId, currentCategory, allProducts)`：把调用方传入的合并商品数组（products-data.js 的 `products`，**不再读** `window.PRODUCTS`）分成三池——同子分类进 `sameCategoryItems`，同大分类的兄弟子分类进 `siblingCategoryItems`，其余进 `otherCategoryItems`（都排除当前商品），并打乱顺序。
+2. 同类池为空 → 自然由后一档补满一页（同级为 0 时直接由下一档顶上）。
 3. 渲染：每页固定 3 张卡片，翻页用 `(startIndex + i) % total` **循环取模**，可以无限前后翻。
-4. ⚠️ **已知静默 bug**（见 OPTIMIZATION_PLAN 第四节）：products.json 的 category 是 `fridges`，data.js 里是 `fridge`，所以同类池永远为空——目前所有详情页的推荐实际都走的"其他分类"模式。
+4. ✅ 旧"已知静默 bug"已闭环（2026-09-30 + 2026-10-05）：products.json 的 `fridges` 已改对齐；详情页推荐改用列表侧（data.js）分类，CMS 详情侧 category 再漂移也不会清空同类池；静态落地页内联调用里残留的 `'fridges'` 硬编码已改为从合并数据取当前商品分类。`scripts/validate-products.mjs` 在 CI 里持续盯这条。
 
 **404.html**：静态兜底页，保留导航和联系弹窗，告知商品不存在。
 
@@ -152,7 +154,7 @@ GitHub Pages 自动重新发布（约 1 分钟，无构建步骤，文件原样�
 （老访客需刷新页面才能看到，站点无任何缓存失效机制，依赖 Pages 默认 max-age=600）
 ```
 
-要点：**一次完整的商品改动 = CMS 产生两条提交（list + detail）**，两个文件由 CMS 分别写入，需要人工保证一致——这是 OPTIMIZATION_PLAN 里"数据源不同步"问题的根源。
+要点：**一次完整的商品改动 = CMS 产生两条提交（list + detail）**，两个文件由 CMS 分别写入，格式由 CMS 决定、前端不改动（读侧由 `products-data.js` 合并）。一致性由 `scripts/validate-products.mjs` 兜底：`.github/workflows/validate-products.yml` 随两侧文件的提交自动运行，输出缺详情 / 孤儿详情 / category 不对齐等 WARN/INFO 提示（不阻断部署）。
 
 ---
 
@@ -176,7 +178,7 @@ GitHub Pages 自动重新发布（约 1 分钟，无构建步骤，文件原样�
 
 ## 九、容易踩坑的时序细节
 
-1. **defer 顺序是"文档顺序"**：首页 `loading.js` → `/products/data.js` → `script.js`（body 末尾）都带 defer，按出现顺序执行，所以 `script.js` 的 `DOMContentLoaded` 回调里 `PRODUCTS` 一定已存在。若把 data.js 改成异步/动态加载，热销渲染会拿到空数组。
-2. **列表页的 data.js / products.js 是同步 script**（无 defer）：阻塞解析换取"全局变量先于一切回调"，是刻意的简单化。
-3. **详情页的两份数据用途不同**：`products.json` 渲染当前商品本体，`data.js` 只喂推荐轮播——两份数据、两次来源，正是双数据源问题的现场。
+1. **defer 顺序是"文档顺序"**：首页 `loading.js` → `/products/data.js` → `products-data.js` → `script.js`（body 末尾）都带 defer，按出现顺序执行；`products-data.js` 执行时 data.js 的全局变量已就位，`script.js` 的 `DOMContentLoaded` 回调里 `productsDataReady` 已存在。若把 data.js 改成异步/动态加载，加载器会拿到空列表直接短路返回。
+2. **列表页的 data.js / products.js 是同步 script**（无 defer）：阻塞解析先建渲染函数；商品数据本身改由 DCL 里 await `productsDataReady` 注入 `CATEGORIES_DATA` / `PRODUCTS_DATA`。
+3. **详情页的渲染与推荐读的是不同侧面**：渲染本体以 `details`（products.json 记录）为准——未填详情的商品因此仍按现状跳 404；推荐位读合并后的 `products`（列表字段权威）。合并逻辑全部集中在根目录 `products-data.js` 一个文件里，将来迁真正单数据源（方案 A/B）只改这一处。
 4. **`.main-content` 遮罩机制依赖 body 上的 loaded 类**：任何新页面如果漏引 `loading.js` 或没把内容包进 `.main-content`，就会出现"白屏到 load 才显示"或"永远 opacity:0"两种异常。

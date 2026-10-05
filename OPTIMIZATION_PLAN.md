@@ -85,11 +85,14 @@
 - [ ] **方案 A：products.json 单一数据源（推荐）**
   改动点：`recommend.js`（接收传入数组，去掉 `window.PRODUCTS` 依赖）、`product_details.js`（传参）、`products/products.js` + `products/index.html`（列表页改 fetch）、根 `script.js` + `index.html`（首页热销改 fetch）；CMS detail 配置补 `isHot`/`description`、统一 category 值。
   前提：CMS 工具的字段配置可以修改。
+  ◐ **2026-10-05 读侧中间态已落地（CMS 契约不动）**：新建根目录 `products-data.js` 统一读入口——首页热销（`script.js`）、列表页（`products.js`）、详情页（`product_details.js`）、推荐位（`recommend.js`）全部改为 `await window.productsDataReady` 取合并数据，不再直接读 `window.PRODUCTS` 或各自 fetch products.json；列表字段以 data.js 为权威，详情侧只并入 subtitle/features/specs，推荐分类改取列表侧值（CMS detail 的 category 再漂移也不会清空同类推荐）。数据文件格式零改动，CMS 提交流程不受影响；将来真正迁 A/B 时只需改这一个加载器。顺带修掉静态落地页 `product_details/fridge-b2000.html` 内联调用里残留的 `'fridges'` 旧分类硬编码。
+  改动点中前端部分（recommend 接收数组、去 PRODUCTS 依赖、详情页传参）已随中间态完成；剩余为 CMS detail 配置补 `isHot`/`description` 与数据文件本身的合并。
 - [ ] **方案 B：保留 data.js，改为由 products.json 自动生成（折中）**
   GitHub Actions 里跑脚本从 products.json 生成 data.js，CMS 只提交 products.json，data.js 变成构建产物。前端代码一行不改，同样达到单一数据源。
   适用：CMS 字段配置不好动的情况。
-- [ ] **方案 C（最小止损，若 A/B 都暂不做）**：只加同步校验脚本 + 手工修 category 不一致（把 products.json 的 `fridges` 改成 `fridge`，或反向），让同类推荐先恢复工作。
-  ✅ category 修齐部分已于 2026-09-30 完成（见第 5 项）；同步校验脚本仍未做。
+- [x] **方案 C（最小止损，若 A/B 都暂不做）**：只加同步校验脚本 + 手工修 category 不一致（把 products.json 的 `fridges` 改成 `fridge`，或反向），让同类推荐先恢复工作。
+  ✅ category 修齐部分已于 2026-09-30 完成（见第 5 项）。
+  ✅ 2026-10-05 同步校验脚本上线：`scripts/validate-products.mjs`（Node，零依赖）对比两侧 id 集合（缺详情 / 孤儿详情 / 重复 id）、category 对齐与合法性、name/image 漂移、分类树 parent 引用完整性、方案 A 迁移就绪度（详情缺 isHot/description 字段计数）；数据问题只输出 WARN/INFO 不阻断（仅文件解析失败才 exit 1），CI 下写入 Step Summary。`.github/workflows/validate-products.yml` 监听两侧数据文件与脚本自身的 push/PR，随 CMS 提交自动运行。本地实测输出：3 条 INFO（1 条 name 漂移、16 个缺详情、1/1 缺 isHot/description）、0 条 WARN。
 
 ---
 
